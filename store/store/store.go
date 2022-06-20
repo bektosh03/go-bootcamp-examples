@@ -1,6 +1,9 @@
 package store
 
-import "fmt"
+import (
+	"fmt"
+	"store/product"
+)
 
 type Store struct {
 	inventory Inventory
@@ -20,4 +23,15 @@ func (s Store) Run() {
 	}
 
 	fmt.Println(p)
+
+	err := s.inventory.AddProduct(product.Product{
+		Name:          "Banana",
+		Quantity:      23,
+		Price:         10,
+		OriginalPrice: 8,
+	})
+
+	if err != nil {
+		fmt.Println("add product err:", err)
+	}
 }

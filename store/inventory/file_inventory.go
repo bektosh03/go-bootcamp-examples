@@ -3,6 +3,7 @@ package inventory
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"store/product"
 	"strconv"
@@ -40,6 +41,16 @@ func (i *FileInventory) FindProduct(name string) (product.Product, bool) {
 	}
 
 	return product.Product{}, false
+}
+
+func (i *FileInventory) AddProduct(p product.Product) error {
+	i.products.Add(p)
+	if err := i.snapshot(); err != nil {
+		i.products.Remove(p.Name)
+		return err
+	}
+
+	return nil
 }
 
 func (i *FileInventory) load() error {
@@ -80,4 +91,23 @@ func (i *FileInventory) parseLine(line string) (product.Product, error) {
 		Price:         price,
 		OriginalPrice: originalPrice,
 	}, nil
+}
+
+func (i *FileInventory) snapshot() error {
+	if err := os.Truncate(i.db.Name(), 0); err != nil {
+		return fmt.Errorf("failed to truncate: %w", err)
+	}
+	if _, err := i.db.Seek(0, io.SeekStart); err != nil {
+		return fmt.Errorf("failed to seek: %w", err)
+	}
+
+	var data strings.Builder
+	for _, p := range i.products {
+		if _, err := data.WriteString(fmt.Sprintf("%s %d %d %d\n", p.Name, p.Quantity, p.Price, p.OriginalPrice)); err != nil {
+			return err
+		}
+	}
+
+	_, err := i.db.WriteString(data.String())
+	return err
 }
