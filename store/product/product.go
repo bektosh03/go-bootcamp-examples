@@ -1,10 +1,10 @@
 package product
 
 type Product struct {
-	Name  string
-	price int
+	Name          string
+	Quantity      uint64
+	Price         uint64
+	OriginalPrice uint64
 }
 
-func (p Product) Price() int {
-	return p.price
-}
+type List []Product
