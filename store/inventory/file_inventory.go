@@ -33,6 +33,8 @@ func (i *FileInventory) Close() error {
 	return i.db.Close()
 }
 
+
+
 func (i *FileInventory) FindProduct(name string) (product.Product, bool) {
 	for _, p := range i.products {
 		if p.Name == name {
