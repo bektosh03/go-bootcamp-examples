@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	
 	i, err := inventory.NewFileInventory("data/inventory.txt")
 	if err != nil {
 		panic(err)
@@ -26,7 +25,6 @@ func main() {
 		}
 		json.NewEncoder(w).Encode(mmm)
 	})
-
 
 	http.ListenAndServe(":8080",nil)
 }
