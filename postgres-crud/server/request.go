@@ -1,7 +1,10 @@
 package server
 
+type CreateAuthorRequest struct {
+	Name string `json:"name"`
+}
+
 type CreateBookRequest struct {
-	ID       string `json:"id"`
 	Title    string `json:"title"`
 	AuthorID string `json:"author_id"`
 }

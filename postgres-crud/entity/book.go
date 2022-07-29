@@ -6,14 +6,14 @@ import (
 
 type Book struct {
 	ID     string
-	Name   string
+	Title  string
 	Author Author
 }
 
 func NewBook(title string, author Author) Book {
 	return Book{
 		ID:     uuid.NewString(),
-		Name:   title,
+		Title:  title,
 		Author: author,
 	}
 }
