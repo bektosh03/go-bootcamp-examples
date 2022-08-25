@@ -8,7 +8,7 @@ definitions:
     properties:
       author_id:
         example: 931bf3fe-1c11-4f55-962f-2d54bba78e28
-        type: string
+      type: string
     type: object
   server.CreateBookRequest:
     properties:

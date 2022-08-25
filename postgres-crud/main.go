@@ -4,13 +4,10 @@ import (
 	"net"
 	"postgres-gin-crud/config"
 	"postgres-gin-crud/postgres"
+	"postgres-gin-crud/router"
 	"postgres-gin-crud/server"
 
 	_ "postgres-gin-crud/docs"
-
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title           Postgres Crud API
@@ -32,12 +29,7 @@ func main() {
 
 	s := server.New(postgres.NewRepo(db))
 
-	r := gin.Default()
-
-	r.POST("/book", s.CreateBook)
-	r.POST("/author", s.CreateAuthor)
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r := router.InitRouter(s)
 
 	r.Run(net.JoinHostPort(cfg.Host, cfg.Port))
 }

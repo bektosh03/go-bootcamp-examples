@@ -103,7 +103,10 @@
             "properties": {
                 "author_id": {
                     "type": "string",
-                    "example": "931bf3fe-1c11-4f55-962f-2d54bba78e28"
+                    "examples": [
+                        "931bf3fe-1c11-4f55-962f-2d54bba78e28",
+                        "931bf3fe-1c11-4f55-962f-2d54bba78e28"
+                    ]
                 }
             }
         },
