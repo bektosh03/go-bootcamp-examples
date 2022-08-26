@@ -1,11 +1,44 @@
 package subject
 
-import "github.com/google/uuid"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/google/uuid"
+)
+
+var (
+	// ErrInvalidSubjectData indicates that data passed to create Subject instance was invalid
+	ErrInvalidSubjectData = errors.New("invalid subject data")
+)
 
 // Subject represents domain object that holds required info for a subject
 // All core business logic relevant to subjects should be done through this struct
 type Subject struct {
-	ID          uuid.UUID
-	Name        string
-	Description string
+	id          uuid.UUID
+	name        string
+	description string
+}
+
+func (s Subject) ID() uuid.UUID {
+	return s.id
+}
+
+func (s Subject) Name() string {
+	return s.name
+}
+
+func (s Subject) Description() string {
+	return s.description
+}
+
+func (s Subject) validate() error {
+	if s.name == "" {
+		return fmt.Errorf("%w: name is empty", ErrInvalidSubjectData)
+	}
+	if s.description == "" {
+		return fmt.Errorf("%w: description is empty", ErrInvalidSubjectData)
+	}
+
+	return nil
 }

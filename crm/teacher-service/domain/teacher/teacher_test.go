@@ -114,6 +114,6 @@ var (
 
 type testIDGenerator struct{}
 
-func (g testIDGenerator) GenerateID() uuid.UUID {
+func (g testIDGenerator) GenerateUUID() uuid.UUID {
 	return testTeacherID
 }
