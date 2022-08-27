@@ -3,7 +3,7 @@ package config
 // Config defines configuration values needed for the entire service
 type Config struct {
 	Host string
-	Port int
+	Port string
 	PostgresConfig
 }
 
