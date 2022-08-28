@@ -1,0 +1,43 @@
+package main
+
+import (
+	"net"
+	"teacher-service/config"
+	"teacher-service/domain/subject"
+	"teacher-service/domain/teacher"
+	"teacher-service/pkg/id"
+	"teacher-service/repository"
+	"teacher-service/server"
+	"teacher-service/service"
+
+	"github.com/bektosh03/crmprotos/teacherpb"
+	"google.golang.org/grpc"
+)
+
+func main() {
+	cfg := config.Config{}
+
+	repo, err := repository.NewPostgres(cfg.PostgresConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	subjectFactory := subject.NewFactory(id.Generator{})
+	teacherFactory := teacher.NewFactory(id.Generator{})
+
+	svc := service.New(repo, subjectFactory, teacherFactory)
+
+	server := server.New(svc, subjectFactory, teacherFactory)
+
+	lis, err := net.Listen("tcp", net.JoinHostPort(cfg.Host, cfg.Port))
+	if err != nil {
+		panic(err)
+	}
+
+	grpcServer := grpc.NewServer()
+	teacherpb.RegisterTeacherServiceServer(grpcServer, server)
+
+	if err := grpcServer.Serve(lis); err != nil {
+		panic(err)
+	}
+}
