@@ -7,8 +7,11 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/joho/godotenv v1.3.0
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.0
 	github.com/stretchr/testify v1.7.0
+	google.golang.org/grpc v1.49.0
 )
 
 require (
@@ -22,7 +25,6 @@ require (
 	golang.org/x/sys v0.0.0-20220317061510-51cd9980dadf // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106 // indirect
-	google.golang.org/grpc v1.49.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

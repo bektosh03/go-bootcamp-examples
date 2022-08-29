@@ -64,3 +64,28 @@ func (t Teacher) validate() error {
 
 	return nil
 }
+
+type UnmarshalTeacherArgs struct {
+	ID          uuid.UUID
+	FirstName   string
+	LastName    string
+	Email       string
+	PhoneNumber string
+	SubjectID   uuid.UUID
+}
+
+func UnmarshalTeacher(args UnmarshalTeacherArgs) (Teacher, error) {
+	t := Teacher{
+		id:          args.ID,
+		firstName:   args.FirstName,
+		lastName:    args.LastName,
+		email:       args.Email,
+		phoneNumber: args.PhoneNumber,
+		subjectID:   args.SubjectID,
+	}
+	if err := t.validate(); err != nil {
+		return Teacher{}, err
+	}
+
+	return t, nil
+}

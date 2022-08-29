@@ -29,7 +29,7 @@ func connect(cfg config.PostgresConfig) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(cfg.PostgresMigrationsPath, "postgres", driver)
+	m, err := migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", cfg.PostgresMigrationsPath), "postgres", driver)
 	if err != nil {
 		return nil, err
 	}

@@ -42,3 +42,23 @@ func (s Subject) validate() error {
 
 	return nil
 }
+
+type UnmarshalSubjectArgs struct {
+	ID          uuid.UUID
+	Name        string
+	Description string
+}
+
+func UnmarshalSubject(args UnmarshalSubjectArgs) (Subject, error) {
+	s := Subject{
+		id:          args.ID,
+		name:        args.Name,
+		description: args.Description,
+	}
+
+	if err := s.validate(); err != nil {
+		return Subject{}, err
+	}
+
+	return s, nil
+}
