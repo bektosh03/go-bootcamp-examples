@@ -15,7 +15,10 @@ import (
 )
 
 func main() {
-	cfg := config.Config{}
+	cfg, err := config.Load()
+	if err != nil {
+		panic(err)
+	}
 
 	repo, err := repository.NewPostgres(cfg.PostgresConfig)
 	if err != nil {
@@ -26,7 +29,6 @@ func main() {
 	teacherFactory := teacher.NewFactory(id.Generator{})
 
 	svc := service.New(repo, subjectFactory, teacherFactory)
-
 	server := server.New(svc, subjectFactory, teacherFactory)
 
 	lis, err := net.Listen("tcp", net.JoinHostPort(cfg.Host, cfg.Port))
