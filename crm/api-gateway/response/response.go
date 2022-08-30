@@ -1,4 +1,4 @@
-package main
+package response
 
 type Teacher struct {
 	ID          string `json:"id"`
@@ -10,7 +10,7 @@ type Teacher struct {
 }
 
 type Subject struct {
-	ID          string `json:"id,omitempty"`
-	Name        string `json:"name,omitempty"`
-	Description string `json:"description,omitempty"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }

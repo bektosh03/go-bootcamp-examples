@@ -1,4 +1,4 @@
-package main
+package request
 
 type RegisterTeacherRequest struct {
 	FirstName   string `json:"first_name"`

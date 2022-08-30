@@ -1,6 +1,8 @@
-package main
+package handler
 
 import (
+	"api-gateway/request"
+	"api-gateway/service"
 	"context"
 	"net/http"
 
@@ -8,23 +10,23 @@ import (
 	"github.com/go-chi/render"
 )
 
-func NewHandler(services Services) Handler {
+func New(svc service.Service) Handler {
 	return Handler{
-		services: services,
+		service: svc,
 	}
 }
 
 type Handler struct {
-	services Services
+	service service.Service
 }
 
 func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
-	var request CreateSubjectRequest
-	if err := render.DecodeJSON(r.Body, &request); err != nil {
+	var req request.CreateSubjectRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
 		panic(err)
 	}
 
-	subject, err := h.services.TeacherService.CreateSubject(context.Background(), request)
+	subject, err := h.service.Teacher.CreateSubject(context.Background(), req)
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +37,7 @@ func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 func (h Handler) GetSubject(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
-	subject, err := h.services.TeacherService.GetSubject(context.Background(), id)
+	subject, err := h.service.Teacher.GetSubject(context.Background(), id)
 	if err != nil {
 		panic(err)
 	}
@@ -44,28 +46,26 @@ func (h Handler) GetSubject(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
-	var request RegisterTeacherRequest
-	if err := render.DecodeJSON(r.Body, &request); err != nil {
+	var req request.RegisterTeacherRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
 		panic(err)
 	}
 
-	teacher, err := h.services.TeacherService.RegisterTeacher(context.Background(), request)
+	teacher, err := h.service.Teacher.RegisterTeacher(context.Background(), req)
 	if err != nil {
 		panic(err)
 	}
 
-	// STEP 3 - compose (add) data from services to single response
 	render.JSON(w, r, teacher)
 }
 
 func (h Handler) GetTeacher(w http.ResponseWriter, r *http.Request) {
 	teacherID := chi.URLParam(r, "id")
 
-	teacher, err := h.services.TeacherService.GetTeacher(context.Background(), teacherID)
+	teacher, err := h.service.Teacher.GetTeacher(context.Background(), teacherID)
 	if err != nil {
 		panic(err)
 	}
 
-	// STEP 3 - compose (add) data from services to single response
 	render.JSON(w, r, teacher)
 }
