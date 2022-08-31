@@ -12,6 +12,7 @@ import (
 	"api-gateway/service"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 )
 
 const TeacherServiceURL = "localhost:8001"
@@ -30,6 +31,14 @@ func main() {
 	h := handler.New(service)
 
 	r := chi.NewRouter()
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"*"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: false,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 
 	r.Post("/teacher", h.RegisterTeacher)
 	r.Get("/teacher/{id}", h.GetTeacher)
