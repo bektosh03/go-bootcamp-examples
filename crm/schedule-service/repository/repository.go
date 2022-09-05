@@ -5,12 +5,12 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/bektosh03/crmcommon/errs"
+	"github.com/bektosh03/crmcommon/postgres"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"schedule-service/domain/schedule"
-
-	"github.com/bektosh03/crmcommon/postgres"
-	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type PostgresRepository struct {
@@ -27,6 +27,44 @@ func NewPostgresRepository(cfg postgres.Config) (*PostgresRepository, error) {
 		db: db,
 	}, nil
 }
+
+//func (r *PostgresRepository) GetSpecificDateScheduleForTeacher(ctx context.Context, teacherId uuid.UUID, date time.Time) ([]schedule.Schedule, error) {
+//
+//}
+
+func (r *PostgresRepository) GetFullScheduleForTeacher(ctx context.Context, teacherId uuid.UUID) ([]schedule.Schedule, error) {
+	schedules, err := r.getFullScheduleForTeacher(ctx, teacherId)
+	if err != nil {
+		return nil, err
+	}
+
+	return convertListToDomainSchedules(schedules)
+}
+
+func (r *PostgresRepository) getFullScheduleForTeacher(ctx context.Context, teacherId uuid.UUID) ([]Schedule, error) {
+	query := `
+	SELECT * FROM schedules WHERE teacher_id = $1`
+
+	schedules := make([]Schedule, 0)
+	if err := r.db.SelectContext(ctx, &schedules, query, teacherId); err != nil {
+		return nil, err
+	}
+	return schedules, nil
+}
+
+func (r *PostgresRepository) GetSpecificDateScheduleForGroup(ctx context.Context, groupId uuid.UUID, date time.Weekday) ([]schedule.Schedule, error) {
+	return nil, nil
+}
+
+//func (r *PostgresRepository) getSpecificDateScheduleForGroup(ctx context.Context, groupId uuid.UUID, date time.Weekday) ([]Schedule, error) {
+//	query := `SELECT * FROM schedules WHERE group_id = $1 and weekday = $2`
+//
+//	schedules := make([]Schedule, 0)
+//	if err := r.db.SelectContext(ctx, &schedules, query, groupId, date); err != nil {
+//		return nil, err
+//	}
+//	return schedules, nil
+//}
 
 func (r *PostgresRepository) GetFullScheduleForGroup(ctx context.Context, groupId uuid.UUID) ([]schedule.Schedule, error) {
 	schedules, err := r.getFullScheduleForGroup(ctx, groupId)
@@ -47,16 +85,16 @@ func (r *PostgresRepository) getFullScheduleForGroup(ctx context.Context, groupI
 	return schedules, nil
 }
 
-func (r *PostgresRepository) DeleteSchedule(ctx context.Context, id uuid.UUID) error {
-	return r.deleteSchedule(ctx, id)
+func (r *PostgresRepository) DeleteSchedule(ctx context.Context, scheduleId uuid.UUID) error {
+	return r.deleteSchedule(ctx, scheduleId)
 }
 
-func (r *PostgresRepository) deleteSchedule(ctx context.Context, id uuid.UUID) error {
+func (r *PostgresRepository) deleteSchedule(ctx context.Context, scheduleId uuid.UUID) error {
 	query := `
 	DELETE FROM schedules WHERE id = $1
 `
 
-	_, err := r.db.ExecContext(ctx, query, id)
+	_, err := r.db.ExecContext(ctx, query, scheduleId)
 
 	return err
 }
@@ -74,8 +112,8 @@ func (r *PostgresRepository) updateSchedule(ctx context.Context, sch schedule.Sc
 	return err
 }
 
-func (r *PostgresRepository) GetSchedule(ctx context.Context, id uuid.UUID) (schedule.Schedule, error) {
-	sch, err := r.getSchedule(ctx, id)
+func (r *PostgresRepository) GetSchedule(ctx context.Context, scheduleId uuid.UUID) (schedule.Schedule, error) {
+	sch, err := r.getSchedule(ctx, scheduleId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return schedule.Schedule{}, errs.ErrNotFound
@@ -86,12 +124,12 @@ func (r *PostgresRepository) GetSchedule(ctx context.Context, id uuid.UUID) (sch
 	return schedule.UnmarshalSchedule(schedule.UnmarshalArgs(sch))
 }
 
-func (r *PostgresRepository) getSchedule(ctx context.Context, id uuid.UUID) (Schedule, error) {
+func (r *PostgresRepository) getSchedule(ctx context.Context, scheduleId uuid.UUID) (Schedule, error) {
 	query := `
 	SELECT * FROM schedules WHERE id = $1
 `
 	var sch Schedule
-	if err := r.db.GetContext(ctx, &sch, query, id); err != nil {
+	if err := r.db.GetContext(ctx, &sch, query, scheduleId); err != nil {
 		return Schedule{}, err
 	}
 
