@@ -5,40 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/go.imports.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/student-service.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clear" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/group/factory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/group/group.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/group/group_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/student/factory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/student/student.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/student/student_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/connect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/converts.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/group.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/migrations/001_create_tables.down.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/migrations/001_create_tables.up.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/postgres.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/postgres_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repository/student.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/converts.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../schedule-service/repository/converters.go" beforeDir="false" afterPath="$PROJECT_DIR$/../schedule-service/repository/converters.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../schedule-service/repository/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../schedule-service/repository/repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../schedule-service/server/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/../schedule-service/server/grpc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../teacher-service/repository/postgres_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../teacher-service/repository/postgres_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

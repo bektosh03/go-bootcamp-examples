@@ -27,6 +27,19 @@ func New(svc service.Service) Server {
 	}
 }
 
+func (s Server) GetFullScheduleForTeacher(ctx context.Context, req *schedulepb.GetFullScheduleForTeacherRequest) (*schedulepb.ScheduleList, error) {
+	teacherId, err := uuid.Parse(req.GetTeacherId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "teacher id is not uuid")
+	}
+	schedules, err := s.svc.GetFullScheduleForTeacher(ctx, teacherId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoScheduleList(schedules), nil
+}
+
 func (s Server) GetFullScheduleForGroup(ctx context.Context, req *schedulepb.GetFullScheduleForGroupRequest) (*schedulepb.ScheduleList, error) {
 	groupId, err := uuid.Parse(req.GetGroupId())
 	if err != nil {
