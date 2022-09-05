@@ -29,22 +29,22 @@ func NewPostgresRepository(cfg postgres.Config) (*PostgresRepository, error) {
 }
 
 func (r *PostgresRepository) GetFullScheduleForGroup(ctx context.Context, groupId uuid.UUID) ([]schedule.Schedule, error) {
-	list, err := r.getFullScheduleForGroup(ctx, groupId)
+	schedules, err := r.getFullScheduleForGroup(ctx, groupId)
 	if err != nil {
 		return nil, err
 	}
 
-	return convertListToDomainSchedules(list)
+	return convertListToDomainSchedules(schedules)
 }
 
 func (r *PostgresRepository) getFullScheduleForGroup(ctx context.Context, groupId uuid.UUID) ([]Schedule, error) {
 	query := `SELECT * FROM schedules WHERE group_id = $1`
 
-	list := make([]Schedule, 0)
-	if err := r.db.SelectContext(ctx, &list, query, groupId); err != nil {
+	schedules := make([]Schedule, 0)
+	if err := r.db.SelectContext(ctx, &schedules, query, groupId); err != nil {
 		return nil, err
 	}
-	return list, nil
+	return schedules, nil
 }
 
 func (r *PostgresRepository) DeleteSchedule(ctx context.Context, id uuid.UUID) error {

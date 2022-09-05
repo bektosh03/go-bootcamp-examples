@@ -19,7 +19,7 @@ var testPostgresCfg = config.PostgresConfig{
 	PostgresUser:           "postgres",
 	PostgresPassword:       "1234",
 	PostgresDB:             "crm_test",
-	PostgresMigrationsPath: "file:///home/bektosh/go-bootcamp/examples/crm/teacher-service/repository/migrations/",
+	PostgresMigrationsPath: "migrations",
 }
 
 func TestPostgres_CreateSubject(t *testing.T) {
@@ -31,7 +31,7 @@ func TestPostgres_CreateSubject(t *testing.T) {
 	subjectFactory := subject.NewFactory(id.Generator{})
 	teacherFactory := teacher.NewFactory(id.Generator{})
 
-	t.Run("create subject", func(t *testing.T) {
+	t.Run("test for create subject", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
 		s, err := subjectFactory.NewSubject(
 			"Math",
@@ -42,7 +42,7 @@ func TestPostgres_CreateSubject(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("create teacher", func(t *testing.T) {
+	t.Run("test for create teacher", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
 		s, err := subjectFactory.NewSubject(
 			"Math",

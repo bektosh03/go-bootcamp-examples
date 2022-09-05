@@ -33,12 +33,12 @@ func (s Server) GetFullScheduleForGroup(ctx context.Context, req *schedulepb.Get
 		return nil, status.Error(codes.InvalidArgument, "group id is not uuid")
 	}
 
-	list, err := s.svc.GetFullScheduleForGroup(ctx, groupId)
+	schedules, err := s.svc.GetFullScheduleForGroup(ctx, groupId)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return toProtoScheduleList(list), nil
+	return toProtoScheduleList(schedules), nil
 }
 
 func (s Server) DeleteSchedule(ctx context.Context, req *schedulepb.DeleteScheduleRequest) (*emptypb.Empty, error) {

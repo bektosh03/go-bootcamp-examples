@@ -2,9 +2,9 @@ package repository
 
 import "schedule-service/domain/schedule"
 
-func convertListToDomainSchedules(list []Schedule) ([]schedule.Schedule, error) {
-	schs := make([]schedule.Schedule, 0, len(list))
-	for _, item := range list {
+func convertListToDomainSchedules(schedules []Schedule) ([]schedule.Schedule, error) {
+	schs := make([]schedule.Schedule, 0, len(schedules))
+	for _, item := range schedules {
 		sch, err := schedule.UnmarshalSchedule(schedule.UnmarshalArgs(item))
 		if err != nil {
 			return nil, err
