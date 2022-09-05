@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/bektosh03/crmcommon/postgres"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -9,17 +10,7 @@ import (
 type Config struct {
 	Host string `envconfig:"host" required:"true"`
 	Port string `envconfig:"port" required:"true"`
-	PostgresConfig
-}
-
-// PostgresConfig defines variables needed for postgres
-type PostgresConfig struct {
-	PostgresHost           string `envconfig:"POSTGRES_HOST" required:"true"`
-	PostgresPort           string `envconfig:"POSTGRES_PORT" required:"true"`
-	PostgresUser           string `envconfig:"POSTGRES_USER" required:"true"`
-	PostgresPassword       string `envconfig:"POSTGRES_PASSWORD" required:"true"`
-	PostgresDB             string `envconfig:"POSTGRES_DB" required:"true"`
-	PostgresMigrationsPath string `envconfig:"POSTGRES_MIGRATIONS_PATH" required:"true"`
+	postgres.Config
 }
 
 func Load() (Config, error) {
