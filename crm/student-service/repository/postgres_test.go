@@ -18,7 +18,7 @@ func TestPostgres(t *testing.T) {
 		PostgresPort:           "5432",
 		PostgresUser:           "pulat",
 		PostgresPassword:       "9",
-		PostgresDB:             "test_schedule_db",
+		PostgresDB:             "studentdb",
 		PostgresMigrationsPath: "migrations",
 	}
 	p, err := NewPostgres(cfg)
@@ -42,7 +42,6 @@ func TestPostgres(t *testing.T) {
 
 		got, err := p.GetGroup(context.Background(), g.ID())
 		require.NoError(t, err)
-
 		assert.Equal(t, g, got)
 	})
 }
