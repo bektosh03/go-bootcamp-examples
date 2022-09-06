@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bektosh03/crmcommon/errs"
+	"github.com/bektosh03/crmcommon/postgres"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"log"
-	"student-service/config"
 	"student-service/domain/group"
 	"student-service/domain/student"
 )
@@ -19,8 +19,8 @@ const (
 	groupsTableName   = "groups"
 )
 
-func NewPostgres(cfg config.PostgresConfig) (*Postgres, error) {
-	db, err := connect(cfg)
+func NewPostgres(cfg postgres.Config) (*Postgres, error) {
+	db, err := postgres.Connect(cfg)
 	if err != nil {
 		return nil, err
 	}

@@ -21,7 +21,7 @@ func main() {
 		log.Fatalln("error with loading config: ", err)
 	}
 
-	repo, err := repository.NewPostgres(cfg.PostgresConfig)
+	repo, err := repository.NewPostgres(cfg.Config)
 	if err != nil {
 		panic(err)
 	}
