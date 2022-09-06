@@ -22,9 +22,10 @@ type Server struct {
 	scheduleFactory schedule.Factory
 }
 
-func New(svc service.Service) Server {
+func New(svc service.Service, fac schedule.Factory) Server {
 	return Server{
 		svc: svc,
+		scheduleFactory: fac,
 	}
 }
 

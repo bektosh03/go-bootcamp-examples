@@ -12,6 +12,12 @@ type Service struct {
 	repo Repository
 }
 
+func New(repo Repository) Service {
+	return Service{
+		repo: repo,
+	}
+}
+
 func (s Service) CreateSchedule(ctx context.Context, sch schedule.Schedule) error {
 	return s.repo.CreateSchedule(ctx, sch)
 }
