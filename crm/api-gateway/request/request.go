@@ -3,12 +3,12 @@ package request
 import "time"
 
 
-type CreateScheduleRequest struct{
-	GroupID string
-	SubjectID string
-	TeacherID string
-	WeekDay time.Weekday
-	LessonNumber int32
+type CreateScheduleRequest struct {
+	GroupID      string       `json:"group_id,omitempty"`
+	SubjectID    string       `json:"subject_id,omitempty"`
+	TeacherID    string       `json:"teacher_id,omitempty"`
+	WeekDay      time.Weekday `json:"week_day,omitempty"`
+	LessonNumber int32        `json:"lesson_number,omitempty"`
 }
 
 type CreateGroupRequest struct {

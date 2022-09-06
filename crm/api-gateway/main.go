@@ -69,7 +69,7 @@ func main() {
 	r.Get("/group/{id}", h.GetGroup)
 
 	r.Post("/schedule",h.RegisterSchedule)
-	r.Get("/schedule{id}",h.GetScheduleById)
+	r.Get("/schedule/{id}",h.GetScheduleById)
 
 
 	http.ListenAndServe(":8080", r)
