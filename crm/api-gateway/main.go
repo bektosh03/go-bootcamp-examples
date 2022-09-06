@@ -18,6 +18,7 @@ import (
 const (
 	StudentServiceURL = "localhost:8002"
 	TeacherServiceURL = "localhost:8001"
+	ScheduleServiceURL = "localhost:8003"
 )
 
 func main() {
@@ -33,11 +34,18 @@ func main() {
 	if err != nil {
 		log.Panicln("failed to create new student service client:", err)
 	}
+	scheduleServiceClient, err := grpc.NewScheduleServiceClient(ctx,ScheduleServiceURL)
+	if err != nil {
+		log.Panicln("failed to create new schedule service client:",err)
+	}
+
+
 
 	teacherService := adapter.NewTeacherService(teacherServiceClient)
 	studentService := adapter.NewStudentService(studentServiceClient)
+	scheduleService := adapter.NewScheduleService(scheduleServiceClient)
 
-	service := service.New(teacherService, studentService)
+	service := service.New(teacherService, studentService,scheduleService)
 	h := handler.New(service)
 
 	r := chi.NewRouter()
@@ -59,6 +67,10 @@ func main() {
 	r.Get("/student/{id}", h.GetStudent)
 	r.Post("/group", h.CreateGroup)
 	r.Get("/group/{id}", h.GetGroup)
+
+	r.Post("/schedule",h.RegisterSchedule)
+	r.Get("/schedule{id}",h.GetScheduleById)
+
 
 	http.ListenAndServe(":8080", r)
 }

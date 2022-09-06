@@ -1,5 +1,16 @@
 package request
 
+import "time"
+
+
+type CreateScheduleRequest struct{
+	GroupID string
+	SubjectID string
+	TeacherID string
+	WeekDay time.Weekday
+	LessonNumber int32
+}
+
 type CreateGroupRequest struct {
 	Name          string `json:"name"`
 	MainTeacherID string `json:"main_teacher_id"`

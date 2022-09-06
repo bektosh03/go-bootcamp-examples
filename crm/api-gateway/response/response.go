@@ -1,5 +1,15 @@
 package response
 
+import "time"
+
+type Schedule struct {
+	ID string `json:"id"`
+	GroupId string `json:"group_id"`
+	SubjectID string `json:"subject_id"`
+	TeacherID string `json:"teacher_id"`
+	WeekDay time.Weekday `json:"week_day"`
+	LessonNumber int32 `json:"lesson_number"`
+}
 type Group struct {
 	ID            string `json:"id"`
 	Name          string `json:"name"`

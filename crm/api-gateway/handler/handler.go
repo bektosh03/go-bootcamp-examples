@@ -19,6 +19,27 @@ func New(svc service.Service) Handler {
 type Handler struct {
 	service service.Service
 }
+func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request)  {
+	var req request.CreateScheduleRequest
+	if err := render.DecodeJSON(r.Body,&req); err != nil {
+		panic(err)
+	}
+	schedule, err := h.service.Schedule.RegisterSchedule(context.Background(),req)
+	if err != nil {
+		panic(err)
+	}
+	render.JSON(w,r,schedule)
+}
+func (h Handler) GetScheduleById(w http.ResponseWriter,r *http.Request)  {
+	id := chi.URLParam(r,"id")
+
+	schedule, err := h.service.Schedule.GetSchedule(context.Background(),id)
+	if err != nil {
+		panic(err)
+	}
+	render.JSON(w,r,schedule)
+}
+
 
 func (h Handler) CreateGroup(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateGroupRequest

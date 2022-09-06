@@ -6,16 +6,23 @@ import (
 	"context"
 )
 
-func New(teacherService TeacherServiceClient, studentService StudentServiceClient) Service {
+func New(teacherService TeacherServiceClient, studentService StudentServiceClient,scheduleService ScheduleServiceClient) Service {
 	return Service{
 		Teacher: teacherService,
 		Student: studentService,
+		Schedule: scheduleService,
 	}
 }
 
 type Service struct {
 	Teacher TeacherServiceClient
 	Student StudentServiceClient
+	Schedule ScheduleServiceClient
+}
+
+type ScheduleServiceClient interface {
+	RegisterSchedule(context.Context,request.CreateScheduleRequest)(response.Schedule,error)
+	GetSchedule(context.Context,string)(response.Schedule,error)
 }
 
 type StudentServiceClient interface {
