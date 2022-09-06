@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="" />
+    <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repository/postgres_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/postgres_test.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,10 +50,12 @@
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
     "WebServerToolWindowFactoryState": "false",
+    "ask.go.tool.to.install.GoGolangCILintTaskConsumer": "true",
+    "ask.go.tool.to.install.GoImportsTaskConsumer": "true",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/home/pulat/out of go/Projects/crmPractice/go-bootcamp-examples/crm/teacher-service",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "last_opened_file_path": "/home/pulat/out of go/Projects/crmClone/go-bootcamp-examples/crm/api-gateway",
+    "settings.editor.selected.configurable": "watcher.settings"
   }
 }]]></component>
   <component name="RecentsManager">

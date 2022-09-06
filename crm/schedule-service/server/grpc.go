@@ -3,14 +3,15 @@ package server
 import (
 	"context"
 	"errors"
+	"schedule-service/domain/schedule"
+	"schedule-service/service"
+	"time"
+
 	"github.com/bektosh03/crmcommon/errs"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"schedule-service/domain/schedule"
-	"schedule-service/service"
-	"time"
 
 	"github.com/bektosh03/crmprotos/schedulepb"
 )
@@ -25,6 +26,34 @@ func New(svc service.Service) Server {
 	return Server{
 		svc: svc,
 	}
+}
+
+func (s Server) GetSpecificDateScheduleForTeacher(ctx context.Context, req *schedulepb.GetSpecificDateScheduleForTeacherRequest) (*schedulepb.ScheduleList, error) {
+	teacherId, err := uuid.Parse(req.GetTeacherId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "teacher id is not uuid")
+	}
+
+	schedules, err := s.svc.GetSpecificDateScheduleForTeacher(ctx, teacherId, req.Date.AsTime())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoScheduleList(schedules), nil
+}
+
+func (s Server) GetSpecificDateScheduleForGroup(ctx context.Context, req *schedulepb.GetSpecificDateScheduleForGroupRequest) (*schedulepb.ScheduleList, error) {
+	groupId, err := uuid.Parse(req.GetGroupId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "group id is not uuid")
+	}
+
+	schedules, err := s.svc.GetSpecificDateScheduleForGroup(ctx, groupId, req.Date.AsTime())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoScheduleList(schedules), nil
 }
 
 func (s Server) GetFullScheduleForTeacher(ctx context.Context, req *schedulepb.GetFullScheduleForTeacherRequest) (*schedulepb.ScheduleList, error) {

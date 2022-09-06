@@ -2,8 +2,10 @@ package service
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"schedule-service/domain/schedule"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type Service struct {
@@ -32,4 +34,12 @@ func (s Service) GetFullScheduleForGroup(ctx context.Context, groupId uuid.UUID)
 
 func (s Service) GetFullScheduleForTeacher(ctx context.Context, teacherId uuid.UUID) ([]schedule.Schedule, error) {
 	return s.repo.GetFullScheduleForTeacher(ctx, teacherId)
+}
+
+func (s Service) GetSpecificDateScheduleForTeacher(ctx context.Context, teacherID uuid.UUID, date time.Time) ([]schedule.Schedule, error) {
+	return s.repo.GetScheduleForTeacher(ctx, teacherID, date.Weekday())
+}
+
+func (s Service) GetSpecificDateScheduleForGroup(ctx context.Context, groupID uuid.UUID, date time.Time) ([]schedule.Schedule, error) {
+	return s.repo.GetScheduleForGroup(ctx, groupID, date.Weekday())
 }
