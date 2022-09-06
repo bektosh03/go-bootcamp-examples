@@ -9,12 +9,13 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/lib/pq v1.10.0
+	github.com/lib/pq v1.10.6
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.49.0
 )
 
 require (
+	github.com/bektosh03/crmcommon v0.1.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
