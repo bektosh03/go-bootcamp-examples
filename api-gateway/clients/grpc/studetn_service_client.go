@@ -2,13 +2,12 @@ package grpc
 
 import (
 	"context"
-
-	"github.com/bektosh03/crmprotos/teacherpb"
+	"github.com/bektosh03/crmprotos/studentpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewTeacherServiceClient(ctx context.Context, url string) (teacherpb.TeacherServiceClient, error) {
+func NewStudentServiceClient(ctx context.Context, url string) (studentpb.StudentServiceClient, error) {
 	conn, err := grpc.DialContext(
 		ctx, url,
 		grpc.WithBlock(),
@@ -18,5 +17,5 @@ func NewTeacherServiceClient(ctx context.Context, url string) (teacherpb.Teacher
 		return nil, err
 	}
 
-	return teacherpb.NewTeacherServiceClient(conn), nil
+	return studentpb.NewStudentServiceClient(conn), nil
 }
