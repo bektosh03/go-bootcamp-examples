@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"teacher-service/config"
 	"teacher-service/domain/subject"
 	"teacher-service/domain/teacher"
-	"teacher-service/pkg/errs"
 
+	"github.com/bektosh03/crmcommon/errs"
+	"github.com/bektosh03/crmcommon/postgres"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
@@ -19,8 +19,8 @@ const (
 	subjectsTableName = "subjects"
 )
 
-func NewPostgres(cfg config.PostgresConfig) (*Postgres, error) {
-	db, err := connect(cfg)
+func NewPostgres(cfg postgres.Config) (*Postgres, error) {
+	db, err := postgres.Connect(cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -52,6 +52,7 @@ func (p *Postgres) createTeacher(ctx context.Context, t Teacher) error {
 	return err
 }
 
+// CreateSubject ...
 func (p *Postgres) CreateSubject(ctx context.Context, s subject.Subject) error {
 	return p.createSubject(ctx, toRepositorySubject(s))
 }
@@ -68,6 +69,7 @@ func (p *Postgres) createSubject(ctx context.Context, s Subject) error {
 	return err
 }
 
+// GetTeacher ...
 func (p *Postgres) GetTeacher(ctx context.Context, id uuid.UUID) (teacher.Teacher, error) {
 	t, err := p.getTeacher(ctx, id)
 	if err != nil {
@@ -92,6 +94,7 @@ func (p *Postgres) getTeacher(ctx context.Context, id uuid.UUID) (Teacher, error
 	return t, nil
 }
 
+// GetSubject ...
 func (p *Postgres) GetSubject(ctx context.Context, id uuid.UUID) (subject.Subject, error) {
 	s, err := p.getSubject(ctx, id)
 	if err != nil {
@@ -116,6 +119,7 @@ func (p *Postgres) getSubject(ctx context.Context, id uuid.UUID) (Subject, error
 	return s, nil
 }
 
+// UpdateTeacher ...
 func (p *Postgres) UpdateTeacher(ctx context.Context, t teacher.Teacher) error {
 	return p.updateTeacher(ctx, toRepositoryTeacher(t))
 }
@@ -134,6 +138,7 @@ func (p *Postgres) updateTeacher(ctx context.Context, t Teacher) error {
 	return err
 }
 
+// UpdateSubject ...
 func (p *Postgres) UpdateSubject(ctx context.Context, s subject.Subject) error {
 	return p.updateSubject(ctx, toRepositorySubject(s))
 }
@@ -149,6 +154,7 @@ func (p *Postgres) updateSubject(ctx context.Context, s Subject) error {
 	return err
 }
 
+// DeleteTeacher ...
 func (p *Postgres) DeleteTeacher(ctx context.Context, id uuid.UUID) error {
 	return p.deleteTeacher(ctx, id)
 }
@@ -163,6 +169,7 @@ func (p *Postgres) deleteTeacher(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// DeleteSubject ...
 func (p *Postgres) DeleteSubject(ctx context.Context, id uuid.UUID) error {
 	return p.deleteSubject(ctx, id)
 }
@@ -177,6 +184,7 @@ func (p *Postgres) deleteSubject(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// ListTeachers ...
 func (p *Postgres) ListTeachers(ctx context.Context, page, limit int32) ([]teacher.Teacher, int, error) {
 	repoTeachers, count, err := p.listTeachers(ctx, page, limit)
 	if err != nil {
@@ -210,6 +218,7 @@ func (p *Postgres) listTeachers(ctx context.Context, page, limit int32) ([]Teach
 	return teachers, count, nil
 }
 
+// ListSubjects ...
 func (p *Postgres) ListSubjects(ctx context.Context, page, limit int32) ([]subject.Subject, int, error) {
 	repoSubjects, count, err := p.listSubjects(ctx, page, limit)
 	if err != nil {
@@ -243,6 +252,7 @@ func (p *Postgres) listSubjects(ctx context.Context, page, limit int32) ([]Subje
 	return subjects, count, nil
 }
 
+// count 000 
 func (p *Postgres) count(ctx context.Context, table string) (int, error) {
 	query := fmt.Sprintf("SELECT COUNT(*) FROM %s", table)
 
@@ -254,6 +264,7 @@ func (p *Postgres) count(ctx context.Context, table string) (int, error) {
 	return count, nil
 }
 
+// Cleanup 000
 func (p *Postgres) Cleanup(ctx context.Context) error {
 	query := `
 	DELETE FROM teachers

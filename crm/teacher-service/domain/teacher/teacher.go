@@ -24,6 +24,7 @@ type Teacher struct {
 	subjectID   uuid.UUID
 }
 
+// Getters ...
 func (t Teacher) ID() uuid.UUID {
 	return t.id
 }
@@ -47,6 +48,32 @@ func (t Teacher) PhoneNumber() string {
 func (t Teacher) SubjectID() uuid.UUID {
 	return t.subjectID
 }
+
+// Setters ...
+func (t *Teacher) SetFirstName(fn string) error {
+	t.firstName = fn
+	return t.validate()
+}
+
+func (t *Teacher) SetLastName(ln string) error {
+	t.lastName = ln
+	return t.validate()
+}
+
+func (t *Teacher) SetEmail(email string) error {
+	t.email = email
+	return t.validate()
+}
+
+func (t *Teacher) SetPhoneNUmber(phone string) error {
+	t.phoneNumber= phone
+	return t.validate()
+}
+
+func (t *Teacher) SetSubjectID(id uuid.UUID)  {
+	t.subjectID = id
+}
+
 
 func (t Teacher) validate() error {
 	if t.firstName == "" {

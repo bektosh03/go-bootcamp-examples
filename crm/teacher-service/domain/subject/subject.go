@@ -20,6 +20,7 @@ type Subject struct {
 	description string
 }
 
+// Getters ...
 func (s Subject) ID() uuid.UUID {
 	return s.id
 }
@@ -30,6 +31,17 @@ func (s Subject) Name() string {
 
 func (s Subject) Description() string {
 	return s.description
+}
+
+// Setters ...
+func (s *Subject) SetName(name string) error {
+	s.name = name
+	return s.validate()
+}
+
+func (s *Subject) SetDescription(desc string) error {
+	s.description = desc
+	return s.validate()
 }
 
 func (s Subject) validate() error {
