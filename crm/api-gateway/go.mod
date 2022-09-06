@@ -1,6 +1,6 @@
 module api-gateway
 
-go 1.19
+go 1.18
 
 require (
 	github.com/bektosh03/crmprotos v0.0.0-20220827055333-9fe1934481a1

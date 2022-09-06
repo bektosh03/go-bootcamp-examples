@@ -4,7 +4,27 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="" />
+    <list default="true" id="37b8aad3-110c-4dd9-97ca-dc6f0adbd943" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/journal-service/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/cmd/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/domain/journal/factory.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/domain/journal/journal.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/protos/journal.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/connection.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/converts.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/journal.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/postgres.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/server/converts.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/server/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/service/repository.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,18 +39,12 @@
   </component>
   <component name="GOROOT" url="file:///usr/local/go" />
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/golang-migrate/migrate/v4@v4.15.2/database/postgres/postgres.go" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/main.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/server/server.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/service/repository.go" root0="FORCE_HIGHLIGHTING" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2E4KeR4RzpJw4sSiQuLh2gly5cz" />
+  <component name="ProjectId" id="2E1eoEUVfdsIXY3HVtcet7jb68l" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -49,19 +63,9 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/pulat/out of go/Projects/crmPractice/go-bootcamp-examples/crm/student-service&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+    &quot;last_opened_file_path&quot;: &quot;/Users/abdurahmonjonobiddinov/outofgo/week13/go-bootcamp-examples/crm&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/pkg" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
