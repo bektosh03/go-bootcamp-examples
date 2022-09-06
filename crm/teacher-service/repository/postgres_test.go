@@ -33,6 +33,7 @@ func TestPostgres_CreateAndGet(t *testing.T) {
 	subjectFactory := subject.NewFactory(id.Generator{})
 	teacherFactory := teacher.NewFactory(id.Generator{})
 
+
 	t.Run("create subject and get subject", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
 		s, err := subjectFactory.NewSubject(
