@@ -35,6 +35,7 @@ type Postgres struct {
 	db *sqlx.DB
 }
 
+// ListGroups ...
 func (p *Postgres) ListGroups(ctx context.Context, page, limit int32) ([]group.Group, int, error) {
 	repoGroups, count, err := p.listGroups(ctx, page, limit)
 	if err != nil {
@@ -67,6 +68,7 @@ func (p *Postgres) listGroups(ctx context.Context, page, limit int32) ([]Group, 
 	return groups, count, nil
 }
 
+// DeleteGroup ...
 func (p *Postgres) DeleteGroup(ctx context.Context, id uuid.UUID) error {
 	return p.deleteGroup(ctx, id)
 }
@@ -79,6 +81,7 @@ func (p *Postgres) deleteGroup(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// UpdateGroup ...
 func (p *Postgres) UpdateGroup(ctx context.Context, g group.Group) error {
 	return p.updateGroup(ctx, g)
 }
@@ -90,6 +93,7 @@ func (p *Postgres) updateGroup(ctx context.Context, g group.Group) error {
 	return err
 }
 
+// ListStudents ...
 func (p *Postgres) ListStudents(ctx context.Context, page, limit int32) ([]student.Student, int, error) {
 	repoStudent, count, err := p.listStudents(ctx, page, limit)
 	if err != nil {
@@ -121,6 +125,7 @@ func (p *Postgres) listStudents(ctx context.Context, page, limit int32) ([]Stude
 	return students, count, nil
 }
 
+// DeleteStudent ...
 func (p *Postgres) DeleteStudent(ctx context.Context, id uuid.UUID) error {
 	return p.deleteStudent(ctx, id)
 }
@@ -133,6 +138,7 @@ func (p *Postgres) deleteStudent(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// UpdateStudent ...
 func (p *Postgres) UpdateStudent(ctx context.Context, s student.Student) error {
 	return p.updateStudent(ctx, s)
 }
@@ -147,6 +153,7 @@ func (p *Postgres) updateStudent(ctx context.Context, s student.Student) error {
 	return err
 }
 
+// GetGroup ...
 func (p *Postgres) GetGroup(ctx context.Context, id uuid.UUID) (group.Group, error) {
 	gr, err := p.getGroup(ctx, id)
 
@@ -171,6 +178,7 @@ func (p *Postgres) getGroup(ctx context.Context, id uuid.UUID) (Group, error) {
 	return g, nil
 }
 
+// GetStudent ...
 func (p *Postgres) GetStudent(ctx context.Context, id uuid.UUID) (student.Student, error) {
 	s, err := p.getStudent(ctx, id)
 	if err != nil {
@@ -194,6 +202,7 @@ func (p *Postgres) getStudent(ctx context.Context, id uuid.UUID) (Student, error
 	return s, nil
 }
 
+// CreateStudent ...
 func (p *Postgres) CreateStudent(ctx context.Context, s student.Student) error {
 	return p.createStudent(ctx, toRepositoryStudent(s))
 }
@@ -208,6 +217,7 @@ func (p *Postgres) createStudent(ctx context.Context, s Student) error {
 	return err
 }
 
+// CreateGroup ...
 func (p *Postgres) CreateGroup(ctx context.Context, g group.Group) error {
 	return p.createGroup(ctx, toRepositoryGroup(g))
 }
@@ -218,6 +228,7 @@ func (p *Postgres) createGroup(ctx context.Context, g Group) error {
 	_, err := p.db.ExecContext(ctx, query, g.ID, g.Name, g.MainTeacherID)
 	return err
 }
+
 
 func (p *Postgres) count(ctx context.Context, table string) (int, error) {
 	query := fmt.Sprintf("select count(*) from %s", table)
