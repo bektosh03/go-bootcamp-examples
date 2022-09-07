@@ -5,6 +5,7 @@ import (
 	"api-gateway/service"
 	"context"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -19,27 +20,71 @@ func New(svc service.Service) Handler {
 type Handler struct {
 	service service.Service
 }
-func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request)  {
+
+func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateScheduleRequest
-	if err := render.DecodeJSON(r.Body,&req); err != nil {
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
 		panic(err)
 	}
-	schedule, err := h.service.Schedule.RegisterSchedule(context.Background(),req)
+	schedule, err := h.service.Schedule.RegisterSchedule(context.Background(), req)
 	if err != nil {
 		panic(err)
 	}
-	render.JSON(w,r,schedule)
+	render.JSON(w, r, schedule)
 }
-func (h Handler) GetScheduleById(w http.ResponseWriter,r *http.Request)  {
-	id := chi.URLParam(r,"id")
+func (h Handler) GetScheduleById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
 
-	schedule, err := h.service.Schedule.GetSchedule(context.Background(),id)
+	schedule, err := h.service.Schedule.GetSchedule(context.Background(), id)
 	if err != nil {
 		panic(err)
 	}
-	render.JSON(w,r,schedule)
+	render.JSON(w, r, schedule)
 }
 
+func (h Handler) ListGroups(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		panic(err)
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		panic(err)
+	}
+
+	groups, err := h.service.Student.ListGroups(context.Background(), int32(page), int32(limit))
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, groups)
+}
+
+func (h Handler) DeleteGroup(w http.ResponseWriter, r *http.Request) {
+	groupID := chi.URLParam(r, "id")
+
+	if err := h.service.Student.DeleteGroup(context.Background(), groupID); err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, render.M{
+		"ok": "deleted",
+	})
+}
+
+func (h Handler) UpdateGroup(w http.ResponseWriter, r *http.Request) {
+	var req request.Group
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		panic(err)
+	}
+
+	updatedGroup, err := h.service.Student.UpdateGroup(context.Background(), req)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, updatedGroup)
+}
 
 func (h Handler) CreateGroup(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateGroupRequest
@@ -64,6 +109,49 @@ func (h Handler) GetGroup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, group)
+}
+
+func (h Handler) ListStudents(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		panic(err)
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		panic(err)
+	}
+	students, err := h.service.Student.ListStudents(context.Background(), int32(page), int32(limit))
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, students)
+}
+
+func (h Handler) DeleteStudent(w http.ResponseWriter, r *http.Request) {
+	studentID := chi.URLParam(r, "id")
+
+	if err := h.service.Student.DeleteStudent(context.Background(), studentID); err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, render.M{
+		"ok": "deleted",
+	})
+}
+
+func (h Handler) UpdateStudent(w http.ResponseWriter, r *http.Request) {
+	var req request.Student
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		panic(err)
+	}
+
+	updatedStudent, err := h.service.Student.UpdateStudent(context.Background(), req)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, updatedStudent)
 }
 
 func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
