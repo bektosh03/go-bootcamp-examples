@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 
-	repo, err := repository.NewPostgres(cfg.PostgresConfig)
+	repo, err := repository.NewPostgres(cfg.Config)
 	if err != nil {
 		panic(err)
 	}

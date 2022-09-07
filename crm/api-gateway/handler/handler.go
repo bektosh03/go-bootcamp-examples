@@ -19,6 +19,77 @@ func New(svc service.Service) Handler {
 type Handler struct {
 	service service.Service
 }
+func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request)  {
+	var req request.CreateScheduleRequest
+	if err := render.DecodeJSON(r.Body,&req); err != nil {
+		panic(err)
+	}
+	schedule, err := h.service.Schedule.RegisterSchedule(context.Background(),req)
+	if err != nil {
+		panic(err)
+	}
+	render.JSON(w,r,schedule)
+}
+func (h Handler) GetScheduleById(w http.ResponseWriter,r *http.Request)  {
+	id := chi.URLParam(r,"id")
+
+	schedule, err := h.service.Schedule.GetSchedule(context.Background(),id)
+	if err != nil {
+		panic(err)
+	}
+	render.JSON(w,r,schedule)
+}
+
+
+func (h Handler) CreateGroup(w http.ResponseWriter, r *http.Request) {
+	var req request.CreateGroupRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		panic(err)
+	}
+
+	group, err := h.service.Student.CreateGroup(context.Background(), req)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, group)
+}
+
+func (h Handler) GetGroup(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	group, err := h.service.Student.GetGroup(context.Background(), id)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, group)
+}
+
+func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
+	var req request.RegisterStudentRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		panic(err)
+	}
+
+	student, err := h.service.Student.RegisterStudent(context.Background(), req)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, student)
+}
+
+func (h Handler) GetStudent(w http.ResponseWriter, r *http.Request) {
+	studentID := chi.URLParam(r, "id")
+
+	student, err := h.service.Student.GetStudent(context.Background(), studentID)
+	if err != nil {
+		panic(err)
+	}
+
+	render.JSON(w, r, student)
+}
 
 func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateSubjectRequest

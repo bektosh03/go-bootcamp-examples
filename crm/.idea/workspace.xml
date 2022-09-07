@@ -5,25 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="37b8aad3-110c-4dd9-97ca-dc6f0adbd943" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/journal-service/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/cmd/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/config/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/domain/journal/factory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/domain/journal/journal.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/protos/journal.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/repository/connection.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/repository/converts.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/repository/journal.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/repository/postgres.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/server/converts.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/server/server.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/service/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/journal-service/service/service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/.idea/api-gateway.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/adapter/schedule_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/adapter/student_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/clients/grpc/schedule_service_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/clients/grpc/studetn_service_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/migrations/001_create_table.down.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/journal-service/repository/migrations/001_create_table.up.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schedule-service/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/teacher-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/api/docs/swagger.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/clients/grpc/teacher_service_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/clients/grpc/teacher_service_client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api-gateway/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/handler/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/handler/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/request/request.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/request/request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/response/response.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/response/response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/cmd/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/cmd/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/repository/converts.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/repository/converts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/repository/journal.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/repository/journal.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/repository/postgres.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/repository/postgres.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/server/converts.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/server/converts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/service/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/service/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/repository/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/repository/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/repository/repository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/repository/repository_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/server/grpc.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/server/grpc.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/service/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/service/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule-service/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule-service/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/student-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/repository/connect.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/repository/postgres.go" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/repository/postgres.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/repository/postgres_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/repository/postgres_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/student-service/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/student-service/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/domain/subject/subject.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/domain/subject/subject.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/domain/teacher/teacher.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/domain/teacher/teacher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/pkg/errs/db.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/repository/connect.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/repository/postgres.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/repository/postgres.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/repository/postgres_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/repository/postgres_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher-service/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/teacher-service/server/server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

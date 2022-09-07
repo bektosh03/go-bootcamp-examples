@@ -6,14 +6,30 @@ import (
 	"context"
 )
 
-func New(teacherService TeacherServiceClient) Service {
+func New(teacherService TeacherServiceClient, studentService StudentServiceClient,scheduleService ScheduleServiceClient) Service {
 	return Service{
 		Teacher: teacherService,
+		Student: studentService,
+		Schedule: scheduleService,
 	}
 }
 
 type Service struct {
 	Teacher TeacherServiceClient
+	Student StudentServiceClient
+	Schedule ScheduleServiceClient
+}
+
+type ScheduleServiceClient interface {
+	RegisterSchedule(context.Context,request.CreateScheduleRequest)(response.Schedule,error)
+	GetSchedule(context.Context,string)(response.Schedule,error)
+}
+
+type StudentServiceClient interface {
+	RegisterStudent(context.Context, request.RegisterStudentRequest) (response.Student, error)
+	GetStudent(context.Context, string) (response.Student, error)
+	CreateGroup(context.Context, request.CreateGroupRequest) (response.Group, error)
+	GetGroup(context.Context, string) (response.Group, error)
 }
 
 type TeacherServiceClient interface {

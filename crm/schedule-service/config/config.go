@@ -8,8 +8,8 @@ import (
 
 // Config defines configuration values needed for the entire service
 type Config struct {
-	Host string `envconfig:"host" required:"true"`
-	Port string `envconfig:"port" required:"true"`
+	Host string `envconfig:"HOST" required:"true"`
+	Port string `envconfig:"PORT" required:"true"`
 	postgres.Config
 }
 
