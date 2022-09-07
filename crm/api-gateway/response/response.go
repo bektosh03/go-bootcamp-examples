@@ -1,14 +1,39 @@
 package response
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
+
+type PopulatedSchedule struct {
+	ID           string       `json:"id"`
+	Group        Group        `json:"group"`
+	Subject      Subject      `json:"subject"`
+	Teacher      Teacher      `json:"teacher"`
+	Weekday      time.Weekday `json:"week_day"`
+	LessonNumber int32        `json:"lesson_number"`
+}
+
+func (s PopulatedSchedule) MarshalJSON() ([]byte, error) {
+	m := map[string]interface{}{
+		"id":            s.ID,
+		"group":         s.Group,
+		"subject":       s.Subject,
+		"teacher":       s.Teacher,
+		"week_day":      s.Weekday.String(),
+		"lesson_number": s.LessonNumber,
+	}
+
+	return json.Marshal(m)
+}
 
 type Schedule struct {
-	ID string `json:"id"`
-	GroupId string `json:"group_id"`
-	SubjectID string `json:"subject_id"`
-	TeacherID string `json:"teacher_id"`
-	WeekDay time.Weekday `json:"week_day"`
-	LessonNumber int32 `json:"lesson_number"`
+	ID           string       `json:"id"`
+	GroupId      string       `json:"group_id"`
+	SubjectID    string       `json:"subject_id"`
+	TeacherID    string       `json:"teacher_id"`
+	WeekDay      time.Weekday `json:"week_day"`
+	LessonNumber int32        `json:"lesson_number"`
 }
 type Group struct {
 	ID            string `json:"id"`

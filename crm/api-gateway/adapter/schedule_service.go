@@ -1,12 +1,16 @@
 package adapter
 
 import (
+	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/bektosh03/crmprotos/schedulepb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type ScheduleService struct {
@@ -28,8 +32,18 @@ func (s ScheduleService) RegisterSchedule(ctx context.Context, req request.Creat
 	}
 	res, err := s.client.CreateSchedule(ctx, grpcRequest)
 	if err != nil {
+		if st, ok := status.FromError(err); ok {
+			switch st.Code() {
+			case codes.InvalidArgument:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, st.Message())
+			default:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrInternal, st.Message())
+			}
+		}
+
 		return response.Schedule{}, err
 	}
+
 	return response.Schedule{
 		ID:           res.Id,
 		GroupId:      res.GroupId,
@@ -55,4 +69,46 @@ func (s ScheduleService) GetSchedule(ctx context.Context, id string) (response.S
 		WeekDay:      time.Weekday(res.Weekday),
 		LessonNumber: res.LessonNumber,
 	}, nil
+}
+
+func (s ScheduleService) UpdateSchedule(ctx context.Context, req request.Schedule) (response.Schedule, error) {
+	res, err := s.client.UpdateSchedule(ctx, &schedulepb.Schedule{
+		Id:           req.ID,
+		GroupId:      req.GroupID,
+		SubjectId:    req.SubjectID,
+		TeacherId:    req.TeacherID,
+		Weekday:      schedulepb.Weekday(req.WeekDay),
+		LessonNumber: req.LessonNumber,
+	})
+	if err != nil {
+		return response.Schedule{}, err
+	}
+
+	return response.Schedule{
+		ID:           res.Id,
+		GroupId:      res.GroupId,
+		SubjectID:    res.SubjectId,
+		TeacherID:    res.TeacherId,
+		WeekDay:      time.Weekday(res.Weekday),
+		LessonNumber: res.LessonNumber,
+	}, nil
+}
+
+func (s ScheduleService) DeleteSchedule(ctx context.Context, id string) error {
+	_, err := s.client.DeleteSchedule(ctx, &schedulepb.DeleteScheduleRequest{
+		ScheduleId: id,
+	})
+
+	return err
+}
+
+func (s ScheduleService) GetFullScheduleForTeacher(ctx context.Context, teacherID string) ([]response.Schedule, error) {
+	res, err := s.client.GetFullScheduleForTeacher(ctx, &schedulepb.GetFullScheduleForTeacherRequest{
+		TeacherId: teacherID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoScheduleListToResponseScheduleSlice(res), nil
 }

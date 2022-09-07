@@ -8,8 +8,8 @@
     <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="" />
 =======
     <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repository/postgres_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/repository/postgres_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api-gateway/request/request.go" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/request/request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api-gateway/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/service/service.go" afterDir="false" />
     </list>
 >>>>>>> cc51c69f51074f90854af1f7b9433e1add7dd1d1
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +58,7 @@
     "ask.go.tool.to.install.GoImportsTaskConsumer": "true",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/home/pulat/out of go/Projects/crmClone/go-bootcamp-examples/crm/api-gateway",
+    "last_opened_file_path": "/home/pulat/out of go/Projects/crmPractice/go-bootcamp-examples/crm/student-service",
     "settings.editor.selected.configurable": "watcher.settings"
   }
 }]]></component>
