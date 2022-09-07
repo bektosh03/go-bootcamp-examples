@@ -64,12 +64,16 @@ func main() {
 	r.Group(func(r chi.Router) {
 		r.Post("/teacher", h.RegisterTeacher)
 		r.Get("/teacher/{id}", h.GetTeacher)
+		r.Delete("/teacher/delete/{id}", h.DeleteTeacher)
+		r.Get("/teachers", h.ListTeachers)
 	})
 
 	// subject endpoints
 	r.Group(func(r chi.Router) {
 		r.Post("/subject", h.CreateSubject)
 		r.Get("/subject/{id}", h.GetSubject)
+		r.Delete("/subject/delete/{id}", h.DeleteSubject)
+		r.Get("/subjects", h.ListSubjects)
 	})
 
 	// student endpoints

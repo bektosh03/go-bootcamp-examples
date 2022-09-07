@@ -11,6 +11,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func New(svc service.Service) Handler {
@@ -255,6 +257,7 @@ func (h Handler) GetStudent(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, student)
 }
 
+// CreateSubject creates a new subject
 func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateSubjectRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
@@ -264,23 +267,97 @@ func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 
 	subject, err := h.service.Teacher.CreateSubject(context.Background(), req)
 	if err != nil {
-		panic(err)
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, subject)
 }
 
+// GetSubject fetches subject data from database by subjectID
 func (h Handler) GetSubject(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	subject, err := h.service.Teacher.GetSubject(context.Background(), id)
 	if err != nil {
-		panic(err)
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			case codes.NotFound:
+				httperr.NotFoundErr(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
 	}
-
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, subject)
 }
 
+// DeleteSubject deletes subject by subjectID
+func (h Handler) DeleteSubject(w http.ResponseWriter, r *http.Request) {
+	subjectID := chi.URLParam(r, "id")
+
+	err := h.service.Teacher.DeleteSubject(context.Background(), subjectID)
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, render.M{
+		"ok":      true,
+		"message": "subject deleted successfully",
+	})
+}
+
+// ListSubjects fetches list of subjects from database
+func (h Handler) ListSubjects(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		httperr.BadRequest(w, r, err.Error())
+		return
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		httperr.BadRequest(w, r, err.Error())
+		return
+	}
+
+	res, err := h.service.Teacher.ListSubjects(context.Background(), int32(page), int32(limit))
+	if err != nil {
+		httperr.InternalError(w, r, err)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, res)
+}
+
+// RegisterTeacher creates a new teacher
 func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 	var req request.RegisterTeacherRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
@@ -290,19 +367,93 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 
 	teacher, err := h.service.Teacher.RegisterTeacher(context.Background(), req)
 	if err != nil {
-		panic(err)
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, teacher)
 }
 
+// GetTeacher fetches teacher's data from database by teacherID
 func (h Handler) GetTeacher(w http.ResponseWriter, r *http.Request) {
 	teacherID := chi.URLParam(r, "id")
 
 	teacher, err := h.service.Teacher.GetTeacher(context.Background(), teacherID)
 	if err != nil {
-		panic(err)
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			case codes.NotFound:
+				httperr.NotFoundErr(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, teacher)
+}
+
+// DeleteTeacher deletes teacher by ID
+func (h Handler) DeleteTeacher(w http.ResponseWriter, r *http.Request) {
+	teacherID := chi.URLParam(r, "id")
+
+	err := h.service.Teacher.DeleteTeacher(context.Background(), teacherID)
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				httperr.BadRequest(w, r, sts.Message())
+			case codes.Internal:
+				httperr.InternalError(w, r, sts.Err())
+			}
+			return
+		}
+		httperr.InternalError(w, r, err)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, render.M{
+		"ok":      true,
+		"message": "teacher deleted successfully",
+	})
+}
+
+// ListTeachers fetches list of teachers 
+func (h Handler) ListTeachers(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		httperr.BadRequest(w, r, err.Error())
+		return
+	}
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		httperr.BadRequest(w, r, err.Error())
+		return
+	}
+
+	res, err := h.service.Teacher.ListTeachers(context.Background(), int32(page), int32(limit))
+	if err != nil {
+		httperr.InternalError(w, r, err)
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, res)
 }
