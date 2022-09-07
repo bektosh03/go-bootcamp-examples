@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"api-gateway/response"
 	"api-gateway/service"
@@ -25,19 +26,24 @@ type Handler struct {
 func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateScheduleRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
+
 	schedule, err := h.service.Schedule.RegisterSchedule(context.Background(), req)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
 	render.JSON(w, r, schedule)
 }
 
 func (h Handler) UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 	var req request.Schedule
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	res, err := h.service.Schedule.UpdateSchedule(context.Background(), req)
@@ -141,7 +147,8 @@ func (h Handler) DeleteGroup(w http.ResponseWriter, r *http.Request) {
 func (h Handler) UpdateGroup(w http.ResponseWriter, r *http.Request) {
 	var req request.Group
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	updatedGroup, err := h.service.Student.UpdateGroup(context.Background(), req)
@@ -155,7 +162,8 @@ func (h Handler) UpdateGroup(w http.ResponseWriter, r *http.Request) {
 func (h Handler) CreateGroup(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateGroupRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	group, err := h.service.Student.CreateGroup(context.Background(), req)
@@ -209,7 +217,8 @@ func (h Handler) DeleteStudent(w http.ResponseWriter, r *http.Request) {
 func (h Handler) UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	var req request.Student
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	updatedStudent, err := h.service.Student.UpdateStudent(context.Background(), req)
@@ -223,7 +232,8 @@ func (h Handler) UpdateStudent(w http.ResponseWriter, r *http.Request) {
 func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
 	var req request.RegisterStudentRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	student, err := h.service.Student.RegisterStudent(context.Background(), req)
@@ -248,7 +258,8 @@ func (h Handler) GetStudent(w http.ResponseWriter, r *http.Request) {
 func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 	var req request.CreateSubjectRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	subject, err := h.service.Teacher.CreateSubject(context.Background(), req)
@@ -273,7 +284,8 @@ func (h Handler) GetSubject(w http.ResponseWriter, r *http.Request) {
 func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 	var req request.RegisterTeacherRequest
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		panic(err)
+		httperr.InvalidJSON(w, r)
+		return
 	}
 
 	teacher, err := h.service.Teacher.RegisterTeacher(context.Background(), req)
