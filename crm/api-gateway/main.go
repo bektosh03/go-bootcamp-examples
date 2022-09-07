@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/go-chi/cors"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/cors"
 
 	"api-gateway/adapter"
 	"api-gateway/clients/grpc"
@@ -13,6 +14,7 @@ import (
 	"api-gateway/service"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -56,24 +58,44 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	r.Post("/teacher", h.RegisterTeacher)
-	r.Get("/teacher/{id}", h.GetTeacher)
-	r.Post("/subject", h.CreateSubject)
-	r.Get("/subject/{id}", h.GetSubject)
+	r.Use(middleware.Logger)
 
-	r.Post("/student", h.RegisterStudent)
-	r.Get("/student/{id}", h.GetStudent)
-	r.Put("/student", h.UpdateStudent)
-	r.Delete("/student/{id}", h.DeleteStudent)
-	r.Get("/students", h.ListStudents)
-	r.Post("/group", h.CreateGroup)
-	r.Get("/group/{id}", h.GetGroup)
-	r.Put("/group", h.UpdateGroup)
-	r.Delete("/group/{id}", h.DeleteGroup)
-	r.Get("/groups", h.ListGroups)
+	// teacher endpoints
+	r.Group(func(r chi.Router) {
+		r.Post("/teacher", h.RegisterTeacher)
+		r.Get("/teacher/{id}", h.GetTeacher)
+	})
 
-	r.Post("/schedule", h.RegisterSchedule)
-	r.Get("/schedule/{id}", h.GetScheduleById)
+	// subject endpoints
+	r.Group(func(r chi.Router) {
+		r.Post("/subject", h.CreateSubject)
+		r.Get("/subject/{id}", h.GetSubject)
+	})
+
+	// student endpoints
+	r.Group(func(r chi.Router) {
+		r.Post("/student", h.RegisterStudent)
+		r.Get("/student/{id}", h.GetStudent)
+		r.Put("/student", h.UpdateStudent)
+		r.Delete("/student/{id}", h.DeleteStudent)
+		r.Get("/students", h.ListStudents)
+	})
+
+	// group endpoints
+	r.Group(func(r chi.Router) {
+		r.Post("/group", h.CreateGroup)
+		r.Get("/group/{id}", h.GetGroup)
+		r.Put("/group", h.UpdateGroup)
+		r.Delete("/group/{id}", h.DeleteGroup)
+		r.Get("/groups", h.ListGroups)
+	})
+
+	// schedule endpoints
+	r.Group(func(r chi.Router) {
+		r.Post("/schedule", h.RegisterSchedule)
+		r.Get("/schedule/{id}", h.GetScheduleById)
+		r.Get("/schedule/teacher/{id}", h.GetFullScheduleForTeacher)
+	})
 
 	http.ListenAndServe(":8080", r)
 }

@@ -3,11 +3,20 @@ package request
 import "time"
 
 type CreateScheduleRequest struct {
-	GroupID      string       `json:"group_id,omitempty"`
-	SubjectID    string       `json:"subject_id,omitempty"`
-	TeacherID    string       `json:"teacher_id,omitempty"`
-	WeekDay      time.Weekday `json:"week_day,omitempty"`
-	LessonNumber int32        `json:"lesson_number,omitempty"`
+	GroupID      string       `json:"group_id"`
+	SubjectID    string       `json:"subject_id"`
+	TeacherID    string       `json:"teacher_id"`
+	WeekDay      time.Weekday `json:"week_day"`
+	LessonNumber int32        `json:"lesson_number"`
+}
+
+type Schedule struct {
+	ID           string       `json:"id"`
+	GroupID      string       `json:"group_id"`
+	SubjectID    string       `json:"subject_id"`
+	TeacherID    string       `json:"teacher_id"`
+	WeekDay      time.Weekday `json:"week_day"`
+	LessonNumber int32        `json:"lesson_number"`
 }
 
 type Student struct {
@@ -49,6 +58,6 @@ type RegisterTeacherRequest struct {
 }
 
 type CreateSubjectRequest struct {
-	Name        string `json:"name,omitempty"`
-	Description string `json:"description,omitempty"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }

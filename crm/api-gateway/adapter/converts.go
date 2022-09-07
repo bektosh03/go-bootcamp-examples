@@ -2,6 +2,9 @@ package adapter
 
 import (
 	"api-gateway/response"
+	"time"
+
+	"github.com/bektosh03/crmprotos/schedulepb"
 	"github.com/bektosh03/crmprotos/studentpb"
 )
 
@@ -39,4 +42,20 @@ func fromProtoToResponseStudent(student *studentpb.Student) response.Student {
 		Level:       student.Level,
 		GroupID:     student.GroupId,
 	}
+}
+
+func fromProtoScheduleListToResponseScheduleSlice(list *schedulepb.ScheduleList) []response.Schedule {
+	schedules := make([]response.Schedule, 0, len(list.Schedules))
+	for _, item := range list.Schedules {
+		schedules = append(schedules, response.Schedule{
+			ID:           item.Id,
+			GroupId:      item.GroupId,
+			SubjectID:    item.SubjectId,
+			TeacherID:    item.TeacherId,
+			WeekDay:      time.Weekday(item.Weekday),
+			LessonNumber: item.LessonNumber,
+		})
+	}
+
+	return schedules
 }

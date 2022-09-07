@@ -82,9 +82,9 @@ func (t Teacher) validate() error {
 	if t.lastName == "" {
 		return fmt.Errorf("%w: empty last name", ErrInvalidTeacherData)
 	}
-	if err := validate.Email(t.email); err != nil {
-		return fmt.Errorf("%w: %v", ErrInvalidTeacherData, err)
-	}
+	// if err := validate.Email(t.email); err != nil {
+	// 	return fmt.Errorf("%w: %v", ErrInvalidTeacherData, err)
+	// }
 	if err := validate.PhoneNumber(t.phoneNumber); err != nil {
 		return fmt.Errorf("%w: %v", ErrInvalidTeacherData, err)
 	}

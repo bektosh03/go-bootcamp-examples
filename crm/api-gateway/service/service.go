@@ -23,6 +23,9 @@ type Service struct {
 type ScheduleServiceClient interface {
 	RegisterSchedule(context.Context, request.CreateScheduleRequest) (response.Schedule, error)
 	GetSchedule(context.Context, string) (response.Schedule, error)
+	UpdateSchedule(ctx context.Context, req request.Schedule) (response.Schedule, error)
+	DeleteSchedule(ctx context.Context, id string) error
+	GetFullScheduleForTeacher(ctx context.Context, teacherID string) ([]response.Schedule, error)
 }
 
 type StudentServiceClient interface {
