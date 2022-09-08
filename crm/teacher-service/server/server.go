@@ -34,12 +34,12 @@ type Server struct {
 func (s Server) RegisterTeacher(ctx context.Context, req *teacherpb.RegisterTeacherRequest) (*teacherpb.Teacher, error) {
 	tch, err := s.convertRegisterTeacherRequestToDomainTeacher(req)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	createdTeacher, err := s.service.RegisterTeacher(ctx, tch)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return toProtoTeacher(createdTeacher), nil

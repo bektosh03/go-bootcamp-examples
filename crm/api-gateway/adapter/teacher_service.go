@@ -31,14 +31,7 @@ func (a TeacherService) RegisterTeacher(ctx context.Context, req request.Registe
 		return response.Teacher{}, err
 	}
 
-	return response.Teacher{
-		ID:          res.Id,
-		FirstName:   res.FirstName,
-		LastName:    res.LastName,
-		Email:       res.Email,
-		PhoneNumber: res.PhoneNumber,
-		SubjectID:   res.SubjectId,
-	}, nil
+	return fromProtoToResponseTeacher(res), nil
 }
 
 func (a TeacherService) GetTeacher(ctx context.Context, id string) (response.Teacher, error) {
@@ -47,14 +40,30 @@ func (a TeacherService) GetTeacher(ctx context.Context, id string) (response.Tea
 		return response.Teacher{}, err
 	}
 
-	return response.Teacher{
-		ID:          res.Id,
-		FirstName:   res.FirstName,
-		LastName:    res.LastName,
-		Email:       res.Email,
-		PhoneNumber: res.PhoneNumber,
-		SubjectID:   res.SubjectId,
-	}, nil
+	return fromProtoToResponseTeacher(res), nil
+}
+
+func (a TeacherService) DeleteTeacher(ctx context.Context, id string) error {
+	_, err := a.client.DeleteTeacher(ctx, &teacherpb.DeleteTeacherRequest{
+		TeacherId: id,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a TeacherService) ListTeachers(ctx context.Context, page, limit int32) ([]response.Teacher, error) {
+	res, err := a.client.ListTeachers(ctx, &teacherpb.ListTeachersRequest{
+		Page:  page,
+		Limit: limit,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return fromProtoToTeacherList(res)
 }
 
 func (a TeacherService) CreateSubject(ctx context.Context, req request.CreateSubjectRequest) (response.Subject, error) {
@@ -69,11 +78,7 @@ func (a TeacherService) CreateSubject(ctx context.Context, req request.CreateSub
 		return response.Subject{}, err
 	}
 
-	return response.Subject{
-		ID:          res.Id,
-		Name:        res.Name,
-		Description: res.Description,
-	}, nil
+	return fromProtoToResponseSubject(res), nil
 }
 
 func (a TeacherService) GetSubject(ctx context.Context, id string) (response.Subject, error) {
@@ -84,9 +89,30 @@ func (a TeacherService) GetSubject(ctx context.Context, id string) (response.Sub
 		return response.Subject{}, err
 	}
 
-	return response.Subject{
-		ID:          res.Id,
-		Name:        res.Name,
-		Description: res.Description,
-	}, nil
+	return fromProtoToResponseSubject(res), nil
+}
+
+func (a TeacherService) DeleteSubject(ctx context.Context, id string) error {
+	_, err := a.client.DeleteSubject(ctx, &teacherpb.DeleteSubjectRequest{
+		SubjectId: id,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a TeacherService) ListSubjects(ctx context.Context, page, limit int32) ([]response.Subject, error) {
+	resp, err := a.client.ListSubjects(ctx, &teacherpb.ListSubjectsRequest{
+		Page:  page,
+		Limit: limit,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoToSubjectList(resp)
 }
