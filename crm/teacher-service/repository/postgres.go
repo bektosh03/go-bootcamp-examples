@@ -70,8 +70,8 @@ func (p *Postgres) createSubject(ctx context.Context, s Subject) error {
 }
 
 // GetTeacher ...
-func (p *Postgres) GetTeacher(ctx context.Context, id uuid.UUID) (teacher.Teacher, error) {
-	t, err := p.getTeacher(ctx, id)
+func (p *Postgres) GetTeacher(ctx context.Context, by teacher.By) (teacher.Teacher, error) {
+	t, err := p.getTeacher(ctx, by)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return teacher.Teacher{}, errs.ErrNotFound
@@ -82,12 +82,26 @@ func (p *Postgres) GetTeacher(ctx context.Context, id uuid.UUID) (teacher.Teache
 	return teacher.UnmarshalTeacher(teacher.UnmarshalTeacherArgs(t))
 }
 
-func (p *Postgres) getTeacher(ctx context.Context, id uuid.UUID) (Teacher, error) {
-	query := `
-	SELECT * FROM teachers WHERE id = $1
-	`
+func (p *Postgres) getTeacher(ctx context.Context, by teacher.By) (Teacher, error) {
+	var (
+		query string
+		arg   interface{}
+	)
+
+	switch b := by.(type) {
+	case teacher.ByID:
+		query = `SELECT * FROM teachers WHERE id = $1`
+		arg = b.ID
+	case teacher.ByEmail:
+		query = `SELECT * FROM teachers WHERE email = $1`
+		arg = b.Email
+	case teacher.ByPhoneNumber:
+		query = `SELECT * FROM teachers WHERE phone_number = $1`
+		arg = b.PhoneNumber
+	}
+
 	var t Teacher
-	if err := p.db.GetContext(ctx, &t, query, id); err != nil {
+	if err := p.db.GetContext(ctx, &t, query, arg); err != nil {
 		return Teacher{}, err
 	}
 
@@ -252,7 +266,7 @@ func (p *Postgres) listSubjects(ctx context.Context, page, limit int32) ([]Subje
 	return subjects, count, nil
 }
 
-// count 000 
+// count 000
 func (p *Postgres) count(ctx context.Context, table string) (int, error) {
 	query := fmt.Sprintf("SELECT COUNT(*) FROM %s", table)
 

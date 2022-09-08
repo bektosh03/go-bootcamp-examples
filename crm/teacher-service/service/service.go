@@ -57,8 +57,8 @@ func (s Service) UpdateSubject(ctx context.Context, sub subject.Subject) (subjec
 	return sub, nil
 }
 
-func (s Service) GetTeacher(ctx context.Context, id uuid.UUID) (teacher.Teacher, error) {
-	t, err := s.repo.GetTeacher(ctx, id)
+func (s Service) GetTeacher(ctx context.Context, by teacher.By) (teacher.Teacher, error) {
+	t, err := s.repo.GetTeacher(ctx, by)
 	if err != nil {
 		return teacher.Teacher{}, err
 	}

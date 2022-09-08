@@ -3,5 +3,5 @@ create table journal(
     schedule_id uuid not null ,
     student_id uuid not null ,
     attended bool not null ,
-    mark int not null ,
+    mark int not null 
 );

@@ -3,7 +3,7 @@ module teacher-service
 go 1.19
 
 require (
-	github.com/bektosh03/crmprotos v0.0.0-20220827055333-9fe1934481a1
+	github.com/bektosh03/crmprotos v0.0.0-20220908055640-d3e1f4214f57
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5

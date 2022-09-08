@@ -14,6 +14,6 @@ func Handle(w http.ResponseWriter, r *http.Request, err error) {
 	case errors.Is(err, ErrBadRequest):
 		BadRequest(w, r, err.Error())
 	default:
-		InternalError(w, r, err)
+		InternalError(w, r, err.Error())
 	}
 }

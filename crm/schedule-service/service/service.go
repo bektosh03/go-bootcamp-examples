@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"schedule-service/domain/schedule"
 	"time"
 
@@ -47,5 +48,7 @@ func (s Service) GetSpecificDateScheduleForTeacher(ctx context.Context, teacherI
 }
 
 func (s Service) GetSpecificDateScheduleForGroup(ctx context.Context, groupID uuid.UUID, date time.Time) ([]schedule.Schedule, error) {
+	fmt.Println("date:", date)
+	fmt.Println("weekday:", date.Weekday())
 	return s.repo.GetScheduleForGroup(ctx, groupID, date.Weekday())
 }

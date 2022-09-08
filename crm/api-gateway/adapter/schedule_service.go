@@ -11,6 +11,7 @@ import (
 	"github.com/bektosh03/crmprotos/schedulepb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type ScheduleService struct {
@@ -105,6 +106,44 @@ func (s ScheduleService) DeleteSchedule(ctx context.Context, id string) error {
 func (s ScheduleService) GetFullScheduleForTeacher(ctx context.Context, teacherID string) ([]response.Schedule, error) {
 	res, err := s.client.GetFullScheduleForTeacher(ctx, &schedulepb.GetFullScheduleForTeacherRequest{
 		TeacherId: teacherID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoScheduleListToResponseScheduleSlice(res), nil
+}
+
+func (s ScheduleService) GetFullScheduleForGroup(ctx context.Context, groupID string) ([]response.Schedule, error) {
+	res, err := s.client.GetFullScheduleForGroup(ctx, &schedulepb.GetFullScheduleForGroupRequest{
+		GroupId: groupID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoScheduleListToResponseScheduleSlice(res), nil
+}
+
+func (s ScheduleService) GetSpecificDateScheduleForTeacher(ctx context.Context, teacherID string, date time.Time) ([]response.Schedule, error) {
+	res, err := s.client.GetSpecificDateScheduleForTeacher(ctx, &schedulepb.GetSpecificDateScheduleForTeacherRequest{
+		TeacherId: teacherID,
+		Date: &timestamppb.Timestamp{
+			Seconds: date.Unix(),
+			Nanos:   int32(date.UnixNano()),
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoScheduleListToResponseScheduleSlice(res), nil
+}
+
+func (s ScheduleService) GetSpecificDateScheduleForGroup(ctx context.Context, groupID string, date time.Time) ([]response.Schedule, error) {
+	res, err := s.client.GetSpecificDateScheduleForGroup(ctx, &schedulepb.GetSpecificDateScheduleForGroupRequest{
+		GroupId: groupID,
+		Date:    &timestamppb.Timestamp{Seconds: date.Unix(), Nanos: int32(date.UnixNano())},
 	})
 	if err != nil {
 		return nil, err

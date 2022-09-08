@@ -111,6 +111,9 @@ func main() {
 		r.Post("/schedule", h.RegisterSchedule)
 		r.Get("/schedule/{id}", h.GetScheduleById)
 		r.Get("/schedule/teacher/{id}", h.GetFullScheduleForTeacher)
+		r.Get("/schedule/group/{id}", h.GetFullScheduleForGroup)
+		r.Post("/schedule/teacher", h.GetSpecificDateScheduleForTeacher)
+		r.Post("/schedule/group", h.GetSpecificDateScheduleForGroup)
 	})
 
 	http.ListenAndServe(":8080", r)

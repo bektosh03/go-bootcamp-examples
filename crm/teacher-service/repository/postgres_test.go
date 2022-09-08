@@ -33,7 +33,6 @@ func TestPostgres_CreateAndGet(t *testing.T) {
 	subjectFactory := subject.NewFactory(id.Generator{})
 	teacherFactory := teacher.NewFactory(id.Generator{})
 
-
 	t.Run("create subject and get subject", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
 		s, err := subjectFactory.NewSubject(
@@ -73,7 +72,7 @@ func TestPostgres_CreateAndGet(t *testing.T) {
 		err = p.CreateTeacher(context.Background(), tch)
 		require.NoError(t, err)
 
-		got, err := p.GetTeacher(context.Background(), tch.ID())
+		got, err := p.GetTeacher(context.Background(), teacher.ByID{ID: tch.ID()})
 		require.NoError(t, err)
 		assert.Equal(t, tch, got)
 	})
@@ -118,7 +117,7 @@ func TestPostgres_Update(t *testing.T) {
 		err = p.UpdateTeacher(context.Background(), tch)
 		require.NoError(t, err)
 
-		got, err := p.GetTeacher(context.Background(), tch.ID())
+		got, err := p.GetTeacher(context.Background(), teacher.ByID{ID: tch.ID()})
 		require.NoError(t, err)
 		assert.Equal(t, tch, got)
 	})
@@ -184,7 +183,7 @@ func TestPostgres_Delete(t *testing.T) {
 		err = p.DeleteTeacher(context.Background(), tch.ID())
 		require.NoError(t, err)
 
-		got, err := p.GetTeacher(context.Background(), tch.ID())
+		got, err := p.GetTeacher(context.Background(), teacher.ByID{ID: tch.ID()})
 		require.ErrorIs(t, err, errs.ErrNotFound)
 		assert.Equal(t, teacher.Teacher{}, got)
 	})
