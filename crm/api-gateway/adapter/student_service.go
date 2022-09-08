@@ -140,7 +140,10 @@ func (a StudentService) UpdateStudent(ctx context.Context, st request.Student) (
 
 func (a StudentService) GetStudent(ctx context.Context, id string) (response.Student, error) {
 	res, err := a.client.GetStudent(ctx, &studentpb.GetStudentRequest{
-		StudentId: id})
+		By: &studentpb.GetStudentRequest_StudentId{
+			StudentId: id,
+		},
+	})
 
 	if err != nil {
 		return response.Student{}, err

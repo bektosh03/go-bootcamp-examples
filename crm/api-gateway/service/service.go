@@ -56,7 +56,7 @@ type StudentServiceClient interface {
 
 type TeacherServiceClient interface {
 	RegisterTeacher(context.Context, request.RegisterTeacherRequest) (response.Teacher, error)
-	GetTeacher(context.Context, string) (response.Teacher, error)
+	GetTeacher(context.Context, request.GetTeacherRequest) (response.Teacher, error)
 	DeleteTeacher(context.Context, string) error
 	ListTeachers(context.Context, int32, int32) ([]response.Teacher, error)
 

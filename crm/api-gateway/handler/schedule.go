@@ -162,7 +162,7 @@ func (h Handler) populateSchedules(schedules []response.Schedule) ([]response.Po
 			return nil, err
 		}
 
-		teacher, err := h.service.Teacher.GetTeacher(context.Background(), sch.TeacherID)
+		teacher, err := h.service.Teacher.GetTeacher(context.Background(), request.GetTeacherRequest{TeacherID: sch.TeacherID})
 		if err != nil {
 			return nil, err
 		}

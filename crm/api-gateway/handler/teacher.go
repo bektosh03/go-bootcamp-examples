@@ -9,8 +9,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // RegisterTeacher creates a new teacher
@@ -23,16 +21,7 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 
 	teacher, err := h.service.Teacher.RegisterTeacher(context.Background(), req)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 
@@ -40,24 +29,17 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, teacher)
 }
 
-// GetTeacher fetches teacher's data from database by teacherID
+// GetTeacher fetches teacher's data from database by teacherID or email or phone_number
 func (h Handler) GetTeacher(w http.ResponseWriter, r *http.Request) {
-	teacherID := chi.URLParam(r, "id")
+	var req request.GetTeacherRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		httperr.InvalidJSON(w, r)
+		return
+	}
 
-	teacher, err := h.service.Teacher.GetTeacher(context.Background(), teacherID)
+	teacher, err := h.service.Teacher.GetTeacher(context.Background(), req)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			case codes.NotFound:
-				httperr.NotFoundErr(w, r, sts.Err())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 
@@ -71,16 +53,7 @@ func (h Handler) DeleteTeacher(w http.ResponseWriter, r *http.Request) {
 
 	err := h.service.Teacher.DeleteTeacher(context.Background(), teacherID)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 
@@ -106,7 +79,7 @@ func (h Handler) ListTeachers(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.service.Teacher.ListTeachers(context.Background(), int32(page), int32(limit))
 	if err != nil {
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 

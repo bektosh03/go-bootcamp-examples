@@ -75,7 +75,7 @@ func main() {
 	// teacher endpoints
 	r.Group(func(r chi.Router) {
 		r.Post("/teacher", h.RegisterTeacher)
-		r.Get("/teacher/{id}", h.GetTeacher)
+		r.Post("/teacher/by", h.GetTeacher)
 		r.Delete("/teacher/delete/{id}", h.DeleteTeacher)
 		r.Get("/teachers", h.ListTeachers)
 	})

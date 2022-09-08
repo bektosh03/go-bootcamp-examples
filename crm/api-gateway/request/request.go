@@ -122,3 +122,9 @@ type CreateSubjectRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
+
+type GetTeacherRequest struct {
+	TeacherID   string `json:"teacher_id,omitempty"`
+	Email       string `json:"email,omitempty"`
+	PhoneNumber string `json:"phone_number,omitempty"`
+}
