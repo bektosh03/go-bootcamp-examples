@@ -6,7 +6,44 @@ import (
 
 	"github.com/bektosh03/crmprotos/schedulepb"
 	"github.com/bektosh03/crmprotos/studentpb"
+	"github.com/bektosh03/crmprotos/teacherpb"
 )
+
+func fromProtoToTeacherList(teachers *teacherpb.ListTeachersResponse) ([]response.Teacher, error) {
+	tchs := make([]response.Teacher, 0, len(teachers.Teachers))
+	for _, item := range teachers.Teachers {
+		tchs = append(tchs, fromProtoToResponseTeacher(item))
+	}
+
+	return tchs, nil
+}
+
+func fromProtoToResponseTeacher(teacher *teacherpb.Teacher) response.Teacher {
+	return response.Teacher{
+		ID:          teacher.Id,
+		FirstName:   teacher.FirstName,
+		LastName:    teacher.LastName,
+		Email:       teacher.Email,
+		PhoneNumber: teacher.PhoneNumber,
+		SubjectID:   teacher.SubjectId,
+	}
+}
+
+func fromProtoToSubjectList(subjects *teacherpb.ListSubjectsResponse) ([]response.Subject, error) {
+	sbjs := make([]response.Subject, 0, len(subjects.Subjects))
+	for _, item := range subjects.Subjects {
+		sbjs = append(sbjs, fromProtoToResponseSubject(item))
+	}
+	return sbjs, nil
+}
+
+func fromProtoToResponseSubject(subject *teacherpb.Subject) response.Subject {
+	return response.Subject{
+		ID:          subject.Id,
+		Name:        subject.Name,
+		Description: subject.Description,
+	}
+}
 
 func fromProtoToResponseGroups(groups *studentpb.GroupList) ([]response.Group, error) {
 	grs := make([]response.Group, 0, len(groups.Groups))

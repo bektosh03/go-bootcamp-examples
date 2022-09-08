@@ -53,6 +53,11 @@ type StudentServiceClient interface {
 type TeacherServiceClient interface {
 	RegisterTeacher(context.Context, request.RegisterTeacherRequest) (response.Teacher, error)
 	GetTeacher(context.Context, string) (response.Teacher, error)
+	DeleteTeacher(context.Context, string) error
+	ListTeachers(context.Context, int32, int32) ([]response.Teacher, error)
+
 	CreateSubject(context.Context, request.CreateSubjectRequest) (response.Subject, error)
 	GetSubject(context.Context, string) (response.Subject, error)
+	DeleteSubject(context.Context, string) error
+	ListSubjects(context.Context, int32, int32) ([]response.Subject, error) 
 }
