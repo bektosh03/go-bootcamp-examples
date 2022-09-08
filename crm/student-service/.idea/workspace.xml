@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="" />
+=======
     <list default="true" id="57eb7f7b-8d3e-4fc5-a983-238b319689cd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../api-gateway/request/request.go" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/request/request.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../api-gateway/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../api-gateway/service/service.go" afterDir="false" />
     </list>
+>>>>>>> cc51c69f51074f90854af1f7b9433e1add7dd1d1
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="37b8aad3-110c-4dd9-97ca-dc6f0adbd943" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/api-gateway/adapter/journal_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/clients/grpc/journal_service_client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/handler/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/handler/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/request/request.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/request/request.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/response/response.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/response/response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/cmd/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/cmd/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/domain/journal/journal.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/domain/journal/journal.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/protos/journal.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/protos/journal.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/protos/journal_grpc.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/repository/postgres.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/repository/postgres.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/server/converts.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/server/converts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/service/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/service/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-service/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/journal-service/service/service.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2E1eoEUVfdsIXY3HVtcet7jb68l" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/abdurahmonjonobiddinov/outofgo/week13/go-bootcamp-examples/crm&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
