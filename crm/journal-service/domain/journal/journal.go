@@ -1,9 +1,10 @@
 package journal
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/google/uuid"
-	"github.com/pkg/errors"
 )
 
 var (
