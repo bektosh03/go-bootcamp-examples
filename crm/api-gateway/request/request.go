@@ -2,6 +2,20 @@ package request
 
 import "time"
 
+type Journal struct {
+	ID         string `json:"id"`
+	ScheduleID string `json:"schedule_id"`
+	StudentID  string `json:"subject_id"`
+	Attended   bool   `json:"attended"`
+	Mark       int32  `json:"mark"`
+}
+type CreateJournalRequest struct {
+	ScheduleID string `json:"schedule_id"`
+	StudentID  string `json:"subject_id"`
+	Attended   bool   `json:"attended"`
+	Mark       int32  `json:"mark"`
+}
+
 type CreateScheduleRequest struct {
 	GroupID      string       `json:"group_id"`
 	SubjectID    string       `json:"subject_id"`

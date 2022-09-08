@@ -21,6 +21,7 @@ const (
 	StudentServiceURL  = "localhost:8002"
 	TeacherServiceURL  = "localhost:8001"
 	ScheduleServiceURL = "localhost:8003"
+	JournalServiceURL  = "localhost:8004"
 )
 
 func main() {
@@ -41,11 +42,16 @@ func main() {
 		log.Panicln("failed to create new schedule service client:", err)
 	}
 
+	journalServiceClient, err := grpc.NewJournalServiceClient(ctx, JournalServiceURL)
+	if err != nil {
+		log.Panicln("failed to create new journal service client:", err)
+	}
 	teacherService := adapter.NewTeacherService(teacherServiceClient)
 	studentService := adapter.NewStudentService(studentServiceClient)
 	scheduleService := adapter.NewScheduleService(scheduleServiceClient)
+	journalService := adapter.NewJournalService(journalServiceClient)
 
-	service := service.New(teacherService, studentService, scheduleService)
+	service := service.New(teacherService, studentService, scheduleService, journalService)
 	h := handler.New(service)
 
 	r := chi.NewRouter()
@@ -60,6 +66,12 @@ func main() {
 
 	r.Use(middleware.Logger)
 
+	r.Group(func(r chi.Router) {
+		r.Post("/journal", h.RegisterJournal)
+		r.Get("/journal/{id}", h.GetJournal)
+		r.Put("/journal", h.UpdateJournal)
+		r.Delete("/journal/{id}", h.DeleteJournal)
+	})
 	// teacher endpoints
 	r.Group(func(r chi.Router) {
 		r.Post("/teacher", h.RegisterTeacher)

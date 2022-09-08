@@ -1,8 +1,8 @@
 package server
 
 import (
+	"github.com/bektosh03/crmprotos/journalpb"
 	"journal-service/domain/journal"
-	journalpb "journal-service/protos"
 )
 
 func toProtoJournal(j journal.Journal) *journalpb.Journal {

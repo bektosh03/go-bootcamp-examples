@@ -6,11 +6,12 @@ import (
 	"context"
 )
 
-func New(teacherService TeacherServiceClient, studentService StudentServiceClient, scheduleService ScheduleServiceClient) Service {
+func New(teacherService TeacherServiceClient, studentService StudentServiceClient, scheduleService ScheduleServiceClient, journalService JournalServiceClient) Service {
 	return Service{
 		Teacher:  teacherService,
 		Student:  studentService,
 		Schedule: scheduleService,
+		Journal:  journalService,
 	}
 }
 
@@ -18,6 +19,14 @@ type Service struct {
 	Teacher  TeacherServiceClient
 	Student  StudentServiceClient
 	Schedule ScheduleServiceClient
+	Journal  JournalServiceClient
+}
+
+type JournalServiceClient interface {
+	RegisterJournal(ctx context.Context, journal request.CreateJournalRequest) (response.Journal, error)
+	GetJournal(ctx context.Context, journalId string) (response.Journal, error)
+	UpdateJournal(ctx context.Context, journal request.Journal) (response.Journal, error)
+	DeleteJournal(ctx context.Context, id string) error
 }
 
 type ScheduleServiceClient interface {

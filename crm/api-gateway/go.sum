@@ -2,8 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/ajg/form v1.5.1 h1:t9c7v8JUKu/XxOGBU0yjNpaMloxGEJhUkqFRq0ibGeU=
 github.com/ajg/form v1.5.1/go.mod h1:uL1WgH+h2mgNtvBq0339dVnzXdBETtL2LeUXaIv25UY=
-github.com/bektosh03/crmprotos v0.0.0-20220831042112-fb320d08d3d4 h1:PjK+Fg88DEssr7vigSE32VIA8UVRNbSyHTToj5XiA/E=
-github.com/bektosh03/crmprotos v0.0.0-20220831042112-fb320d08d3d4/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
+github.com/bektosh03/crmprotos v0.0.0-20220907061800-041307b77675 h1:eIBy9JmczHRvIG95XCVUp8VHWSw9gwmlMvf9B+dvXaY=
+github.com/bektosh03/crmprotos v0.0.0-20220907061800-041307b77675/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=

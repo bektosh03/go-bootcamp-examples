@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/bektosh03/crmcommon/id"
+	"github.com/bektosh03/crmprotos/journalpb"
 	"google.golang.org/grpc"
 	"journal-service/config"
 	"journal-service/domain/journal"
-	journalpb "journal-service/protos"
 	"journal-service/repository"
 	"journal-service/server"
 	"journal-service/service"

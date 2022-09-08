@@ -39,3 +39,25 @@ func (j Journal) validate() error {
 	}
 	return nil
 }
+
+type UnmarshalJournalArgs struct {
+	ID         uuid.UUID
+	ScheduleID uuid.UUID
+	StudentID  uuid.UUID
+	Attended   bool
+	Mark       int32
+}
+
+func UnmarshalJournal(args UnmarshalJournalArgs) (Journal, error) {
+	j := Journal{
+		id:         args.ID,
+		scheduleId: args.ScheduleID,
+		studentId:  args.StudentID,
+		attended:   args.Attended,
+		mark:       args.Mark,
+	}
+	if err := j.validate(); err != nil {
+		return Journal{}, nil
+	}
+	return j, nil
+}

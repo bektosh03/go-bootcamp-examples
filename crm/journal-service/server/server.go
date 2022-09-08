@@ -2,11 +2,14 @@ package server
 
 import (
 	"context"
+	"errors"
+	"github.com/bektosh03/crmcommon/errs"
+	"github.com/bektosh03/crmprotos/journalpb"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"journal-service/domain/journal"
-	journalpb "journal-service/protos"
 	"journal-service/service"
 )
 
@@ -23,7 +26,7 @@ func New(svc service.Service, journalFactory journal.Factory) Server {
 	}
 }
 
-func (s Server) RegisterJournal(ctx context.Context, req *journalpb.RegisterJournalRequest) (*journalpb.Journal, error) {
+func (s Server) RegisterJournal(ctx context.Context, req *journalpb.CreateJournalRequest) (*journalpb.Journal, error) {
 	jour, err := s.convertRegisterJournalRequestToDomainJournal(req)
 	if err != nil {
 		return nil, err
@@ -33,8 +36,68 @@ func (s Server) RegisterJournal(ctx context.Context, req *journalpb.RegisterJour
 	}
 	return toProtoJournal(jour), nil
 }
+func (s Server) GetJournal(ctx context.Context, req *journalpb.GetJournalRequest) (*journalpb.Journal, error) {
+	id, err := uuid.Parse(req.JournalId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "id is not uuid")
+	}
+	jour, err := s.service.GetJournal(ctx, id)
+	if err != nil {
+		if errors.Is(err, errs.ErrNotFound) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return toProtoJournal(jour), nil
+}
+func (s Server) UpdateJournal(ctx context.Context, req *journalpb.Journal) (*journalpb.Journal, error) {
+	jour, err := s.convertUpdateJournalRequestToDomainJournal(req)
+	if err != nil {
+		return nil, err
+	}
+	if err = s.service.UpdateJournal(ctx, jour); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return toProtoJournal(jour), err
+}
+func (s Server) DeleteJournal(ctx context.Context, req *journalpb.DeleteJournalRequest) (*emptypb.Empty, error) {
+	journalId, err := uuid.Parse(req.GetJournalId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "journal id is not uuid")
+	}
+	if err = s.service.DeleteJournal(ctx, journalId); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &emptypb.Empty{}, nil
+}
 
-func (s Server) convertRegisterJournalRequestToDomainJournal(protoJour *journalpb.RegisterJournalRequest) (journal.Journal, error) {
+func (s Server) convertUpdateJournalRequestToDomainJournal(protojour *journalpb.Journal) (journal.Journal, error) {
+	id, err := uuid.Parse(protojour.GetId())
+	if err != nil {
+		return journal.Journal{}, status.Error(codes.InvalidArgument, "journal id is not uuid")
+	}
+	scheduleId, err := uuid.Parse(protojour.GetScheduleId())
+	if err != nil {
+		return journal.Journal{}, status.Error(codes.InvalidArgument, "schedule id is not uuid")
+	}
+	studentId, err := uuid.Parse(protojour.GetStudentId())
+	if err != nil {
+		return journal.Journal{}, status.Error(codes.InvalidArgument, "student id is not uuid")
+	}
+	jour, err := journal.UnmarshalJournal(journal.UnmarshalJournalArgs{
+		ID:         id,
+		ScheduleID: scheduleId,
+		StudentID:  studentId,
+		Attended:   protojour.Attended,
+		Mark:       protojour.Mark,
+	})
+	if err != nil {
+		return journal.Journal{}, status.Error(codes.InvalidArgument, err.Error())
+	}
+	return jour, nil
+}
+
+func (s Server) convertRegisterJournalRequestToDomainJournal(protoJour *journalpb.CreateJournalRequest) (journal.Journal, error) {
 	scheduleId, err := uuid.Parse(protoJour.ScheduleId)
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, "provided schedule id is not uuid")
@@ -51,5 +114,4 @@ func (s Server) convertRegisterJournalRequestToDomainJournal(protoJour *journalp
 		return journal.Journal{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 	return jour, nil
-
 }

@@ -65,3 +65,10 @@ type Subject struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
+type Journal struct {
+	ID         string `json:"id"`
+	ScheduleID string `json:"schedule_id"`
+	StudentID  string `json:"subject_id"`
+	Attended   bool   `json:"attended"`
+	Mark       int32  `json:"mark"`
+}
