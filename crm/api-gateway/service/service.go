@@ -4,6 +4,7 @@ import (
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
+	"time"
 )
 
 func New(teacherService TeacherServiceClient, studentService StudentServiceClient, scheduleService ScheduleServiceClient, journalService JournalServiceClient) Service {
@@ -35,6 +36,9 @@ type ScheduleServiceClient interface {
 	UpdateSchedule(ctx context.Context, req request.Schedule) (response.Schedule, error)
 	DeleteSchedule(ctx context.Context, id string) error
 	GetFullScheduleForTeacher(ctx context.Context, teacherID string) ([]response.Schedule, error)
+	GetFullScheduleForGroup(ctx context.Context, groupID string) ([]response.Schedule, error)
+	GetSpecificDateScheduleForTeacher(ctx context.Context, teacherID string, date time.Time) ([]response.Schedule, error)
+	GetSpecificDateScheduleForGroup(ctx context.Context, groupID string, date time.Time) ([]response.Schedule, error)
 }
 
 type StudentServiceClient interface {
@@ -59,5 +63,5 @@ type TeacherServiceClient interface {
 	CreateSubject(context.Context, request.CreateSubjectRequest) (response.Subject, error)
 	GetSubject(context.Context, string) (response.Subject, error)
 	DeleteSubject(context.Context, string) error
-	ListSubjects(context.Context, int32, int32) ([]response.Subject, error) 
+	ListSubjects(context.Context, int32, int32) ([]response.Subject, error)
 }

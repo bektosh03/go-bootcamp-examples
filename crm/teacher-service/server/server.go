@@ -62,12 +62,23 @@ func (s Server) CreateSubject(ctx context.Context, req *teacherpb.CreateSubjectR
 
 // GetTeacher fetches teacher's data by teacher ID
 func (s Server) GetTeacher(ctx context.Context, req *teacherpb.GetTeacherRequest) (*teacherpb.Teacher, error) {
-	id, err := uuid.Parse(req.TeacherId)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "id is not uuid")
+	var teacherBy teacher.By
+	switch by := req.By.(type) {
+	case *teacherpb.GetTeacherRequest_Email:
+		teacherBy = teacher.ByEmail{Email: by.Email}
+	case *teacherpb.GetTeacherRequest_PhoneNumber:
+		teacherBy = teacher.ByPhoneNumber{PhoneNumber: by.PhoneNumber}
+	case *teacherpb.GetTeacherRequest_TeacherId:
+		id, err := uuid.Parse(by.TeacherId)
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, "id is not uuid")
+		}
+		teacherBy = teacher.ByID{ID: id}
+	default:
+		return nil, status.Error(codes.InvalidArgument, "by is not provided")
 	}
 
-	t, err := s.service.GetTeacher(ctx, id)
+	t, err := s.service.GetTeacher(ctx, teacherBy)
 	if err != nil {
 		if errors.Is(err, errs.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -123,7 +134,7 @@ func (s Server) DeleteSubject(ctx context.Context, req *teacherpb.DeleteSubjectR
 	return &emptypb.Empty{}, nil
 }
 
-// ListTeachers returns list of teachers 
+// ListTeachers returns list of teachers
 func (s Server) ListTeachers(ctx context.Context, req *teacherpb.ListTeachersRequest) (*teacherpb.ListTeachersResponse, error) {
 	list, _, err := s.service.ListTeachers(ctx, req.Page, req.Limit)
 	if err != nil {

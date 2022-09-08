@@ -3,12 +3,13 @@ package repository
 import (
 	"errors"
 	"fmt"
+	"journal-service/config"
+
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"journal-service/config"
 )
 
 func connect(cfg config.PostgresConfig) (*sqlx.DB, error) {
@@ -31,6 +32,7 @@ func connect(cfg config.PostgresConfig) (*sqlx.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if err = m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return nil, err
 	}
