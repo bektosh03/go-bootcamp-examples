@@ -3,14 +3,17 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
+	"journal-service/domain/journal"
+	"journal-service/service"
+	"time"
+
 	"github.com/bektosh03/crmcommon/errs"
 	"github.com/bektosh03/crmprotos/journalpb"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"journal-service/domain/journal"
-	"journal-service/service"
 )
 
 type Server struct {
@@ -31,12 +34,23 @@ func (s Server) RegisterJournal(ctx context.Context, req *journalpb.CreateJourna
 	if err != nil {
 		return nil, err
 	}
-	if err = s.service.RegisterJournal(ctx, jour); err != nil {
+
+	studentIDs := make([]uuid.UUID, 0, len(req.StudentIds))
+	for _, idString := range req.StudentIds {
+		id, err := uuid.Parse(idString)
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("student id=%q is not uuid", idString))
+		}
+		studentIDs = append(studentIDs, id)
+	}
+
+	if err = s.service.RegisterJournal(ctx, jour, studentIDs); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
 	return toProtoJournal(jour), nil
 }
-func (s Server) GetJournal(ctx context.Context, req *journalpb.GetJournalRequest) (*journalpb.Journal, error) {
+func (s Server) GetJournalEntry(ctx context.Context, req *journalpb.GetJournalEntryRequest) (*journalpb.Journal, error) {
 	id, err := uuid.Parse(req.JournalId)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "id is not uuid")
@@ -80,16 +94,10 @@ func (s Server) convertUpdateJournalRequestToDomainJournal(protojour *journalpb.
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, "schedule id is not uuid")
 	}
-	studentId, err := uuid.Parse(protojour.GetStudentId())
-	if err != nil {
-		return journal.Journal{}, status.Error(codes.InvalidArgument, "student id is not uuid")
-	}
 	jour, err := journal.UnmarshalJournal(journal.UnmarshalJournalArgs{
 		ID:         id,
 		ScheduleID: scheduleId,
-		StudentID:  studentId,
-		Attended:   protojour.Attended,
-		Mark:       protojour.Mark,
+		Date:       time.Time{},
 	})
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, err.Error())
@@ -102,14 +110,8 @@ func (s Server) convertRegisterJournalRequestToDomainJournal(protoJour *journalp
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, "provided schedule id is not uuid")
 	}
-	studentId, err := uuid.Parse(protoJour.ScheduleId)
-	if err != nil {
-		return journal.Journal{}, status.Error(codes.InvalidArgument, "provided student id is not uuid")
-	}
 
-	jour, err := s.journalFactory.NewJournal(
-		scheduleId, studentId, protoJour.Attended, protoJour.Mark,
-	)
+	jour, err := s.journalFactory.NewJournal(scheduleId, protoJour.Date.AsTime())
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, err.Error())
 	}

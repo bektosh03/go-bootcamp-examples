@@ -1,7 +1,8 @@
 package journal
 
 import (
-	"fmt"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
@@ -13,51 +14,44 @@ var (
 type Journal struct {
 	id         uuid.UUID
 	scheduleId uuid.UUID
-	studentId  uuid.UUID
-	attended   bool
-	mark       int32
+	date       time.Time
 }
 
-func (j Journal) Id() uuid.UUID {
+func (j Journal) ID() uuid.UUID {
 	return j.id
 }
-func (j Journal) ScheduleId() uuid.UUID {
+
+func (j Journal) ScheduleID() uuid.UUID {
 	return j.scheduleId
 }
-func (j Journal) StudentId() uuid.UUID {
-	return j.studentId
+
+func (j Journal) Date() time.Time {
+	return j.date
 }
-func (j Journal) Attended() bool {
-	return j.attended
-}
-func (j Journal) Mark() int32 {
-	return j.mark
-}
+
 func (j Journal) validate() error {
-	if j.mark < 0 || j.mark > 5 {
-		return fmt.Errorf("%w invalid mark value", ErrInvalidJournalData)
+	if j.date.Equal(time.Time{}) {
+		return errors.New("time is empty")
 	}
+
 	return nil
 }
 
 type UnmarshalJournalArgs struct {
 	ID         uuid.UUID
 	ScheduleID uuid.UUID
-	StudentID  uuid.UUID
-	Attended   bool
-	Mark       int32
+	Date       time.Time
 }
 
 func UnmarshalJournal(args UnmarshalJournalArgs) (Journal, error) {
 	j := Journal{
 		id:         args.ID,
 		scheduleId: args.ScheduleID,
-		studentId:  args.StudentID,
-		attended:   args.Attended,
-		mark:       args.Mark,
+		date:       args.Date,
 	}
 	if err := j.validate(); err != nil {
 		return Journal{}, nil
 	}
+
 	return j, nil
 }

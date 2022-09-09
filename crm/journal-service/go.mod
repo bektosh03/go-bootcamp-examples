@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/bektosh03/crmcommon v0.1.1
-	github.com/bektosh03/crmprotos v0.0.0-20220907061800-041307b77675
+	github.com/bektosh03/crmprotos v0.1.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5

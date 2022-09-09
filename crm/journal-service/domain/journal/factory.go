@@ -1,6 +1,8 @@
 package journal
 
 import (
+	"time"
+
 	"github.com/bektosh03/crmcommon/id"
 	"github.com/google/uuid"
 )
@@ -14,16 +16,15 @@ func NewFactory(idGenerator id.Generator) Factory {
 		idGenerator: idGenerator,
 	}
 }
-func (f Factory) NewJournal(scheduleId, studentId uuid.UUID, attended bool, mark int32) (Journal, error) {
+func (f Factory) NewJournal(scheduleId uuid.UUID, date time.Time) (Journal, error) {
 	j := Journal{
 		id:         f.idGenerator.GenerateUUID(),
 		scheduleId: scheduleId,
-		studentId:  studentId,
-		attended:   attended,
-		mark:       mark,
+		date:       date,
 	}
 	if err := j.validate(); err != nil {
 		return Journal{}, err
 	}
+
 	return j, nil
 }

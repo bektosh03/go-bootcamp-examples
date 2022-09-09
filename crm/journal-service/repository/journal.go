@@ -1,11 +1,21 @@
 package repository
 
-import "github.com/google/uuid"
+import (
+	"database/sql"
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Journal struct {
-	ID         uuid.UUID `json:"id"`
-	ScheduleID uuid.UUID `json:"schedule_id"`
-	StudentID  uuid.UUID `json:"student_id"`
-	Attended   bool      `json:"attended"`
-	Mark       int32     `json:"mark"`
+	ID         uuid.UUID `db:"id"`
+	ScheduleID uuid.UUID `db:"schedule_id"`
+	Date       time.Time `db:"date"`
+}
+
+type Status struct {
+	JournalID uuid.UUID     `db:"journal_id"`
+	StudentID uuid.UUID     `db:"student_id"`
+	Attended  bool          `db:"attended"`
+	Mark      sql.NullInt32 `db:"mark"`
 }
