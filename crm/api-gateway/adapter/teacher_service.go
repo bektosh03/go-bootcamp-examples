@@ -38,16 +38,6 @@ func (a TeacherService) RegisterTeacher(ctx context.Context, req request.Registe
 	return fromProtoToResponseTeacher(res), nil
 }
 
-type By interface {
-	isGetTeacherRequest_By()
-}
-
-type ByID struct {
-	ID string
-}
-
-func (b ByID) isGetTeacherRequest_By() {}
-
 func (a TeacherService) GetTeacher(ctx context.Context, req request.GetTeacherRequest) (response.Teacher, error) {
 	var (
 		res *teacherpb.Teacher
