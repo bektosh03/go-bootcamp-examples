@@ -1,10 +1,14 @@
 package adapter
 
 import (
+	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
+	"fmt"
 	"github.com/bektosh03/crmprotos/studentpb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func NewStudentService(client studentpb.StudentServiceClient) StudentService {
@@ -138,23 +142,48 @@ func (a StudentService) UpdateStudent(ctx context.Context, st request.Student) (
 	}, nil
 }
 
-func (a StudentService) GetStudent(ctx context.Context, id string) (response.Student, error) {
-	res, err := a.client.GetStudent(ctx, &studentpb.GetStudentRequest{
-		StudentId: id})
+func (a StudentService) GetStudent(ctx context.Context, req request.GetStudentRequest) (response.Student, error) {
+	var (
+		res *studentpb.Student
+		err error
+	)
+	if req.StudentID != "" {
+		res, err = a.client.GetStudent(ctx, &studentpb.GetStudentRequest{
+			By: &studentpb.GetStudentRequest_StudentId{
+				StudentId: req.StudentID,
+			},
+		})
+	} else if req.Email != "" {
+		res, err = a.client.GetStudent(ctx, &studentpb.GetStudentRequest{
+			By: &studentpb.GetStudentRequest_Email{
+				Email: req.Email,
+			},
+		})
+	} else if req.PhoneNumber != "" {
+		res, err = a.client.GetStudent(ctx, &studentpb.GetStudentRequest{
+			By: &studentpb.GetStudentRequest_PhoneNumber{
+				PhoneNumber: req.PhoneNumber,
+			},
+		})
+	} else {
+		return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, "searching data is not provided")
+	}
 
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Student{}, err
 	}
 
-	return response.Student{
-		ID:          res.Id,
-		FirstName:   res.FirstName,
-		LastName:    res.LastName,
-		Email:       res.Email,
-		PhoneNumber: res.PhoneNumber,
-		Level:       res.Level,
-		GroupID:     res.GroupId,
-	}, nil
+	return fromProtoToResponseStudent(res), nil
 
 }
 

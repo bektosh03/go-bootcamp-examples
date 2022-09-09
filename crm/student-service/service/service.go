@@ -52,8 +52,8 @@ func (s Service) GetGroup(ctx context.Context, id uuid.UUID) (group.Group, error
 	return s.repo.GetGroup(ctx, id)
 }
 
-func (s Service) GetStudent(ctx context.Context, id uuid.UUID) (student.Student, error) {
-	return s.repo.GetStudent(ctx, id)
+func (s Service) GetStudent(ctx context.Context, by student.By) (student.Student, error) {
+	return s.repo.GetStudent(ctx, by)
 }
 
 func (s Service) RegisterStudent(ctx context.Context, st student.Student) error {

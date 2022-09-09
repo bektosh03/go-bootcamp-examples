@@ -56,13 +56,13 @@ type Journal struct {
 	Attended   bool   `json:"attended"`
 	Mark       int32  `json:"mark"`
 }
+
 type CreateJournalRequest struct {
 	ScheduleID string `json:"schedule_id"`
 	StudentID  string `json:"subject_id"`
 	Attended   bool   `json:"attended"`
 	Mark       int32  `json:"mark"`
 }
-
 type CreateScheduleRequest struct {
 	GroupID      string       `json:"group_id"`
 	SubjectID    string       `json:"subject_id"`
@@ -121,4 +121,16 @@ type RegisterTeacherRequest struct {
 type CreateSubjectRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
+}
+
+type GetTeacherRequest struct {
+	TeacherID   string `json:"teacher_id,omitempty"`
+	Email       string `json:"email,omitempty"`
+	PhoneNumber string `json:"phone_number,omitempty"`
+}
+
+type GetStudentRequest struct {
+	StudentID   string `json:"student_id,omitempty"`
+	Email       string `json:"email,omitempty"`
+	PhoneNumber string `json:"phone_number,omitempty"`
 }

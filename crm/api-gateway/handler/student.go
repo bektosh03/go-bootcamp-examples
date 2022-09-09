@@ -71,9 +71,13 @@ func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetStudent(w http.ResponseWriter, r *http.Request) {
-	studentID := chi.URLParam(r, "id")
+	var req request.GetStudentRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		httperr.InvalidJSON(w, r)
+		return
+	}
 
-	student, err := h.service.Student.GetStudent(context.Background(), studentID)
+	student, err := h.service.Student.GetStudent(context.Background(), req)
 	if err != nil {
 		panic(err)
 	}

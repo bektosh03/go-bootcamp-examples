@@ -43,7 +43,7 @@ type ScheduleServiceClient interface {
 
 type StudentServiceClient interface {
 	RegisterStudent(context.Context, request.RegisterStudentRequest) (response.Student, error)
-	GetStudent(context.Context, string) (response.Student, error)
+	GetStudent(context.Context, request.GetStudentRequest) (response.Student, error)
 	UpdateStudent(context.Context, request.Student) (response.Student, error)
 	DeleteStudent(context.Context, string) error
 	ListStudents(context.Context, int32, int32) ([]response.Student, error)
@@ -56,7 +56,7 @@ type StudentServiceClient interface {
 
 type TeacherServiceClient interface {
 	RegisterTeacher(context.Context, request.RegisterTeacherRequest) (response.Teacher, error)
-	GetTeacher(context.Context, string) (response.Teacher, error)
+	GetTeacher(context.Context, request.GetTeacherRequest) (response.Teacher, error)
 	DeleteTeacher(context.Context, string) error
 	ListTeachers(context.Context, int32, int32) ([]response.Teacher, error)
 

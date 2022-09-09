@@ -1,9 +1,13 @@
 package adapter
 
 import (
+	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
+	"fmt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/bektosh03/crmprotos/teacherpb"
 )
@@ -34,9 +38,44 @@ func (a TeacherService) RegisterTeacher(ctx context.Context, req request.Registe
 	return fromProtoToResponseTeacher(res), nil
 }
 
-func (a TeacherService) GetTeacher(ctx context.Context, id string) (response.Teacher, error) {
-	res, err := a.client.GetTeacher(ctx, &teacherpb.GetTeacherRequest{TeacherId: id})
+func (a TeacherService) GetTeacher(ctx context.Context, req request.GetTeacherRequest) (response.Teacher, error) {
+	var (
+		res *teacherpb.Teacher
+		err error
+	)
+	if req.TeacherID != "" {
+		res, err = a.client.GetTeacher(ctx, &teacherpb.GetTeacherRequest{
+			By: &teacherpb.GetTeacherRequest_TeacherId{
+				TeacherId: req.TeacherID,
+			},
+		})
+	} else if req.Email != "" {
+		res, err = a.client.GetTeacher(ctx, &teacherpb.GetTeacherRequest{
+			By: &teacherpb.GetTeacherRequest_Email{
+				Email: req.Email,
+			},
+		})
+	} else if req.PhoneNumber != "" {
+		res, err = a.client.GetTeacher(ctx, &teacherpb.GetTeacherRequest{
+			By: &teacherpb.GetTeacherRequest_PhoneNumber{
+				PhoneNumber: req.PhoneNumber,
+			},
+		})
+	} else {
+		return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, "searching data is not provided")
+	}
+
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Teacher{}, err
 	}
 

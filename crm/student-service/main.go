@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/bektosh03/crmcommon/id"
 	"github.com/bektosh03/crmprotos/studentpb"
-	_ "github.com/bektosh03/crmprotos/teacherpb"
 	"google.golang.org/grpc"
 	"log"
 	"net"

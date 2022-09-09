@@ -179,8 +179,8 @@ func (p *Postgres) getGroup(ctx context.Context, id uuid.UUID) (Group, error) {
 }
 
 // GetStudent ...
-func (p *Postgres) GetStudent(ctx context.Context, id uuid.UUID) (student.Student, error) {
-	s, err := p.getStudent(ctx, id)
+func (p *Postgres) GetStudent(ctx context.Context, by student.By) (student.Student, error) {
+	s, err := p.getStudent(ctx, by)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return student.Student{}, errs.ErrNotFound
@@ -191,11 +191,26 @@ func (p *Postgres) GetStudent(ctx context.Context, id uuid.UUID) (student.Studen
 	return student.UnmarshalStudent(student.UnmarshalStudentArgs(s))
 }
 
-func (p *Postgres) getStudent(ctx context.Context, id uuid.UUID) (Student, error) {
-	query := `select * from students where id = $1`
+func (p *Postgres) getStudent(ctx context.Context, by student.By) (Student, error) {
+	var (
+		query string
+		arg   interface{}
+	)
+
+	switch b := by.(type) {
+	case student.ByID:
+		query = `select * from students where id = $1`
+		arg = b.ID
+	case student.ByEmail:
+		query = `select * from students where email = $1`
+		arg = b.Email
+	case student.ByPhoneNumber:
+		query = `select * from students where phone_number = $1`
+		arg = b.PhoneNumber
+	}
 
 	var s Student
-	if err := p.db.GetContext(ctx, &s, query, id); err != nil {
+	if err := p.db.GetContext(ctx, &s, query, arg); err != nil {
 		return Student{}, err
 	}
 
@@ -228,7 +243,6 @@ func (p *Postgres) createGroup(ctx context.Context, g Group) error {
 	_, err := p.db.ExecContext(ctx, query, g.ID, g.Name, g.MainTeacherID)
 	return err
 }
-
 
 func (p *Postgres) count(ctx context.Context, table string) (int, error) {
 	query := fmt.Sprintf("select count(*) from %s", table)
