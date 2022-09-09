@@ -42,9 +42,13 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 
 // GetTeacher fetches teacher's data from database by teacherID
 func (h Handler) GetTeacher(w http.ResponseWriter, r *http.Request) {
-	teacherID := chi.URLParam(r, "id")
+	var req request.GetTeacherRequest
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		httperr.InvalidJSON(w, r)
+		return
+	}
 
-	teacher, err := h.service.Teacher.GetTeacher(context.Background(), teacherID)
+	teacher, err := h.service.Teacher.GetTeacher(context.Background(), req)
 	if err != nil {
 		if sts, ok := status.FromError(err); ok {
 			switch sts.Code() {

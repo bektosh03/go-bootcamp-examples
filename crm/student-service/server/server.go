@@ -68,7 +68,7 @@ func (s Server) UpdateGroup(ctx context.Context, req *studentpb.Group) (*student
 	return toProtoGroup(gr), nil
 }
 
-// ListStudents fetches a list of students from database 
+// ListStudents fetches a list of students from database
 func (s Server) ListStudents(ctx context.Context, req *studentpb.ListStudentsRequest) (*studentpb.StudentList, error) {
 	students, _, err := s.service.ListStudents(ctx, req.GetPage(), req.GetLimit())
 	if err != nil {
@@ -101,7 +101,7 @@ func (s Server) GetGroup(ctx context.Context, request *studentpb.GetGroupRequest
 
 	gr, err := s.service.GetGroup(ctx, id)
 	if err != nil {
-		if errors.Is(err, errs.ErrNotFound){
+		if errors.Is(err, errs.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "group is not found")
 		}
 		return nil, status.Error(codes.Internal, err.Error())
@@ -110,15 +110,27 @@ func (s Server) GetGroup(ctx context.Context, request *studentpb.GetGroupRequest
 	return toProtoGroup(gr), nil
 }
 
-// GetStudent fetches student data from database by studentID 
+// GetStudent fetches student data from database by studentID
 func (s Server) GetStudent(ctx context.Context, req *studentpb.GetStudentRequest) (*studentpb.Student, error) {
-	id, err := uuid.Parse(req.GetStudentId())
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "id is not uuid")
+	var studentBy student.By
+	switch by := req.By.(type) {
+	case *studentpb.GetStudentRequest_Email:
+		studentBy = student.ByEmail{Email: by.Email}
+	case *studentpb.GetStudentRequest_PhoneNumber:
+		studentBy = student.ByPhoneNumber{PhoneNumber: by.PhoneNumber}
+	case *studentpb.GetStudentRequest_StudentId:
+		id, err := uuid.Parse(req.GetStudentId())
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, "id is not uuid")
+		}
+		studentBy = student.ByID{ID: id}
+	default:
+		return nil, status.Error(codes.InvalidArgument, "by is not provided")
 	}
-	st, err := s.service.GetStudent(ctx, id)
+
+	st, err := s.service.GetStudent(ctx, studentBy)
 	if err != nil {
-		if errors.Is(err, errs.ErrNotFound){
+		if errors.Is(err, errs.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "student is not found")
 		}
 		return nil, status.Error(codes.Internal, err.Error())

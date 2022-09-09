@@ -96,6 +96,7 @@ func (h Handler) GetSpecificDateScheduleForTeacher(w http.ResponseWriter, r *htt
 		httperr.InvalidJSON(w, r)
 		return
 	}
+	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForTeacher(context.Background(), req.TeacherID, req.Date)
 	if err != nil {
@@ -123,6 +124,7 @@ func (h Handler) GetSpecificDateScheduleForGroup(w http.ResponseWriter, r *http.
 	fmt.Println("weekday:", req.Date.Weekday())
 	t := time.Unix(req.Date.Unix(), req.Date.UnixNano())
 	fmt.Println("t:", t, "t weekday:", t.Weekday())
+	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForGroup(context.Background(), req.GroupID, req.Date)
 	if err != nil {
@@ -162,7 +164,11 @@ func (h Handler) populateSchedules(schedules []response.Schedule) ([]response.Po
 			return nil, err
 		}
 
-		teacher, err := h.service.Teacher.GetTeacher(context.Background(), sch.TeacherID)
+		teacher, err := h.service.Teacher.GetTeacher(context.Background(), request.GetTeacherRequest{
+			TeacherID:   sch.TeacherID,
+			Email:       "",
+			PhoneNumber: "",
+		})
 		if err != nil {
 			return nil, err
 		}
