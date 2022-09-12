@@ -13,9 +13,18 @@ type Journal struct {
 	Date       time.Time `db:"date"`
 }
 
-type Status struct {
+type Stats struct {
 	JournalID uuid.UUID     `db:"journal_id"`
 	StudentID uuid.UUID     `db:"student_id"`
 	Attended  bool          `db:"attended"`
 	Mark      sql.NullInt32 `db:"mark"`
+}
+
+type Entry struct {
+	JournalID  uuid.UUID     `db:"journal_id"`
+	ScheduleID uuid.UUID     `db:"schedule_id"`
+	Date       time.Time     `db:"date"`
+	StudentID  uuid.UUID     `db:"student_id"`
+	Attended   bool          `db:"attended"`
+	Mark       sql.NullInt32 `db:"mark"`
 }

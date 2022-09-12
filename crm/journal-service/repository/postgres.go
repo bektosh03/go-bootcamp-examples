@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"journal-service/domain/journal"
+	"time"
 
 	"github.com/bektosh03/crmcommon/errs"
 	"github.com/bektosh03/crmcommon/postgres"
@@ -31,18 +32,18 @@ func (r *PostgresRepository) CreateJournal(ctx context.Context, jour journal.Jou
 }
 
 func (r *PostgresRepository) createJournal(ctx context.Context, jour Journal) error {
-	query := `INSERT INTO journal VALUES ($1,$2,$3)`
+	query := `INSERT INTO journals VALUES ($1,$2,$3)`
 	_, err := r.db.ExecContext(ctx, query, jour.ID, jour.ScheduleID, jour.Date)
 	return err
 }
 
-func (r *PostgresRepository) CreateJournalStatuses(ctx context.Context, journalID uuid.UUID, studentIDs []uuid.UUID) error {
+func (r *PostgresRepository) CreateJournalStats(ctx context.Context, journalID uuid.UUID, studentIDs []uuid.UUID) error {
 	return r.createJournalStatuses(ctx, journalID, studentIDs)
 }
 
 func (r *PostgresRepository) createJournalStatuses(ctx context.Context, journalID uuid.UUID, studentIDs []uuid.UUID) error {
 	query := `
-	INSERT INTO journal_status VALUES ($1, $2)
+	INSERT INTO journal_stats VALUES ($1, $2)
 	`
 	tx, err := r.db.Begin()
 	if err != nil {
@@ -73,7 +74,7 @@ func (r *PostgresRepository) GetJournal(ctx context.Context, id uuid.UUID) (jour
 }
 
 func (r *PostgresRepository) getJournal(ctx context.Context, id uuid.UUID) (Journal, error) {
-	query := `SELECT * FROM journal where id = $1`
+	query := `SELECT * FROM journals WHERE id = $1`
 	var j Journal
 	if err := r.db.GetContext(ctx, &j, query, id); err != nil {
 		return Journal{}, err
@@ -86,7 +87,7 @@ func (r *PostgresRepository) UpdateJournal(ctx context.Context, jour journal.Jou
 }
 
 func (r *PostgresRepository) updateJournal(ctx context.Context, jour Journal) error {
-	query := `UPDATE journal SET schedule_id = $1, date = $2 where id = $3`
+	query := `UPDATE journals SET schedule_id = $1, date = $2 where id = $3`
 	_, err := r.db.ExecContext(ctx, query, jour.ScheduleID, jour.Date, jour.ID)
 	return err
 }
@@ -96,20 +97,57 @@ func (r *PostgresRepository) DeleteJournal(ctx context.Context, id uuid.UUID) er
 }
 
 func (r *PostgresRepository) deleteJournal(ctx context.Context, id uuid.UUID) error {
-	query := `DELETE FROM journal WHERE id = $1`
+	query := `DELETE FROM journals WHERE id = $1`
 	_, err := r.db.ExecContext(ctx, query, id)
 	return err
 }
 
-func (r *PostgresRepository) MarkStudent(ctx context.Context, st journal.Status) error {
+func (r *PostgresRepository) MarkStudent(ctx context.Context, st journal.Stat) error {
 	return r.markStudent(ctx, toRepositoryJournalStatus(st))
 }
 
-func (r *PostgresRepository) markStudent(ctx context.Context, st Status) error {
+func (r *PostgresRepository) markStudent(ctx context.Context, st Stats) error {
 	query := `
-	UPDATE journal_status SET mark = $1, attended = TRUE
+	UPDATE journal_stats SET mark = $1, attended = TRUE
 	WHERE student_id = $2 AND journal_id = $3
 	`
 	_, err := r.db.ExecContext(ctx, query, st.Mark, st.StudentID, st.JournalID)
 	return err
+}
+
+func (r *PostgresRepository) SetStudentAttendance(ctx context.Context, st journal.Stat) error {
+	return r.setStudentAttendance(ctx, st.StudentID(), st.JournalID(), st.Attended())
+}
+
+func (r *PostgresRepository) setStudentAttendance(ctx context.Context, studentID, journalID uuid.UUID, attended bool) error {
+	query := `
+	UPDATE journal_stats SET attended = $1
+	WHERE journal_id = $2 AND student_id = $3
+	`
+	_, err := r.db.ExecContext(ctx, query, attended, studentID, journalID)
+	return err
+}
+
+func (r *PostgresRepository) GetStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start, end time.Time) ([]journal.Entry, error) {
+	dbEntries, err := r.getStudentJournalEntries(ctx, studentID, start, end)
+	if err != nil {
+		return nil, err
+	}
+
+	return toDomainEntries(dbEntries)
+}
+
+func (r *PostgresRepository) getStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start, end time.Time) ([]Entry, error) {
+	query := `
+	SELECT j.id, j.schedule_id, j.date, js.student_id, js.attended, js.mark
+	FROM journals j
+	JOIN journal_stats js ON j.id = js.journal_id
+	WHERE js.student_id = $1 AND (j.date BETWEEN $2 AND $3)
+	`
+	entries := make([]Entry, 0)
+	if err := r.db.SelectContext(ctx, &entries, query, studentID, start, end); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
 }

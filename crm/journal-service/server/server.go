@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/bektosh03/crmcommon/errs"
 	"journal-service/domain/journal"
 	"journal-service/service"
 	"time"
 
-	"github.com/bektosh03/crmcommon/errs"
 	"github.com/bektosh03/crmprotos/journalpb"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -24,8 +24,8 @@ type Server struct {
 
 func New(svc service.Service, journalFactory journal.Factory) Server {
 	return Server{
-		service:        service.Service{},
-		journalFactory: journal.Factory{},
+		service:        svc,
+		journalFactory: journalFactory,
 	}
 }
 
@@ -50,7 +50,8 @@ func (s Server) RegisterJournal(ctx context.Context, req *journalpb.CreateJourna
 
 	return toProtoJournal(jour), nil
 }
-func (s Server) GetJournalEntry(ctx context.Context, req *journalpb.GetJournalEntryRequest) (*journalpb.Journal, error) {
+
+func (s Server) GetJournal(ctx context.Context, req *journalpb.GetJournalRequest) (*journalpb.Journal, error) {
 	id, err := uuid.Parse(req.JournalId)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "id is not uuid")
@@ -64,6 +65,7 @@ func (s Server) GetJournalEntry(ctx context.Context, req *journalpb.GetJournalEn
 	}
 	return toProtoJournal(jour), nil
 }
+
 func (s Server) UpdateJournal(ctx context.Context, req *journalpb.Journal) (*journalpb.Journal, error) {
 	jour, err := s.convertUpdateJournalRequestToDomainJournal(req)
 	if err != nil {
@@ -83,6 +85,66 @@ func (s Server) DeleteJournal(ctx context.Context, req *journalpb.DeleteJournalR
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &emptypb.Empty{}, nil
+}
+
+func (s Server) MarkStudent(ctx context.Context, req *journalpb.MarkStudentRequest) (*emptypb.Empty, error) {
+	studentID, err := uuid.Parse(req.StudentId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "student id is not uuid")
+	}
+
+	journalID, err := uuid.Parse(req.GetJournalId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "journal id is not uuid")
+	}
+
+	st, err := journal.NewStatus(journalID, studentID, true, req.Mark)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	if err = s.service.MarkStudent(ctx, st); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) SetStudentAttendance(ctx context.Context, req *journalpb.SetStudentAttendanceRequest) (*emptypb.Empty, error) {
+	studentID, err := uuid.Parse(req.StudentId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "student id is not uuid")
+	}
+
+	journalID, err := uuid.Parse(req.GetJournalId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "journal id is not uuid")
+	}
+
+	st, err := journal.NewStatus(journalID, studentID, req.Attended, 0)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	if err = s.service.SetStudentAttendance(ctx, st); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) GetStudentJournalEntries(ctx context.Context, req *journalpb.GetStudentJournalEntriesRequest) (*journalpb.Entries, error) {
+	studentID, err := uuid.Parse(req.StudentId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "student id is not uuid")
+	}
+
+	entries, err := s.service.GetStudentJournalEntries(ctx, studentID, req.TimeRange.Start.AsTime(), req.TimeRange.End.AsTime())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoEntries(entries), nil
 }
 
 func (s Server) convertUpdateJournalRequestToDomainJournal(protojour *journalpb.Journal) (journal.Journal, error) {

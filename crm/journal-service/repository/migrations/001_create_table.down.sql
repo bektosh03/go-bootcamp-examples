@@ -1,3 +1,3 @@
-DROP TABLE journal_status;
+DROP TABLE journal_stats;
 
-DROP TABLE journal;
+DROP TABLE journals;

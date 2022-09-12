@@ -161,6 +161,10 @@ github.com/bektosh03/crmprotos v0.1.0 h1:6ipNJVT+Iu7s3dpxKtfBzH7AqrdCxUPniUmelaY
 github.com/bektosh03/crmprotos v0.1.0/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/bektosh03/crmprotos v0.1.1 h1:f/xfgX1q6Ix7L7nksFW296mB2hby3k2YsDGJrQtn0z4=
 github.com/bektosh03/crmprotos v0.1.1/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
+github.com/bektosh03/crmprotos v0.1.2 h1:aEezoivGx7RC849Zb5BIepbxuSzJV6i9QQktMygzIZ8=
+github.com/bektosh03/crmprotos v0.1.2/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
+github.com/bektosh03/crmprotos v0.2.0 h1:bKvWUtg7DtrgySx8WKldOAs9MWVnX7Dzo6BmOF90Q+I=
+github.com/bektosh03/crmprotos v0.2.0/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/benbjohnson/clock v1.0.3/go.mod h1:bGMdMPoPVvcYyt1gHDf4J2KE153Yf9BuiUKYMaxlTDM=
 github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=

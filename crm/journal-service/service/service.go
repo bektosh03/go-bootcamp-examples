@@ -4,6 +4,7 @@ import (
 	"context"
 	"journal-service/domain/journal"
 	"log"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +25,7 @@ func (s Service) RegisterJournal(ctx context.Context, journal journal.Journal, s
 	if err := s.repo.CreateJournal(ctx, journal); err != nil {
 		return err
 	}
-	if err := s.repo.CreateJournalStatuses(ctx, journal.ID(), studentIDs); err != nil {
+	if err := s.repo.CreateJournalStats(ctx, journal.ID(), studentIDs); err != nil {
 		if err = s.repo.DeleteJournal(ctx, journal.ID()); err != nil {
 			log.Println("[ERROR] could not delete journal after failed insertion of journal statuses")
 		}
@@ -41,9 +42,23 @@ func (s Service) GetJournal(ctx context.Context, id uuid.UUID) (journal.Journal,
 	}
 	return jour, nil
 }
+
 func (s Service) UpdateJournal(ctx context.Context, jour journal.Journal) error {
 	return s.repo.UpdateJournal(ctx, jour)
 }
+
 func (s Service) DeleteJournal(ctx context.Context, id uuid.UUID) error {
 	return s.repo.DeleteJournal(ctx, id)
+}
+
+func (s Service) MarkStudent(ctx context.Context, st journal.Stat) error {
+	return s.repo.MarkStudent(ctx, st)
+}
+
+func (s Service) SetStudentAttendance(ctx context.Context, st journal.Stat) error {
+	return s.repo.SetStudentAttendance(ctx, st)
+}
+
+func (s Service) GetStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start, end time.Time) ([]journal.Entry, error) {
+	return s.repo.GetStudentJournalEntries(ctx, studentID, start, end)
 }
