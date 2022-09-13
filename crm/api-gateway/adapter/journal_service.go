@@ -29,11 +29,11 @@ func (s JournalService) GetStudentJournal(ctx context.Context, studentID string,
 		TimeRange: &journalpb.TimeRange{
 			Start: &timestamppb.Timestamp{
 				Seconds: start.Unix(),
-				Nanos:   int32(start.UnixNano()),
+				Nanos:   int32(start.Nanosecond()),
 			},
 			End: &timestamppb.Timestamp{
 				Seconds: end.Unix(),
-				Nanos:   int32(end.UnixNano()),
+				Nanos:   int32(end.Nanosecond()),
 			},
 		},
 	})

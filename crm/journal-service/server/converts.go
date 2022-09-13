@@ -27,7 +27,7 @@ func toProtoEntry(entry journal.Entry) *journalpb.Entry {
 		Mark:       entry.Mark(),
 		Date: &timestamppb.Timestamp{
 			Seconds: entry.Date().Unix(),
-			Nanos:   int32(entry.Date().UnixNano()),
+			Nanos:   int32(entry.Date().Nanosecond()),
 		},
 	}
 }
