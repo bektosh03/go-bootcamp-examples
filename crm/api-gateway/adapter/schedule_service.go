@@ -130,7 +130,7 @@ func (s ScheduleService) GetSpecificDateScheduleForTeacher(ctx context.Context, 
 		TeacherId: teacherID,
 		Date: &timestamppb.Timestamp{
 			Seconds: date.Unix(),
-			Nanos:   int32(date.UnixNano()),
+			Nanos:   int32(date.Nanosecond()),
 		},
 	})
 	if err != nil {
@@ -143,7 +143,7 @@ func (s ScheduleService) GetSpecificDateScheduleForTeacher(ctx context.Context, 
 func (s ScheduleService) GetSpecificDateScheduleForGroup(ctx context.Context, groupID string, date time.Time) ([]response.Schedule, error) {
 	res, err := s.client.GetSpecificDateScheduleForGroup(ctx, &schedulepb.GetSpecificDateScheduleForGroupRequest{
 		GroupId: groupID,
-		Date:    &timestamppb.Timestamp{Seconds: date.Unix(), Nanos: int32(date.UnixNano())},
+		Date:    &timestamppb.Timestamp{Seconds: date.Unix(), Nanos: int32(date.Nanosecond())},
 	})
 	if err != nil {
 		return nil, err
