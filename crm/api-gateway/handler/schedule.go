@@ -24,6 +24,7 @@ func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, schedule)
 }
 
@@ -36,9 +37,11 @@ func (h Handler) UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.service.Schedule.UpdateSchedule(context.Background(), req)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, res)
 }
 
@@ -46,9 +49,11 @@ func (h Handler) DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	scheduleID := chi.URLParam(r, "id")
 
 	if err := h.service.Schedule.DeleteSchedule(context.Background(), scheduleID); err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, render.M{
 		"ok": true,
 	})
@@ -59,7 +64,8 @@ func (h Handler) GetFullScheduleForTeacher(w http.ResponseWriter, r *http.Reques
 
 	schedules, err := h.service.Schedule.GetFullScheduleForTeacher(context.Background(), teacherID)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
 	populatedSchedules, err := h.populateSchedules(schedules)
@@ -68,6 +74,7 @@ func (h Handler) GetFullScheduleForTeacher(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -76,7 +83,8 @@ func (h Handler) GetFullScheduleForGroup(w http.ResponseWriter, r *http.Request)
 
 	schedules, err := h.service.Schedule.GetFullScheduleForGroup(context.Background(), groupID)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
 	populatedSchedules, err := h.populateSchedules(schedules)
@@ -85,6 +93,7 @@ func (h Handler) GetFullScheduleForGroup(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -107,6 +116,7 @@ func (h Handler) GetSpecificDateScheduleForTeacher(w http.ResponseWriter, r *htt
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -129,6 +139,7 @@ func (h Handler) GetSpecificDateScheduleForGroup(w http.ResponseWriter, r *http.
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -137,8 +148,11 @@ func (h Handler) GetScheduleById(w http.ResponseWriter, r *http.Request) {
 
 	schedule, err := h.service.Schedule.GetSchedule(context.Background(), id)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, schedule)
 }
 

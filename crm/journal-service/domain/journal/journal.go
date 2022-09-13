@@ -47,7 +47,6 @@ func (j Journal) validate() error {
 }
 
 
-
 type UnmarshalJournalArgs struct {
 	ID         uuid.UUID
 	ScheduleID uuid.UUID

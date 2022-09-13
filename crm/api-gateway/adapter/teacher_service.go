@@ -32,6 +32,14 @@ func (a TeacherService) RegisterTeacher(ctx context.Context, req request.Registe
 	}
 	res, err := a.client.RegisterTeacher(ctx, grpcRequest)
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Teacher{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Teacher{}, err
 	}
 
@@ -87,6 +95,14 @@ func (a TeacherService) DeleteTeacher(ctx context.Context, id string) error {
 		TeacherId: id,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return err
 	}
 
@@ -114,6 +130,14 @@ func (a TeacherService) CreateSubject(ctx context.Context, req request.CreateSub
 		},
 	)
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Subject{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Subject{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Subject{}, err
 	}
 
@@ -125,9 +149,18 @@ func (a TeacherService) GetSubject(ctx context.Context, id string) (response.Sub
 		SubjectId: id,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Subject{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Subject{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Subject{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Subject{}, err
 	}
-
 	return fromProtoToResponseSubject(res), nil
 }
 
@@ -137,6 +170,14 @@ func (a TeacherService) DeleteSubject(ctx context.Context, id string) error {
 	})
 
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return err
 	}
 

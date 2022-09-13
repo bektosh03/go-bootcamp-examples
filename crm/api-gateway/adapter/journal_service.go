@@ -38,6 +38,14 @@ func (s JournalService) GetStudentJournal(ctx context.Context, studentID string,
 		},
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 
@@ -51,6 +59,18 @@ func (s JournalService) MarkStudent(ctx context.Context, req request.MarkStudent
 		JournalId: req.JournalID,
 	})
 
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
+		return err
+	}
+
 	return err
 }
 
@@ -60,6 +80,17 @@ func (s JournalService) SetStudentAttendance(ctx context.Context, req request.Se
 		StudentId: req.StudentID,
 		JournalId: req.JournalID,
 	})
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
+		return err
+	}
 
 	return err
 }
@@ -92,10 +123,23 @@ func (s JournalService) RegisterJournal(ctx context.Context, scheduleID string, 
 		Date:       res.Date.AsTime(),
 	}, nil
 }
+
 func (s JournalService) GetJournal(ctx context.Context, journalId string) (response.Journal, error) {
 	res, err := s.client.GetJournal(ctx, &journalpb.GetJournalRequest{JournalId: journalId})
+	
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Journal{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Journal{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Journal{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Journal{}, err
+	
 	}
 	return response.Journal{
 		ID:         res.Id,
@@ -103,6 +147,7 @@ func (s JournalService) GetJournal(ctx context.Context, journalId string) (respo
 		Date:       res.Date.AsTime(),
 	}, nil
 }
+
 func (s JournalService) UpdateJournal(ctx context.Context, req request.Journal) (response.Journal, error) {
 	res, err := s.client.UpdateJournal(ctx, &journalpb.Journal{
 		Id:         req.ID,
@@ -112,16 +157,40 @@ func (s JournalService) UpdateJournal(ctx context.Context, req request.Journal) 
 			Nanos:   int32(req.Date.Nanosecond()),
 		},
 	})
+
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Journal{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Journal{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Journal{}, err
 	}
+
 	return response.Journal{
 		ID:         res.Id,
 		ScheduleID: res.ScheduleId,
 		Date:       res.Date.AsTime(),
 	}, nil
 }
+
 func (s JournalService) DeleteJournal(ctx context.Context, id string) error {
 	_, err := s.client.DeleteJournal(ctx, &journalpb.DeleteJournalRequest{JournalId: id})
+
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
+		return err
+	}
+
 	return err
 }
