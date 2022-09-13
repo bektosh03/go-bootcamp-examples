@@ -69,7 +69,7 @@ func (s JournalService) RegisterJournal(ctx context.Context, scheduleID string, 
 		ScheduleId: scheduleID,
 		Date: &timestamppb.Timestamp{
 			Seconds: date.Unix(),
-			Nanos:   int32(date.UnixNano()),
+			Nanos:   int32(date.Nanosecond()),
 		},
 		StudentIds: studentIDs,
 	}
@@ -109,7 +109,7 @@ func (s JournalService) UpdateJournal(ctx context.Context, req request.Journal) 
 		ScheduleId: req.ScheduleID,
 		Date: &timestamppb.Timestamp{
 			Seconds: req.Date.Unix(),
-			Nanos:   int32(req.Date.UnixNano()),
+			Nanos:   int32(req.Date.Nanosecond()),
 		},
 	})
 	if err != nil {

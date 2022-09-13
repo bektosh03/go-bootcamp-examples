@@ -32,7 +32,7 @@ func (h Handler) GetStudentJournal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	journals, err := h.service.Journal.GetStudentJournal(context.Background(), studentID, start.Add(time.Second), end.Add(time.Second))
+	journals, err := h.service.Journal.GetStudentJournal(context.Background(), studentID, start, end)
 	if err != nil {
 		httperr.Handle(w, r, err)
 		return

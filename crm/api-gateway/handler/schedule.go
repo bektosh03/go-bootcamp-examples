@@ -5,9 +5,7 @@ import (
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -96,7 +94,6 @@ func (h Handler) GetSpecificDateScheduleForTeacher(w http.ResponseWriter, r *htt
 		httperr.InvalidJSON(w, r)
 		return
 	}
-	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForTeacher(context.Background(), req.TeacherID, req.Date)
 	if err != nil {
@@ -119,12 +116,6 @@ func (h Handler) GetSpecificDateScheduleForGroup(w http.ResponseWriter, r *http.
 		httperr.InvalidJSON(w, r)
 		return
 	}
-
-	fmt.Println("date:", req.Date)
-	fmt.Println("weekday:", req.Date.Weekday())
-	t := time.Unix(req.Date.Unix(), req.Date.UnixNano())
-	fmt.Println("t:", t, "t weekday:", t.Weekday())
-	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForGroup(context.Background(), req.GroupID, req.Date)
 	if err != nil {
