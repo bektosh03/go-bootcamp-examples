@@ -25,7 +25,7 @@ func toRepositoryGroup(s group.Group) Group {
 	}
 }
 
-func toDomainStudent(repoStudents []Student) ([]student.Student, error) {
+func toDomainStudents(repoStudents []Student) ([]student.Student, error) {
 	students := make([]student.Student, 0, len(repoStudents))
 	for _, repoStudent := range repoStudents {
 		t, err := student.UnmarshalStudent(student.UnmarshalStudentArgs(repoStudent))

@@ -11,6 +11,10 @@ func toProtoJournal(j journal.Journal) *journalpb.Journal {
 	return &journalpb.Journal{
 		Id:         j.ID().String(),
 		ScheduleId: j.ScheduleID().String(),
+		Date: &timestamppb.Timestamp{
+			Seconds: j.Date().Unix(),
+			Nanos:   int32(j.Date().UnixNano()),
+		},
 	}
 }
 

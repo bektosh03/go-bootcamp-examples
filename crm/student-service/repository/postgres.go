@@ -35,6 +35,27 @@ type Postgres struct {
 	db *sqlx.DB
 }
 
+func (p *Postgres) GetStudentsByGroup(ctx context.Context, groupID uuid.UUID) ([]student.Student, error) {
+	repoStudents, err := p.getStudentsByGroup(ctx, groupID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toDomainStudents(repoStudents)
+}
+
+func (p *Postgres) getStudentsByGroup(ctx context.Context, groupID uuid.UUID) ([]Student, error) {
+	query := `
+	SELECT * FROM students WHERE group_id = $1
+	`
+	students := make([]Student, 0)
+	if err := p.db.SelectContext(ctx, &students, query, groupID); err != nil {
+		return nil, err
+	}
+
+	return students, nil
+}
+
 // ListGroups ...
 func (p *Postgres) ListGroups(ctx context.Context, page, limit int32) ([]group.Group, int, error) {
 	repoGroups, count, err := p.listGroups(ctx, page, limit)
@@ -100,7 +121,7 @@ func (p *Postgres) ListStudents(ctx context.Context, page, limit int32) ([]stude
 		return nil, 0, err
 	}
 
-	students, err := toDomainStudent(repoStudent)
+	students, err := toDomainStudents(repoStudent)
 	if err != nil {
 		return nil, 0, err
 	}

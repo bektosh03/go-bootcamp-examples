@@ -63,3 +63,7 @@ func (s Service) RegisterStudent(ctx context.Context, st student.Student) error 
 func (s Service) CreateGroup(ctx context.Context, g group.Group) error {
 	return s.repo.CreateGroup(ctx, g)
 }
+
+func (s Service) GetStudentsByGroup(ctx context.Context, groupID uuid.UUID) ([]student.Student, error) {
+	return s.repo.GetStudentsByGroup(ctx, groupID)
+}

@@ -29,7 +29,7 @@ func New(svc service.Service, journalFactory journal.Factory) Server {
 	}
 }
 
-func (s Server) RegisterJournal(ctx context.Context, req *journalpb.CreateJournalRequest) (*journalpb.Journal, error) {
+func (s Server) CreateJournal(ctx context.Context, req *journalpb.CreateJournalRequest) (*journalpb.Journal, error) {
 	jour, err := s.convertRegisterJournalRequestToDomainJournal(req)
 	if err != nil {
 		return nil, err

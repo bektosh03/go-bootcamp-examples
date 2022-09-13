@@ -21,6 +21,31 @@ type StudentService struct {
 	client studentpb.StudentServiceClient
 }
 
+func (a StudentService) GetGroupStudents(ctx context.Context, groupID string) ([]response.Student, error) {
+	res, err := a.client.GetGroupStudents(ctx, &studentpb.GetGroupStudentsRequest{
+		GroupId: groupID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoToResponseStudents(res), nil
+}
+
+func (a StudentService) GetGroupStudentIDs(ctx context.Context, groupID string) ([]string, error) {
+	students, err := a.GetGroupStudents(ctx, groupID)
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]string, 0, len(students))
+	for _, student := range students {
+		ids = append(ids, student.ID)
+	}
+
+	return ids, nil
+}
+
 func (a StudentService) ListGroups(ctx context.Context, page, limit int32) ([]response.Group, error) {
 	res, err := a.client.ListGroups(ctx, &studentpb.ListGroupsRequest{
 		Page:  page,
@@ -104,7 +129,7 @@ func (a StudentService) ListStudents(ctx context.Context, page, limit int32) ([]
 		return nil, err
 	}
 
-	return fromProtoToResponseStudents(students)
+	return fromProtoToResponseStudents(students), nil
 }
 
 func (a StudentService) DeleteStudent(ctx context.Context, studentID string) error {

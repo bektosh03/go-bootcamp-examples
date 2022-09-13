@@ -30,6 +30,20 @@ type Server struct {
 	studentFactory student.Factory
 }
 
+func (s Server) GetGroupStudents(ctx context.Context, req *studentpb.GetGroupStudentsRequest) (*studentpb.StudentList, error) {
+	groupId, err := uuid.Parse(req.GetGroupId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "group id is not uuid")
+	}
+
+	students, err := s.service.GetStudentsByGroup(ctx, groupId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoStudents(students), nil
+}
+
 // ListGroups fetches list of groups
 func (s Server) ListGroups(ctx context.Context, req *studentpb.ListGroupsRequest) (*studentpb.GroupList, error) {
 	groups, _, err := s.service.ListGroups(ctx, req.GetPage(), req.GetLimit())

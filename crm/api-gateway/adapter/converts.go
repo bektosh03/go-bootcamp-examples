@@ -2,12 +2,28 @@ package adapter
 
 import (
 	"api-gateway/response"
+	"github.com/bektosh03/crmprotos/journalpb"
 	"time"
 
 	"github.com/bektosh03/crmprotos/schedulepb"
 	"github.com/bektosh03/crmprotos/studentpb"
 	"github.com/bektosh03/crmprotos/teacherpb"
 )
+
+func fromProtoToResponseEntries(protoEntries *journalpb.Entries) []response.JournalEntry {
+	entries := make([]response.JournalEntry, 0, len(protoEntries.Entries))
+	for _, e := range protoEntries.Entries {
+		entries = append(entries, response.JournalEntry{
+			JournalID:  e.JournalId,
+			Date:       e.Date.AsTime(),
+			ScheduleID: e.ScheduleId,
+			Mark:       e.Mark,
+			Attended:   e.Attended,
+		})
+	}
+
+	return entries
+}
 
 func fromProtoToTeacherList(teachers *teacherpb.ListTeachersResponse) ([]response.Teacher, error) {
 	tchs := make([]response.Teacher, 0, len(teachers.Teachers))
@@ -61,12 +77,12 @@ func fromProtoToResponseGroup(group *studentpb.Group) response.Group {
 	}
 }
 
-func fromProtoToResponseStudents(students *studentpb.StudentList) ([]response.Student, error) {
+func fromProtoToResponseStudents(students *studentpb.StudentList) []response.Student {
 	sts := make([]response.Student, 0, len(students.Students))
 	for _, item := range students.Students {
 		sts = append(sts, fromProtoToResponseStudent(item))
 	}
-	return sts, nil
+	return sts
 }
 
 func fromProtoToResponseStudent(student *studentpb.Student) response.Student {

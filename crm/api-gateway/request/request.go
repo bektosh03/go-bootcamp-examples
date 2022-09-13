@@ -5,6 +5,18 @@ import (
 	"time"
 )
 
+type MarkStudentRequest struct {
+	JournalID string `json:"journal_id"`
+	StudentID string `json:"student_id"`
+	Mark      int32  `json:"mark"`
+}
+
+type SetStudentAttendanceRequest struct {
+	StudentID string `json:"student_id"`
+	Attended  bool   `json:"attended"`
+	JournalID string `json:"journal_id"`
+}
+
 type GetSpecificDateScheduleForTeacherRequest struct {
 	TeacherID string    `json:"teacher_id"`
 	Date      time.Time `json:"date"` // date should be in format: YYYY-MM-DD
@@ -50,19 +62,33 @@ func (r *GetSpecificDateScheduleForGroupRequest) UnmarshalJSON(data []byte) erro
 }
 
 type Journal struct {
-	ID         string `json:"id"`
-	ScheduleID string `json:"schedule_id"`
-	StudentID  string `json:"subject_id"`
-	Attended   bool   `json:"attended"`
-	Mark       int32  `json:"mark"`
+	ID         string    `json:"id"`
+	ScheduleID string    `json:"schedule_id"`
+	Date       time.Time `json:"date"`
 }
 
 type CreateJournalRequest struct {
-	ScheduleID string `json:"schedule_id"`
-	StudentID  string `json:"subject_id"`
-	Attended   bool   `json:"attended"`
-	Mark       int32  `json:"mark"`
+	ScheduleID string    `json:"schedule_id"`
+	Date       time.Time `json:"date"`
 }
+
+func (r *CreateJournalRequest) UnmarshalJSON(data []byte) error {
+	m := make(map[string]string)
+	if err := json.Unmarshal(data, &m); err != nil {
+		return err
+	}
+
+	date, err := time.Parse("2006-01-02", m["date"])
+	if err != nil {
+		return err
+	}
+
+	r.ScheduleID = m["schedule_id"]
+	r.Date = date.Add(time.Second)
+
+	return nil
+}
+
 type CreateScheduleRequest struct {
 	GroupID      string       `json:"group_id"`
 	SubjectID    string       `json:"subject_id"`

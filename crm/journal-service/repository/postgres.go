@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"journal-service/domain/journal"
 	"time"
 
@@ -49,7 +50,10 @@ func (r *PostgresRepository) createJournalStatuses(ctx context.Context, journalI
 	if err != nil {
 		return err
 	}
-	defer tx.Commit()
+	defer func() {
+		tx.Commit()
+		fmt.Println("COMMITTED TRANSACTION")
+	}()
 
 	for _, studentID := range studentIDs {
 		_, err := tx.ExecContext(ctx, query, journalID, studentID)
@@ -124,7 +128,7 @@ func (r *PostgresRepository) setStudentAttendance(ctx context.Context, studentID
 	UPDATE journal_stats SET attended = $1
 	WHERE journal_id = $2 AND student_id = $3
 	`
-	_, err := r.db.ExecContext(ctx, query, attended, studentID, journalID)
+	_, err := r.db.ExecContext(ctx, query, attended, journalID, studentID)
 	return err
 }
 
@@ -139,7 +143,7 @@ func (r *PostgresRepository) GetStudentJournalEntries(ctx context.Context, stude
 
 func (r *PostgresRepository) getStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start, end time.Time) ([]Entry, error) {
 	query := `
-	SELECT j.id, j.schedule_id, j.date, js.student_id, js.attended, js.mark
+	SELECT j.id as journal_id, j.schedule_id, j.date, js.student_id, js.attended, js.mark
 	FROM journals j
 	JOIN journal_stats js ON j.id = js.journal_id
 	WHERE js.student_id = $1 AND (j.date BETWEEN $2 AND $3)

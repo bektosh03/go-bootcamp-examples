@@ -65,10 +65,26 @@ type Subject struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
+
 type Journal struct {
-	ID         string `json:"id"`
-	ScheduleID string `json:"schedule_id"`
-	StudentID  string `json:"subject_id"`
-	Attended   bool   `json:"attended"`
-	Mark       int32  `json:"mark"`
+	ID         string    `json:"id"`
+	ScheduleID string    `json:"schedule_id"`
+	Date       time.Time `json:"date"`
+}
+
+type FullJournalEntry struct {
+	JournalID string    `json:"journal_id"`
+	Date      time.Time `json:"date"`
+	Subject   Subject   `json:"subject"`
+	Teacher   Teacher   `json:"teacher"`
+	Mark      int32     `json:"mark"`
+	Attended  bool      `json:"attended"`
+}
+
+type JournalEntry struct {
+	JournalID  string
+	Date       time.Time
+	ScheduleID string
+	Mark       int32
+	Attended   bool
 }

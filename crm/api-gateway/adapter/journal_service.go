@@ -9,6 +9,8 @@ import (
 	"github.com/bektosh03/crmprotos/journalpb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
 )
 
 type JournalService struct {
@@ -20,12 +22,56 @@ func NewJournalService(client journalpb.JournalServiceClient) JournalService {
 		client: client,
 	}
 }
-func (s JournalService) RegisterJournal(ctx context.Context, req request.CreateJournalRequest) (response.Journal, error) {
+
+func (s JournalService) GetStudentJournal(ctx context.Context, studentID string, start, end time.Time) ([]response.JournalEntry, error) {
+	res, err := s.client.GetStudentJournalEntries(ctx, &journalpb.GetStudentJournalEntriesRequest{
+		StudentId: studentID,
+		TimeRange: &journalpb.TimeRange{
+			Start: &timestamppb.Timestamp{
+				Seconds: start.Unix(),
+				Nanos:   int32(start.UnixNano()),
+			},
+			End: &timestamppb.Timestamp{
+				Seconds: end.Unix(),
+				Nanos:   int32(end.UnixNano()),
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return fromProtoToResponseEntries(res), nil
+}
+
+func (s JournalService) MarkStudent(ctx context.Context, req request.MarkStudentRequest) error {
+	_, err := s.client.MarkStudent(ctx, &journalpb.MarkStudentRequest{
+		Mark:      req.Mark,
+		StudentId: req.StudentID,
+		JournalId: req.JournalID,
+	})
+
+	return err
+}
+
+func (s JournalService) SetStudentAttendance(ctx context.Context, req request.SetStudentAttendanceRequest) error {
+	_, err := s.client.SetStudentAttendance(ctx, &journalpb.SetStudentAttendanceRequest{
+		Attended:  req.Attended,
+		StudentId: req.StudentID,
+		JournalId: req.JournalID,
+	})
+
+	return err
+}
+
+func (s JournalService) RegisterJournal(ctx context.Context, scheduleID string, date time.Time, studentIDs []string) (response.Journal, error) {
 	grpcRequest := &journalpb.CreateJournalRequest{
-		ScheduleId: req.ScheduleID,
-		StudentId:  req.StudentID,
-		Attended:   req.Attended,
-		Mark:       req.Mark,
+		ScheduleId: scheduleID,
+		Date: &timestamppb.Timestamp{
+			Seconds: date.Unix(),
+			Nanos:   int32(date.UnixNano()),
+		},
+		StudentIds: studentIDs,
 	}
 	res, err := s.client.CreateJournal(ctx, grpcRequest)
 	if err != nil {
@@ -39,12 +85,11 @@ func (s JournalService) RegisterJournal(ctx context.Context, req request.CreateJ
 		}
 		return response.Journal{}, err
 	}
+
 	return response.Journal{
 		ID:         res.Id,
 		ScheduleID: res.ScheduleId,
-		StudentID:  res.StudentId,
-		Attended:   res.Attended,
-		Mark:       res.Mark,
+		Date:       res.Date.AsTime(),
 	}, nil
 }
 func (s JournalService) GetJournal(ctx context.Context, journalId string) (response.Journal, error) {
@@ -55,18 +100,17 @@ func (s JournalService) GetJournal(ctx context.Context, journalId string) (respo
 	return response.Journal{
 		ID:         res.Id,
 		ScheduleID: res.ScheduleId,
-		StudentID:  res.StudentId,
-		Attended:   false,
-		Mark:       0,
+		Date:       res.Date.AsTime(),
 	}, nil
 }
 func (s JournalService) UpdateJournal(ctx context.Context, req request.Journal) (response.Journal, error) {
 	res, err := s.client.UpdateJournal(ctx, &journalpb.Journal{
 		Id:         req.ID,
 		ScheduleId: req.ScheduleID,
-		StudentId:  req.StudentID,
-		Attended:   req.Attended,
-		Mark:       req.Mark,
+		Date: &timestamppb.Timestamp{
+			Seconds: req.Date.Unix(),
+			Nanos:   int32(req.Date.UnixNano()),
+		},
 	})
 	if err != nil {
 		return response.Journal{}, err
@@ -74,9 +118,7 @@ func (s JournalService) UpdateJournal(ctx context.Context, req request.Journal) 
 	return response.Journal{
 		ID:         res.Id,
 		ScheduleID: res.ScheduleId,
-		StudentID:  res.StudentId,
-		Attended:   res.Attended,
-		Mark:       res.Mark,
+		Date:       res.Date.AsTime(),
 	}, nil
 }
 func (s JournalService) DeleteJournal(ctx context.Context, id string) error {
