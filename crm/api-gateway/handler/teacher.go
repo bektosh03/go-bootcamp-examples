@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"api-gateway/pkg/auth"
 	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"context"
@@ -26,7 +27,10 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.Status(r, http.StatusCreated)
-	render.JSON(w, r, teacher)
+	render.JSON(w, r, render.M{
+		"teacher": teacher,
+		"token":   auth.NewJWT(teacher.ID),
+	})
 }
 
 // GetTeacher fetches teacher's data from database by teacherID

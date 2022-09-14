@@ -10,7 +10,6 @@ import (
 func NewScheduleServiceClient(ctx context.Context, url string) (schedulepb.ScheduleServiceClient, error) {
 	conn, err := grpc.DialContext(
 		ctx, url,
-		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {

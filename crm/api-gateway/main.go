@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-gateway/pkg/auth"
 	"context"
 	"log"
 	"net/http"
@@ -51,8 +52,8 @@ func main() {
 	scheduleService := adapter.NewScheduleService(scheduleServiceClient)
 	journalService := adapter.NewJournalService(journalServiceClient)
 
-	service := service.New(teacherService, studentService, scheduleService, journalService)
-	h := handler.New(service)
+	svc := service.New(teacherService, studentService, scheduleService, journalService)
+	h := handler.New(svc)
 
 	r := chi.NewRouter()
 
@@ -66,7 +67,14 @@ func main() {
 
 	r.Use(middleware.Logger)
 
+	// registration endpoints
 	r.Group(func(r chi.Router) {
+		r.Post("/teacher", h.RegisterTeacher)
+		r.Post("/student", h.RegisterStudent)
+	})
+
+	r.Group(func(r chi.Router) {
+		r.Use(auth.Middleware)
 		r.Post("/journal", h.RegisterJournal)
 		r.Get("/journal/{id}", h.GetJournal)
 		r.Put("/journal", h.UpdateJournal)
@@ -78,7 +86,7 @@ func main() {
 	})
 	// teacher endpoints
 	r.Group(func(r chi.Router) {
-		r.Post("/teacher", h.RegisterTeacher)
+		r.Use(auth.Middleware)
 		r.Post("/get/teacher", h.GetTeacher)
 		r.Delete("/teacher/delete/{id}", h.DeleteTeacher)
 		r.Get("/teachers", h.ListTeachers)
@@ -86,6 +94,7 @@ func main() {
 
 	// subject endpoints
 	r.Group(func(r chi.Router) {
+		// TODO add auth middleware
 		r.Post("/subject", h.CreateSubject)
 		r.Get("/subject/{id}", h.GetSubject)
 		r.Delete("/subject/delete/{id}", h.DeleteSubject)
@@ -94,7 +103,7 @@ func main() {
 
 	// student endpoints
 	r.Group(func(r chi.Router) {
-		r.Post("/student", h.RegisterStudent)
+		r.Use(auth.Middleware)
 		r.Post("/get/student", h.GetStudent)
 		r.Put("/student", h.UpdateStudent)
 		r.Delete("/student/{id}", h.DeleteStudent)
@@ -103,6 +112,7 @@ func main() {
 
 	// group endpoints
 	r.Group(func(r chi.Router) {
+		r.Use(auth.Middleware)
 		r.Post("/group", h.CreateGroup)
 		r.Get("/group/{id}", h.GetGroup)
 		r.Put("/group", h.UpdateGroup)
@@ -112,6 +122,7 @@ func main() {
 
 	// schedule endpoints
 	r.Group(func(r chi.Router) {
+		r.Use(auth.Middleware)
 		r.Post("/schedule", h.RegisterSchedule)
 		r.Get("/schedule/{id}", h.GetScheduleById)
 		r.Get("/schedule/teacher/{id}", h.GetFullScheduleForTeacher)

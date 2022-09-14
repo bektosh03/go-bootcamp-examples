@@ -10,7 +10,6 @@ import (
 func NewTeacherServiceClient(ctx context.Context, url string) (teacherpb.TeacherServiceClient, error) {
 	conn, err := grpc.DialContext(
 		ctx, url,
-		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
