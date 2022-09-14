@@ -31,7 +31,7 @@ func TestFactory_NewJournal(t *testing.T) {
 			},
 			want: Journal{
 				id:         testJournalID,
-				scheduleId: testScheduleID,
+				scheduleID: testScheduleID,
 				date:       dateValue,
 			},
 			wantErr: false,

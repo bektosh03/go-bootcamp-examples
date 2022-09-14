@@ -10,6 +10,7 @@ import (
 type Journal struct {
 	ID         uuid.UUID `db:"id"`
 	ScheduleID uuid.UUID `db:"schedule_id"`
+	TeacherID  uuid.UUID `db:"teacher_id"`
 	Date       time.Time `db:"date"`
 }
 

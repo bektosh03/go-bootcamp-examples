@@ -33,8 +33,8 @@ func (r *PostgresRepository) CreateJournal(ctx context.Context, jour journal.Jou
 }
 
 func (r *PostgresRepository) createJournal(ctx context.Context, jour Journal) error {
-	query := `INSERT INTO journals VALUES ($1,$2,$3)`
-	_, err := r.db.ExecContext(ctx, query, jour.ID, jour.ScheduleID, jour.Date)
+	query := `INSERT INTO journals VALUES ($1, $2, $3, $4)`
+	_, err := r.db.ExecContext(ctx, query, jour.ID, jour.ScheduleID, jour.Date, jour.TeacherID)
 	return err
 }
 
@@ -156,16 +156,40 @@ func (r *PostgresRepository) getStudentJournalEntries(ctx context.Context, stude
 	return entries, nil
 }
 
-func (p *PostgresRepository) cleanup(ctx context.Context) error {
+func (r *PostgresRepository) GetTeacherJournalEntries(ctx context.Context, teacherID uuid.UUID, start, end time.Time) ([]journal.Entry, error) {
+	dbEntries, err := r.getTeacherJournalEntries(ctx, teacherID, start, end)
+	if err != nil {
+		return nil, err
+	}
+
+	return toDomainEntries(dbEntries)
+}
+
+func (r *PostgresRepository) getTeacherJournalEntries(ctx context.Context, teacherID uuid.UUID, start, end time.Time) ([]Entry, error) {
+	query := `
+	SELECT j.id as journal_id, j.schedule_id, j.date, js.student_id, js.attended, js.mark
+	FROM journals j
+	JOIN journal_stats js ON j.id = js.journal_id
+	WHERE j.teacher_id = $1 AND (j.date BETWEEN $2 AND $3)
+	`
+	entries := make([]Entry, 0)
+	if err := r.db.SelectContext(ctx, &entries, query, teacherID, start, end); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
+}
+
+func (r *PostgresRepository) cleanup(ctx context.Context) error {
 
 	query := `DELETE FROM journal_stats`
-	_, err := p.db.ExecContext(ctx, query)
+	_, err := r.db.ExecContext(ctx, query)
 	if err != nil {
 		return err
 	}
 	query = `DELETE FROM journals`
 
-	_, err = p.db.ExecContext(ctx, query)
+	_, err = r.db.ExecContext(ctx, query)
 	if err != nil {
 		return err
 	}

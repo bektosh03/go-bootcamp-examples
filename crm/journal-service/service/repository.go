@@ -17,4 +17,5 @@ type JournalRepository interface {
 	MarkStudent(ctx context.Context, st journal.Stat) error
 	SetStudentAttendance(ctx context.Context, st journal.Stat) error
 	GetStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start time.Time, end time.Time) ([]journal.Entry, error)
+	GetTeacherJournalEntries(ctx context.Context, teacherID uuid.UUID, start, end time.Time) ([]journal.Entry, error)
 }

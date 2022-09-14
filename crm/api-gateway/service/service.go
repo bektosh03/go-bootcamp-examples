@@ -24,13 +24,14 @@ type Service struct {
 }
 
 type JournalServiceClient interface {
-	RegisterJournal(ctx context.Context, scheduleID string, date time.Time, studentIDs []string) (response.Journal, error)
+	RegisterJournal(ctx context.Context, scheduleID, teacherID string, date time.Time, studentIDs []string) (response.Journal, error)
 	GetJournal(ctx context.Context, journalId string) (response.Journal, error)
 	UpdateJournal(ctx context.Context, journal request.Journal) (response.Journal, error)
 	DeleteJournal(ctx context.Context, id string) error
 	SetStudentAttendance(ctx context.Context, req request.SetStudentAttendanceRequest) error
 	MarkStudent(ctx context.Context, req request.MarkStudentRequest) error
 	GetStudentJournal(ctx context.Context, studentID string, start, end time.Time) ([]response.JournalEntry, error)
+	GetTeacherJournal(ctx context.Context, teacherID string, start, end time.Time) ([]response.JournalEntry, error)
 }
 
 type ScheduleServiceClient interface {

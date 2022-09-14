@@ -33,6 +33,7 @@ func toRepositoryJournal(jour journal.Journal) Journal {
 	return Journal{
 		ID:         jour.ID(),
 		ScheduleID: jour.ScheduleID(),
+		TeacherID:  jour.TeacherID(),
 		Date:       jour.Date(),
 	}
 }

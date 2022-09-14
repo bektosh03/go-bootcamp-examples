@@ -16,10 +16,11 @@ func NewFactory(idGenerator id.IGenerator) Factory {
 		idGenerator: idGenerator,
 	}
 }
-func (f Factory) NewJournal(scheduleId uuid.UUID, date time.Time) (Journal, error) {
+func (f Factory) NewJournal(scheduleId, teacherID uuid.UUID, date time.Time) (Journal, error) {
 	j := Journal{
 		id:         f.idGenerator.GenerateUUID(),
-		scheduleId: scheduleId,
+		scheduleID: scheduleId,
+		teacherID:  teacherID,
 		date:       date,
 	}
 	if err := j.validate(); err != nil {

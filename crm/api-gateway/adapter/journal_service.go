@@ -23,6 +23,35 @@ func NewJournalService(client journalpb.JournalServiceClient) JournalService {
 	}
 }
 
+func (s JournalService) GetTeacherJournal(ctx context.Context, teacherID string, start, end time.Time) ([]response.JournalEntry, error) {
+	res, err := s.client.GetTeacherJournalEntries(ctx, &journalpb.GetTeacherJournalEntriesRequest{
+		TeacherId: teacherID,
+		TimeRange: &journalpb.TimeRange{
+			Start: &timestamppb.Timestamp{
+				Seconds: start.Unix(),
+				Nanos:   int32(start.Nanosecond()),
+			},
+			End: &timestamppb.Timestamp{
+				Seconds: end.Unix(),
+				Nanos:   int32(end.Nanosecond()),
+			},
+		},
+	})
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
+		return nil, err
+	}
+
+	return fromProtoToResponseEntries(res), nil
+}
+
 func (s JournalService) GetStudentJournal(ctx context.Context, studentID string, start, end time.Time) ([]response.JournalEntry, error) {
 	res, err := s.client.GetStudentJournalEntries(ctx, &journalpb.GetStudentJournalEntriesRequest{
 		StudentId: studentID,
@@ -95,9 +124,10 @@ func (s JournalService) SetStudentAttendance(ctx context.Context, req request.Se
 	return err
 }
 
-func (s JournalService) RegisterJournal(ctx context.Context, scheduleID string, date time.Time, studentIDs []string) (response.Journal, error) {
+func (s JournalService) RegisterJournal(ctx context.Context, scheduleID, teacherID string, date time.Time, studentIDs []string) (response.Journal, error) {
 	grpcRequest := &journalpb.CreateJournalRequest{
 		ScheduleId: scheduleID,
+		TeacherId:  teacherID,
 		Date: &timestamppb.Timestamp{
 			Seconds: date.Unix(),
 			Nanos:   int32(date.Nanosecond()),
@@ -126,7 +156,7 @@ func (s JournalService) RegisterJournal(ctx context.Context, scheduleID string, 
 
 func (s JournalService) GetJournal(ctx context.Context, journalId string) (response.Journal, error) {
 	res, err := s.client.GetJournal(ctx, &journalpb.GetJournalRequest{JournalId: journalId})
-	
+
 	if err != nil {
 		if sts, ok := status.FromError(err); ok {
 			switch sts.Code() {
@@ -139,7 +169,7 @@ func (s JournalService) GetJournal(ctx context.Context, journalId string) (respo
 			}
 		}
 		return response.Journal{}, err
-	
+
 	}
 	return response.Journal{
 		ID:         res.Id,

@@ -147,6 +147,21 @@ func (s Server) GetStudentJournalEntries(ctx context.Context, req *journalpb.Get
 	return toProtoEntries(entries), nil
 }
 
+func (s Server) GetTeacherJournalEntries(ctx context.Context, req *journalpb.GetTeacherJournalEntriesRequest) (*journalpb.Entries, error) {
+	teacherID, err := uuid.Parse(req.TeacherId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "teacher id is not uuid")
+	}
+
+	entries, err := s.service.GetTeacherJournalEntries(ctx, teacherID, req.TimeRange.Start.AsTime(), req.TimeRange.End.AsTime())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return toProtoEntries(entries), nil
+
+}
+
 func (s Server) convertUpdateJournalRequestToDomainJournal(protojour *journalpb.Journal) (journal.Journal, error) {
 	id, err := uuid.Parse(protojour.GetId())
 	if err != nil {
@@ -173,7 +188,12 @@ func (s Server) convertRegisterJournalRequestToDomainJournal(protoJour *journalp
 		return journal.Journal{}, status.Error(codes.InvalidArgument, "provided schedule id is not uuid")
 	}
 
-	jour, err := s.journalFactory.NewJournal(scheduleId, protoJour.Date.AsTime())
+	teacherID, err := uuid.Parse(protoJour.TeacherId)
+	if err != nil {
+		return journal.Journal{}, status.Error(codes.InvalidArgument, "provided teacher id is not uuid")
+	}
+
+	jour, err := s.journalFactory.NewJournal(scheduleId, teacherID, protoJour.Date.AsTime())
 	if err != nil {
 		return journal.Journal{}, status.Error(codes.InvalidArgument, err.Error())
 	}

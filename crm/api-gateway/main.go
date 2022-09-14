@@ -74,6 +74,7 @@ func main() {
 		r.Put("/journal/attendance", h.SetStudentAttendance)
 		r.Put("/journal/mark", h.MarkStudent)
 		r.Get("/journal/student/{id}", h.GetStudentJournal)
+		r.Get("/journal/teacher/{id}", h.GetTeacherJournal)
 	})
 	// teacher endpoints
 	r.Group(func(r chi.Router) {

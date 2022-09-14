@@ -62,3 +62,7 @@ func (s Service) SetStudentAttendance(ctx context.Context, st journal.Stat) erro
 func (s Service) GetStudentJournalEntries(ctx context.Context, studentID uuid.UUID, start, end time.Time) ([]journal.Entry, error) {
 	return s.repo.GetStudentJournalEntries(ctx, studentID, start, end)
 }
+
+func (s Service) GetTeacherJournalEntries(ctx context.Context, teacherID uuid.UUID, start, end time.Time) ([]journal.Entry, error) {
+	return s.repo.GetTeacherJournalEntries(ctx, teacherID, start, end)
+}

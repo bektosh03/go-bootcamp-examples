@@ -1,6 +1,7 @@
 package journal
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,20 +14,25 @@ var (
 
 type Journal struct {
 	id         uuid.UUID
-	scheduleId uuid.UUID
+	scheduleID uuid.UUID
+	teacherID  uuid.UUID
 	date       time.Time
 }
 
-func (j Journal) ID() uuid.UUID {
+func (j *Journal) ID() uuid.UUID {
 	return j.id
 }
 
-func (j Journal) ScheduleID() uuid.UUID {
-	return j.scheduleId
+func (j *Journal) ScheduleID() uuid.UUID {
+	return j.scheduleID
 }
 
-func (j Journal) Date() time.Time {
+func (j *Journal) Date() time.Time {
 	return j.date
+}
+
+func (j *Journal) TeacherID() uuid.UUID {
+	return j.teacherID
 }
 
 // Setters
@@ -35,10 +41,10 @@ func (j *Journal) SetDate(date time.Time) error {
 	return j.validate()
 }
 func (j *Journal) SetScheduleID(id uuid.UUID) {
-	j.scheduleId = id
+	j.scheduleID = id
 }
 
-func (j Journal) validate() error {
+func (j *Journal) validate() error {
 	if j.date.Equal(time.Time{}) {
 		return errors.New("time is empty")
 	}
@@ -46,21 +52,22 @@ func (j Journal) validate() error {
 	return nil
 }
 
-
 type UnmarshalJournalArgs struct {
 	ID         uuid.UUID
 	ScheduleID uuid.UUID
+	TeacherID  uuid.UUID
 	Date       time.Time
 }
 
 func UnmarshalJournal(args UnmarshalJournalArgs) (Journal, error) {
 	j := Journal{
 		id:         args.ID,
-		scheduleId: args.ScheduleID,
+		scheduleID: args.ScheduleID,
+		teacherID:  args.TeacherID,
 		date:       args.Date,
 	}
 	if err := j.validate(); err != nil {
-		return Journal{}, nil
+		return Journal{}, fmt.Errorf("%w: %s", ErrInvalidJournalData, err.Error())
 	}
 
 	return j, nil
