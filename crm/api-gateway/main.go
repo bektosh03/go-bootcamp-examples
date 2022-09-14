@@ -67,10 +67,13 @@ func main() {
 
 	r.Use(middleware.Logger)
 
+	r.Post("/admin", h.AuthAdmin)
 	// registration endpoints
 	r.Group(func(r chi.Router) {
+		r.Use(auth.AdminMiddleware)
 		r.Post("/teacher", h.RegisterTeacher)
 		r.Post("/student", h.RegisterStudent)
+		r.Post("/subject", h.CreateSubject)
 	})
 
 	r.Group(func(r chi.Router) {
@@ -95,7 +98,6 @@ func main() {
 	// subject endpoints
 	r.Group(func(r chi.Router) {
 		// TODO add auth middleware
-		r.Post("/subject", h.CreateSubject)
 		r.Get("/subject/{id}", h.GetSubject)
 		r.Delete("/subject/delete/{id}", h.DeleteSubject)
 		r.Get("/subjects", h.ListSubjects)

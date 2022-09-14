@@ -3,9 +3,9 @@ package auth
 import (
 	"api-gateway/pkg/httperr"
 	"fmt"
-	"github.com/golang-jwt/jwt/v4"
 	"net/http"
-	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 const jwtSecret = "very secret key"
@@ -34,16 +34,30 @@ func Middleware(next http.Handler) http.Handler {
 	})
 }
 
-func NewJWT(id string) string {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":  id,
-		"exp": time.Now().Add(time.Hour).Unix(),
+func AdminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.Header.Get("Admin")
+		if tokenString == "" {
+			httperr.Unauthorized(w, r, "no token in Admin header")
+			return
+		}
+		claims := &AdminCliams{}
+
+		tkn, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtSecret), nil
+		})
+
+		if err != nil {
+			httperr.Unauthorized(w, r, err.Error())
+			return
+		}
+		if !tkn.Valid {
+			httperr.Unauthorized(w, r, "token has been expired")
+			return
+		}
+
+		r.Header.Set("Admin", tokenString)
+
+		next.ServeHTTP(w, r)
 	})
-
-	tokenString, err := token.SignedString([]byte(jwtSecret))
-	if err != nil {
-		panic(err)
-	}
-
-	return tokenString
 }

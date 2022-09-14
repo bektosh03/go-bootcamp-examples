@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type AdminRequest struct {
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
+}
+
 type MarkStudentRequest struct {
 	JournalID string `json:"journal_id"`
 	StudentID string `json:"student_id"`
