@@ -21,6 +21,7 @@ type Teacher struct {
 	lastName    string
 	email       string
 	phoneNumber string
+	password    string
 	subjectID   uuid.UUID
 }
 
@@ -49,6 +50,10 @@ func (t Teacher) SubjectID() uuid.UUID {
 	return t.subjectID
 }
 
+func (t Teacher) Password() string {
+	return t.password
+}
+
 // Setters ...
 func (t *Teacher) SetFirstName(fn string) error {
 	t.firstName = fn
@@ -66,14 +71,18 @@ func (t *Teacher) SetEmail(email string) error {
 }
 
 func (t *Teacher) SetPhoneNUmber(phone string) error {
-	t.phoneNumber= phone
+	t.phoneNumber = phone
 	return t.validate()
 }
 
-func (t *Teacher) SetSubjectID(id uuid.UUID)  {
-	t.subjectID = id
+func (t *Teacher) SetPassword(password string) error {
+	t.password = password
+	return t.validate()
 }
 
+func (t *Teacher) SetSubjectID(id uuid.UUID) {
+	t.subjectID = id
+}
 
 func (t Teacher) validate() error {
 	if t.firstName == "" {
@@ -81,6 +90,9 @@ func (t Teacher) validate() error {
 	}
 	if t.lastName == "" {
 		return fmt.Errorf("%w: empty last name", ErrInvalidTeacherData)
+	}
+	if t.password == "" {
+		return fmt.Errorf("%w: empty password", ErrInvalidTeacherData)
 	}
 	// if err := validate.Email(t.email); err != nil {
 	// 	return fmt.Errorf("%w: %v", ErrInvalidTeacherData, err)
@@ -98,6 +110,7 @@ type UnmarshalTeacherArgs struct {
 	LastName    string
 	Email       string
 	PhoneNumber string
+	Password    string
 	SubjectID   uuid.UUID
 }
 
@@ -108,6 +121,7 @@ func UnmarshalTeacher(args UnmarshalTeacherArgs) (Teacher, error) {
 		lastName:    args.LastName,
 		email:       args.Email,
 		phoneNumber: args.PhoneNumber,
+		password:    args.Password,
 		subjectID:   args.SubjectID,
 	}
 	if err := t.validate(); err != nil {

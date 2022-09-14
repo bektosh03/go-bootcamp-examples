@@ -9,5 +9,6 @@ type Teacher struct {
 	LastName    string    `db:"last_name"`
 	Email       string    `db:"email"`
 	PhoneNumber string    `db:"phone_number"`
+	Password    string    `db:"password"`
 	SubjectID   uuid.UUID `db:"subject_id"`
 }

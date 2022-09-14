@@ -181,6 +181,7 @@ func (s Server) convertRegisterTeacherRequestToDomainTeacher(protoTeacher *teach
 		protoTeacher.LastName,
 		protoTeacher.Email,
 		protoTeacher.PhoneNumber,
+		protoTeacher.Password,
 		subjectID,
 	)
 	if err != nil {

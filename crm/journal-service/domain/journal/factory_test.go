@@ -11,6 +11,7 @@ import (
 func TestFactory_NewJournal(t *testing.T) {
 	type args struct {
 		scheduleId uuid.UUID
+		teacherID uuid.UUID
 		date       time.Time
 	}
 
@@ -27,11 +28,13 @@ func TestFactory_NewJournal(t *testing.T) {
 			name: "should pass",
 			args: args{
 				scheduleId: testScheduleID,
+				teacherID: testTeacherID,
 				date:       dateValue,
 			},
 			want: Journal{
 				id:         testJournalID,
 				scheduleID: testScheduleID,
+				teacherID: testTeacherID,
 				date:       dateValue,
 			},
 			wantErr: false,
@@ -51,7 +54,7 @@ func TestFactory_NewJournal(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := f.NewJournal(tt.args.scheduleId, tt.args.date)
+			got, err := f.NewJournal(tt.args.scheduleId, tt.args.teacherID,tt.args.date)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewJournal() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -66,6 +69,7 @@ func TestFactory_NewJournal(t *testing.T) {
 var (
 	testScheduleID = uuid.New()
 	testJournalID  = uuid.New()
+	testTeacherID = uuid.New()
 	date           = "2022-09-14"
 )
 
