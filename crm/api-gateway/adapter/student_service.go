@@ -6,6 +6,7 @@ import (
 	"api-gateway/response"
 	"context"
 	"fmt"
+
 	"github.com/bektosh03/crmprotos/studentpb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -26,6 +27,14 @@ func (a StudentService) GetGroupStudents(ctx context.Context, groupID string) ([
 		GroupId: groupID,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 
@@ -62,6 +71,14 @@ func (a StudentService) DeleteGroup(ctx context.Context, groupID string) error {
 	if _, err := a.client.DeleteGroup(ctx, &studentpb.DeleteGroupRequest{
 		GroupId: groupID,
 	}); err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return err
 	}
 
@@ -76,6 +93,14 @@ func (a StudentService) UpdateGroup(ctx context.Context, gr request.Group) (resp
 	}
 	res, err := a.client.UpdateGroup(ctx, grpcRequest)
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Group{}, err
 	}
 
@@ -92,6 +117,16 @@ func (a StudentService) GetGroup(ctx context.Context, id string) (response.Group
 	})
 
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Group{}, err
 	}
 
@@ -110,6 +145,14 @@ func (a StudentService) CreateGroup(ctx context.Context, req request.CreateGroup
 
 	res, err := a.client.CreateGroup(ctx, grpcRequest)
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Group{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Group{}, err
 	}
 
@@ -136,6 +179,14 @@ func (a StudentService) DeleteStudent(ctx context.Context, studentID string) err
 	if _, err := a.client.DeleteStudent(ctx, &studentpb.DeleteStudentRequest{
 		StudentId: studentID,
 	}); err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return err
 	}
 
@@ -154,6 +205,14 @@ func (a StudentService) UpdateStudent(ctx context.Context, st request.Student) (
 	}
 	res, err := a.client.UpdateStudent(ctx, grpcRequest)
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Student{}, err
 	}
 	return response.Student{
@@ -222,7 +281,15 @@ func (a StudentService) RegisterStudent(ctx context.Context, req request.Registe
 		GroupId:     req.GroupID,
 	}
 	res, err := a.client.RegisterStudent(ctx, grpcRequest)
-	if err != nil {
+		if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Student{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Student{}, err
 	}
 

@@ -60,6 +60,16 @@ func (s ScheduleService) GetSchedule(ctx context.Context, id string) (response.S
 		ScheduleId: id,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			case codes.NotFound:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrNotFound, sts.Message())
+			default:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Schedule{}, err
 	}
 	return response.Schedule{
@@ -82,6 +92,14 @@ func (s ScheduleService) UpdateSchedule(ctx context.Context, req request.Schedul
 		LessonNumber: req.LessonNumber,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return response.Schedule{}, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return response.Schedule{}, err
 	}
 
@@ -100,6 +118,18 @@ func (s ScheduleService) DeleteSchedule(ctx context.Context, id string) error {
 		ScheduleId: id,
 	})
 
+	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
+		return err
+	}
+
 	return err
 }
 
@@ -108,6 +138,14 @@ func (s ScheduleService) GetFullScheduleForTeacher(ctx context.Context, teacherI
 		TeacherId: teacherID,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 
@@ -119,6 +157,14 @@ func (s ScheduleService) GetFullScheduleForGroup(ctx context.Context, groupID st
 		GroupId: groupID,
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 
@@ -130,10 +176,18 @@ func (s ScheduleService) GetSpecificDateScheduleForTeacher(ctx context.Context, 
 		TeacherId: teacherID,
 		Date: &timestamppb.Timestamp{
 			Seconds: date.Unix(),
-			Nanos:   int32(date.UnixNano()),
+			Nanos:   int32(date.Nanosecond()),
 		},
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 
@@ -143,9 +197,17 @@ func (s ScheduleService) GetSpecificDateScheduleForTeacher(ctx context.Context, 
 func (s ScheduleService) GetSpecificDateScheduleForGroup(ctx context.Context, groupID string, date time.Time) ([]response.Schedule, error) {
 	res, err := s.client.GetSpecificDateScheduleForGroup(ctx, &schedulepb.GetSpecificDateScheduleForGroupRequest{
 		GroupId: groupID,
-		Date:    &timestamppb.Timestamp{Seconds: date.Unix(), Nanos: int32(date.UnixNano())},
+		Date:    &timestamppb.Timestamp{Seconds: date.Unix(), Nanos: int32(date.Nanosecond())},
 	})
 	if err != nil {
+		if sts, ok := status.FromError(err); ok {
+			switch sts.Code() {
+			case codes.InvalidArgument:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrBadRequest, sts.Message())
+			default:
+				return nil, fmt.Errorf("%w: %s", httperr.ErrInternal, sts.Message())
+			}
+		}
 		return nil, err
 	}
 

@@ -155,3 +155,20 @@ func (r *PostgresRepository) getStudentJournalEntries(ctx context.Context, stude
 
 	return entries, nil
 }
+
+func (p *PostgresRepository) cleanup(ctx context.Context) error {
+
+	query := `DELETE FROM journal_stats`
+	_, err := p.db.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	query = `DELETE FROM journals`
+
+	_, err = p.db.ExecContext(ctx, query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

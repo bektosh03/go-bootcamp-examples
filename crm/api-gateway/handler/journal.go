@@ -32,7 +32,7 @@ func (h Handler) GetStudentJournal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	journals, err := h.service.Journal.GetStudentJournal(context.Background(), studentID, start.Add(time.Second), end.Add(time.Second))
+	journals, err := h.service.Journal.GetStudentJournal(context.Background(), studentID, start, end)
 	if err != nil {
 		httperr.Handle(w, r, err)
 		return
@@ -57,6 +57,11 @@ func (h Handler) GetStudentJournal(w http.ResponseWriter, r *http.Request) {
 			request.GetTeacherRequest{TeacherID: schedule.TeacherID},
 		)
 
+		if err != nil {
+			httperr.Handle(w, r, err)
+			return
+		}
+
 		entries = append(entries, response.FullJournalEntry{
 			JournalID: j.JournalID,
 			Date:      j.Date,
@@ -67,6 +72,7 @@ func (h Handler) GetStudentJournal(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, entries)
 }
 
@@ -82,6 +88,7 @@ func (h Handler) MarkStudent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, render.M{
 		"ok": true,
 	})
@@ -99,6 +106,7 @@ func (h Handler) SetStudentAttendance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, render.M{
 		"ok": true,
 	})
@@ -129,6 +137,7 @@ func (h Handler) RegisterJournal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, journal)
 }
 
@@ -136,8 +145,11 @@ func (h Handler) GetJournal(w http.ResponseWriter, r *http.Request) {
 	journalId := chi.URLParam(r, "id")
 	journal, err := h.service.Journal.GetJournal(context.Background(), journalId)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, journal)
 }
 
@@ -145,8 +157,11 @@ func (h Handler) DeleteJournal(w http.ResponseWriter, r *http.Request) {
 	journalId := chi.URLParam(r, "id")
 	err := h.service.Journal.DeleteJournal(context.Background(), journalId)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, render.M{
 		"ok": "deleted",
 	})
@@ -160,7 +175,10 @@ func (h Handler) UpdateJournal(w http.ResponseWriter, r *http.Request) {
 	}
 	res, err := h.service.Journal.UpdateJournal(context.Background(), req)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, res)
 }
