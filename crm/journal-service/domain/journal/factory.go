@@ -8,10 +8,10 @@ import (
 )
 
 type Factory struct {
-	idGenerator id.Generator
+	idGenerator id.IGenerator
 }
 
-func NewFactory(idGenerator id.Generator) Factory {
+func NewFactory(idGenerator id.IGenerator) Factory {
 	return Factory{
 		idGenerator: idGenerator,
 	}
