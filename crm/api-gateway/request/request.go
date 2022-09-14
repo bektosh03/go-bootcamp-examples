@@ -34,7 +34,7 @@ func (r *GetSpecificDateScheduleForTeacherRequest) UnmarshalJSON(data []byte) er
 	}
 
 	r.TeacherID = m["teacher_id"]
-	r.Date = date.Add(time.Second)
+	r.Date = date
 
 	return nil
 }
@@ -56,7 +56,7 @@ func (r *GetSpecificDateScheduleForGroupRequest) UnmarshalJSON(data []byte) erro
 	}
 
 	r.GroupID = m["group_id"]
-	r.Date = date.Add(time.Second)
+	r.Date = date
 
 	return nil
 }
@@ -84,7 +84,7 @@ func (r *CreateJournalRequest) UnmarshalJSON(data []byte) error {
 	}
 
 	r.ScheduleID = m["schedule_id"]
-	r.Date = date.Add(time.Second)
+	r.Date = date
 
 	return nil
 }

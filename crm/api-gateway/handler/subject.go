@@ -9,8 +9,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // CreateSubject creates a new subject
@@ -23,16 +21,7 @@ func (h Handler) CreateSubject(w http.ResponseWriter, r *http.Request) {
 
 	subject, err := h.service.Teacher.CreateSubject(context.Background(), req)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 
@@ -46,18 +35,7 @@ func (h Handler) GetSubject(w http.ResponseWriter, r *http.Request) {
 
 	subject, err := h.service.Teacher.GetSubject(context.Background(), id)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			case codes.NotFound:
-				httperr.NotFoundErr(w, r, sts.Err())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 	render.Status(r, http.StatusOK)
@@ -70,16 +48,7 @@ func (h Handler) DeleteSubject(w http.ResponseWriter, r *http.Request) {
 
 	err := h.service.Teacher.DeleteSubject(context.Background(), subjectID)
 	if err != nil {
-		if sts, ok := status.FromError(err); ok {
-			switch sts.Code() {
-			case codes.InvalidArgument:
-				httperr.BadRequest(w, r, sts.Message())
-			case codes.Internal:
-				httperr.InternalError(w, r, sts.Message())
-			}
-			return
-		}
-		httperr.InternalError(w, r, err.Error())
+		httperr.Handle(w, r, err)
 		return
 	}
 

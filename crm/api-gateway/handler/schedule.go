@@ -5,9 +5,7 @@ import (
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -26,6 +24,7 @@ func (h Handler) RegisterSchedule(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, schedule)
 }
 
@@ -38,9 +37,11 @@ func (h Handler) UpdateSchedule(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.service.Schedule.UpdateSchedule(context.Background(), req)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, res)
 }
 
@@ -48,9 +49,11 @@ func (h Handler) DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	scheduleID := chi.URLParam(r, "id")
 
 	if err := h.service.Schedule.DeleteSchedule(context.Background(), scheduleID); err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, render.M{
 		"ok": true,
 	})
@@ -61,7 +64,8 @@ func (h Handler) GetFullScheduleForTeacher(w http.ResponseWriter, r *http.Reques
 
 	schedules, err := h.service.Schedule.GetFullScheduleForTeacher(context.Background(), teacherID)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
 	populatedSchedules, err := h.populateSchedules(schedules)
@@ -70,6 +74,7 @@ func (h Handler) GetFullScheduleForTeacher(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -78,7 +83,8 @@ func (h Handler) GetFullScheduleForGroup(w http.ResponseWriter, r *http.Request)
 
 	schedules, err := h.service.Schedule.GetFullScheduleForGroup(context.Background(), groupID)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
 
 	populatedSchedules, err := h.populateSchedules(schedules)
@@ -87,6 +93,7 @@ func (h Handler) GetFullScheduleForGroup(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -96,7 +103,6 @@ func (h Handler) GetSpecificDateScheduleForTeacher(w http.ResponseWriter, r *htt
 		httperr.InvalidJSON(w, r)
 		return
 	}
-	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForTeacher(context.Background(), req.TeacherID, req.Date)
 	if err != nil {
@@ -110,6 +116,7 @@ func (h Handler) GetSpecificDateScheduleForTeacher(w http.ResponseWriter, r *htt
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -119,12 +126,6 @@ func (h Handler) GetSpecificDateScheduleForGroup(w http.ResponseWriter, r *http.
 		httperr.InvalidJSON(w, r)
 		return
 	}
-
-	fmt.Println("date:", req.Date)
-	fmt.Println("weekday:", req.Date.Weekday())
-	t := time.Unix(req.Date.Unix(), req.Date.UnixNano())
-	fmt.Println("t:", t, "t weekday:", t.Weekday())
-	req.Date.Add(time.Second)
 
 	schedules, err := h.service.Schedule.GetSpecificDateScheduleForGroup(context.Background(), req.GroupID, req.Date)
 	if err != nil {
@@ -138,6 +139,7 @@ func (h Handler) GetSpecificDateScheduleForGroup(w http.ResponseWriter, r *http.
 		return
 	}
 
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, populatedSchedules)
 }
 
@@ -146,8 +148,11 @@ func (h Handler) GetScheduleById(w http.ResponseWriter, r *http.Request) {
 
 	schedule, err := h.service.Schedule.GetSchedule(context.Background(), id)
 	if err != nil {
-		panic(err)
+		httperr.Handle(w, r, err)
+		return
 	}
+
+	render.Status(r, http.StatusOK)
 	render.JSON(w, r, schedule)
 }
 

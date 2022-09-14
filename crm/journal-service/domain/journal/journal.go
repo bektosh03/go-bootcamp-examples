@@ -29,6 +29,15 @@ func (j Journal) Date() time.Time {
 	return j.date
 }
 
+// Setters
+func (j *Journal) SetDate(date time.Time) error {
+	j.date = date
+	return j.validate()
+}
+func (j *Journal) SetScheduleID(id uuid.UUID) {
+	j.scheduleId = id
+}
+
 func (j Journal) validate() error {
 	if j.date.Equal(time.Time{}) {
 		return errors.New("time is empty")
@@ -36,6 +45,7 @@ func (j Journal) validate() error {
 
 	return nil
 }
+
 
 type UnmarshalJournalArgs struct {
 	ID         uuid.UUID
