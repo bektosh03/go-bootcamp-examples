@@ -12,8 +12,8 @@ type AdminCliams struct {
 }
 
 const (
-	Admin_user_name = "user"
-	Admin_password  = "123"
+	AdminUserName = "user"
+	AdminPassword = "123"
 )
 
 func NewJWTForAdmin() string {

@@ -9,7 +9,6 @@ import (
 	"github.com/go-chi/render"
 )
 
-
 func (h Handler) AuthAdmin(w http.ResponseWriter, r *http.Request) {
 	var req request.AdminRequest
 
@@ -18,14 +17,14 @@ func (h Handler) AuthAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Password != auth.Admin_password || req.UserName != auth.Admin_user_name {
+	if req.Password != auth.AdminPassword || req.UserName != auth.AdminUserName {
 		httperr.Unauthorized(w, r, "password or user_name for admin is incorrect")
 		return
 	}
-		
+
 	render.JSON(w, r, render.M{
-		"ok" : true,
-		"token": auth.NewJWTForAdmin()	,
+		"ok":    true,
+		"token": auth.NewJWTForAdmin(),
 	})
-	
+
 }
