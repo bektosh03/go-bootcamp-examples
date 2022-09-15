@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"api-gateway/pkg/auth"
 	"api-gateway/pkg/httperr"
 	"api-gateway/request"
 	"context"
@@ -23,7 +24,7 @@ func (h Handler) ListStudents(w http.ResponseWriter, r *http.Request) {
 		httperr.BadRequest(w, r, err.Error())
 		return
 	}
-	
+
 	students, err := h.service.Student.ListStudents(context.Background(), int32(page), int32(limit))
 	if err != nil {
 		httperr.Handle(w, r, err)
@@ -79,7 +80,10 @@ func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.Status(r, http.StatusOK)
-	render.JSON(w, r, student)
+	render.JSON(w, r, render.M{
+		"student": student,
+		"token":   auth.NewJWT(student.ID),
+	})
 }
 
 func (h Handler) GetStudent(w http.ResponseWriter, r *http.Request) {

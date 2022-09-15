@@ -25,7 +25,7 @@ func (h Handler) RegisterTeacher(w http.ResponseWriter, r *http.Request) {
 		httperr.Handle(w, r, err)
 		return
 	}
-
+	
 	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, render.M{
 		"teacher": teacher,

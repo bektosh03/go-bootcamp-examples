@@ -65,6 +65,7 @@ func TestPostgres_CreateAndGet(t *testing.T) {
 			"Last",
 			"khasanovasumbula@gmail.com",
 			"+998991234567",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)
@@ -73,6 +74,7 @@ func TestPostgres_CreateAndGet(t *testing.T) {
 		require.NoError(t, err)
 
 		got, err := p.GetTeacher(context.Background(), teacher.ByID{ID: tch.ID()})
+		tch.SetPassword(got.Password()) // because password comes in hashed from database
 		require.NoError(t, err)
 		assert.Equal(t, tch, got)
 	})
@@ -104,6 +106,7 @@ func TestPostgres_Update(t *testing.T) {
 			"Last",
 			"khasanovasumbula@gmail.com",
 			"+998991234567",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)
@@ -119,6 +122,7 @@ func TestPostgres_Update(t *testing.T) {
 
 		got, err := p.GetTeacher(context.Background(), teacher.ByID{ID: tch.ID()})
 		require.NoError(t, err)
+		tch.SetPassword(got.Password()) // because password comes in hashed from database
 		assert.Equal(t, tch, got)
 	})
 
@@ -173,6 +177,7 @@ func TestPostgres_Delete(t *testing.T) {
 			"Last",
 			"khasanovasumbula@gmail.com",
 			"+998991234567",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)
@@ -234,6 +239,7 @@ func TestPostgres_List(t *testing.T) {
 			"Last",
 			"sumbulahasanova@gmail.com",
 			"+998777777777",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)
@@ -246,6 +252,7 @@ func TestPostgres_List(t *testing.T) {
 			"Last",
 			"khasanovasumbula@gmail.com",
 			"+998991234567",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)
@@ -258,6 +265,7 @@ func TestPostgres_List(t *testing.T) {
 			"Last",
 			"lolopepedamnn@gmail.com",
 			"+998933332333",
+			"123",
 			s.ID(),
 		)
 		require.NoError(t, err)

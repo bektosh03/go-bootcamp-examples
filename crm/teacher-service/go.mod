@@ -22,6 +22,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
+	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20220317061510-51cd9980dadf // indirect
 	golang.org/x/text v0.3.7 // indirect

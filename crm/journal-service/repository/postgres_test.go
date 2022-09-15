@@ -27,6 +27,7 @@ var testPostgresCfg = postgres.Config{
 var (
 	testStudentID  = uuid.New()
 	testScheduelID = uuid.New()
+	testTeacherID = uuid.New()
 )
 
 func TestPostgresRepository(t *testing.T) {
@@ -41,7 +42,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("create journal", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		want, err := journalFac.NewJournal(testScheduelID, testDate)
+		want, err := journalFac.NewJournal(testScheduelID, testTeacherID,testDate)
 		require.NoError(t, err)
 
 		err = p.CreateJournal(context.Background(), want)
@@ -55,7 +56,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("create journal_stats", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		j, err := journalFac.NewJournal(testScheduelID, testDate)
+		j, err := journalFac.NewJournal(testScheduelID, testTeacherID, testDate)
 		require.NoError(t, err)
 		err = p.CreateJournal(context.Background(), j)
 		require.NoError(t, err)
@@ -70,7 +71,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("delet journal", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		j, err := journalFac.NewJournal(testScheduelID, testDate)
+		j, err := journalFac.NewJournal(testScheduelID, testTeacherID, testDate)
 		require.NoError(t, err)
 
 		err = p.CreateJournal(context.Background(), j)
@@ -86,7 +87,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("update journal", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		j, err := journalFac.NewJournal(testScheduelID, testDate)
+		j, err := journalFac.NewJournal(testScheduelID, testTeacherID, testDate)
 		require.NoError(t, err)
 
 		err = p.CreateJournal(context.Background(), j)
@@ -103,7 +104,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("mark student", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		j, err := journalFac.NewJournal(testScheduelID, testDate)
+		j, err := journalFac.NewJournal(testScheduelID, testTeacherID, testDate)
 		require.NoError(t, err)
 		err = p.CreateJournal(context.Background(), j)
 		require.NoError(t, err)
@@ -118,7 +119,7 @@ func TestPostgresRepository(t *testing.T) {
 
 	t.Run("set student's attendance", func(t *testing.T) {
 		t.Cleanup(cleanup(p))
-		j, err := journalFac.NewJournal(testScheduelID, testDate)
+		j, err := journalFac.NewJournal(testScheduelID, testTeacherID, testDate)
 		require.NoError(t, err)
 
 		err = p.CreateJournal(context.Background(), j)

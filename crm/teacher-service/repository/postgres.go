@@ -12,6 +12,7 @@ import (
 	"github.com/bektosh03/crmcommon/postgres"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -41,12 +42,19 @@ func (p *Postgres) CreateTeacher(ctx context.Context, t teacher.Teacher) error {
 }
 
 func (p *Postgres) createTeacher(ctx context.Context, t Teacher) error {
+	bp, err := bcrypt.GenerateFromPassword([]byte(t.Password), bcrypt.MinCost)
+	if err != nil {
+		return err
+	}
+
 	query := `
-	INSERT INTO teachers VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO teachers
+		(id, first_name, last_name, email, phone_number, password, subject_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
-	_, err := p.db.ExecContext(
+	_, err = p.db.ExecContext(
 		ctx, query,
-		t.ID, t.FirstName, t.LastName, t.Email, t.PhoneNumber, t.SubjectID,
+		t.ID, t.FirstName, t.LastName, t.Email, t.PhoneNumber, string(bp), t.SubjectID,
 	)
 
 	return err
@@ -105,6 +113,7 @@ func (p *Postgres) getTeacher(ctx context.Context, by teacher.By) (Teacher, erro
 		return Teacher{}, err
 	}
 
+	
 	return t, nil
 }
 
@@ -139,14 +148,19 @@ func (p *Postgres) UpdateTeacher(ctx context.Context, t teacher.Teacher) error {
 }
 
 func (p *Postgres) updateTeacher(ctx context.Context, t Teacher) error {
+	bp, err := bcrypt.GenerateFromPassword([]byte(t.Password), bcrypt.MinCost)
+	if err != nil {
+		return err
+	}
+
 	query := `
 	UPDATE teachers
-		SET first_name = $1, last_name = $2, email = $3, phone_number = $4, subject_id = $5
-	WHERE id = $6
+		SET first_name = $1, last_name = $2, email = $3, phone_number = $4, password = $5, subject_id = $6
+	WHERE id = $7
 	`
-	_, err := p.db.ExecContext(
+	_, err = p.db.ExecContext(
 		ctx, query,
-		t.FirstName, t.LastName, t.Email, t.PhoneNumber, t.SubjectID, t.ID,
+		t.FirstName, t.LastName, t.Email, t.PhoneNumber, string(bp), t.SubjectID, t.ID,
 	)
 
 	return err

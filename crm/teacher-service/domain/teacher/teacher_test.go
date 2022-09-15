@@ -13,6 +13,7 @@ func TestFactory_New(t *testing.T) {
 		lastName    string
 		email       string
 		phoneNumber string
+		password    string
 		subjectID   uuid.UUID
 	}
 	tests := []struct {
@@ -28,6 +29,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "Nazarov",
 				email:       "polat@nazarov.com",
 				phoneNumber: "+998977777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			want: Teacher{
@@ -36,6 +38,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "Nazarov",
 				email:       "polat@nazarov.com",
 				phoneNumber: "+998977777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			wantErr: false,
@@ -47,6 +50,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "Nazarov",
 				email:       "polat@nazarov.com",
 				phoneNumber: "+998977777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			want:    Teacher{},
@@ -59,6 +63,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "",
 				email:       "polat@nazarov.com",
 				phoneNumber: "+998977777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			want:    Teacher{},
@@ -71,6 +76,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "Nazarob",
 				email:       "polat.com",
 				phoneNumber: "+998977777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			want:    Teacher{},
@@ -83,6 +89,7 @@ func TestFactory_New(t *testing.T) {
 				lastName:    "Nazarob",
 				email:       "polat@nazarov.com",
 				phoneNumber: "+99897777777",
+				password: "123",
 				subjectID:   testSubjectID,
 			},
 			want:    Teacher{},
@@ -94,7 +101,7 @@ func TestFactory_New(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := f.NewTeacher(tt.args.firstName, tt.args.lastName, tt.args.email, tt.args.phoneNumber, tt.args.subjectID)
+			got, err := f.NewTeacher(tt.args.firstName, tt.args.lastName, tt.args.email, tt.args.phoneNumber, tt.args.password, tt.args.subjectID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
 				return
