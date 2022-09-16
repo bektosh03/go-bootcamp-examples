@@ -41,6 +41,7 @@ func fromProtoToResponseTeacher(teacher *teacherpb.Teacher) response.Teacher {
 		LastName:    teacher.LastName,
 		Email:       teacher.Email,
 		PhoneNumber: teacher.PhoneNumber,
+		Password:    teacher.Password,
 		SubjectID:   teacher.SubjectId,
 	}
 }
@@ -93,6 +94,7 @@ func fromProtoToResponseStudent(student *studentpb.Student) response.Student {
 		Email:       student.Email,
 		PhoneNumber: student.PhoneNumber,
 		Level:       student.Level,
+		Password:    student.Password,
 		GroupID:     student.GroupId,
 	}
 }

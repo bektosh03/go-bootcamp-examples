@@ -113,7 +113,6 @@ func (p *Postgres) getTeacher(ctx context.Context, by teacher.By) (Teacher, erro
 		return Teacher{}, err
 	}
 
-	
 	return t, nil
 }
 
@@ -155,7 +154,7 @@ func (p *Postgres) updateTeacher(ctx context.Context, t Teacher) error {
 
 	query := `
 	UPDATE teachers
-		SET first_name = $1, last_name = $2, email = $3, phone_number = $4, password = $5, subject_id = $6
+		SET first_name = $1, last_name = $2, email = $3, phone_number = $4, password = $5, subject_id = $6b
 	WHERE id = $7
 	`
 	_, err = p.db.ExecContext(

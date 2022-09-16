@@ -4,12 +4,13 @@ go 1.19
 
 require (
 	github.com/bektosh03/crmcommon v0.1.1
-	github.com/bektosh03/crmprotos v0.2.0
+	github.com/bektosh03/crmprotos v0.2.1-0.20220916093350-93f5e8a77d29
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/stretchr/testify v1.7.0
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 )

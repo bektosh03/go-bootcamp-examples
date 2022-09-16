@@ -13,6 +13,7 @@ func toRepositoryStudent(s student.Student) Student {
 		Email:       s.Email(),
 		PhoneNumber: s.PhoneNumber(),
 		Level:       s.Level(),
+		Password:    s.Password(),
 		GroupID:     s.GroupID(),
 	}
 }

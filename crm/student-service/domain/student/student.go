@@ -21,6 +21,7 @@ type Student struct {
 	email       string
 	phoneNumber string
 	level       int32
+	password    string
 	groupID     uuid.UUID
 }
 
@@ -48,6 +49,10 @@ func (t Student) Level() int32 {
 	return t.level
 }
 
+func (t Student) Password() string {
+	return t.password
+}
+
 func (t Student) GroupID() uuid.UUID {
 	return t.groupID
 }
@@ -62,6 +67,9 @@ func (t Student) validate() error {
 	//if err := validate.Email(t.email); err != nil {
 	//	return fmt.Errorf("%w: %v", ErrInvalidStudentData, err)
 	//}
+	if t.password == "" {
+		fmt.Errorf("%w: empty password", ErrInvalidStudentData)
+	}
 	if err := validate.PhoneNumber(t.phoneNumber); err != nil {
 		return fmt.Errorf("%w: %v", ErrInvalidStudentData, err)
 	}
@@ -79,6 +87,7 @@ type UnmarshalStudentArgs struct {
 	Email       string
 	PhoneNumber string
 	Level       int32
+	Password    string
 	GroupID     uuid.UUID
 }
 
@@ -90,6 +99,7 @@ func UnmarshalStudent(args UnmarshalStudentArgs) (Student, error) {
 		email:       args.Email,
 		phoneNumber: args.PhoneNumber,
 		level:       args.Level,
+		password:    args.Password,
 		groupID:     args.GroupID,
 	}
 	if err := t.validate(); err != nil {

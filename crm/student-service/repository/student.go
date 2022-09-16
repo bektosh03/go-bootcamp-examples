@@ -10,5 +10,6 @@ type Student struct {
 	Email       string    `db:"email"`
 	PhoneNumber string    `db:"phone_number"`
 	Level       int32     `db:"level"`
+	Password    string    `db:"password"`
 	GroupID     uuid.UUID `db:"group_id"`
 }

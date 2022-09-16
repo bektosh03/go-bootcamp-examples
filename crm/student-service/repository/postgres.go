@@ -9,6 +9,7 @@ import (
 	"github.com/bektosh03/crmcommon/postgres"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"student-service/domain/group"
 	"student-service/domain/student"
@@ -161,14 +162,17 @@ func (p *Postgres) deleteStudent(ctx context.Context, id uuid.UUID) error {
 
 // UpdateStudent ...
 func (p *Postgres) UpdateStudent(ctx context.Context, s student.Student) error {
-	return p.updateStudent(ctx, s)
+	return p.updateStudent(ctx, toRepositoryStudent(s))
 }
 
-func (p *Postgres) updateStudent(ctx context.Context, s student.Student) error {
-	query := `update students set first_name = $1, last_name = $2, email = $3, phone_number = $4, level = $5, group_id = $6 where id = $7`
-	_, err := p.db.ExecContext(
+func (p *Postgres) updateStudent(ctx context.Context, s Student) error {
+	bp, err := bcrypt.GenerateFromPassword([]byte(s.Password), bcrypt.MinCost)
+	query := `update students 
+	set first_name = $1, last_name = $2, email = $3, phone_number = $4, level = $5, password = $6, group_id = $7 
+	where id = $8`
+	_, err = p.db.ExecContext(
 		ctx, query,
-		s.FirstName, s.LastName, s.Email, s.PhoneNumber, s.Level, s.GroupID, s.ID(),
+		s.FirstName, s.LastName, s.Email, s.PhoneNumber, s.Level, string(bp), s.GroupID, s.ID,
 	)
 
 	return err
@@ -244,10 +248,17 @@ func (p *Postgres) CreateStudent(ctx context.Context, s student.Student) error {
 }
 
 func (p *Postgres) createStudent(ctx context.Context, s Student) error {
-	query := `insert into students values ($1, $2, $3, $4, $5, $6, $7)`
-	_, err := p.db.ExecContext(
+	bp, err := bcrypt.GenerateFromPassword([]byte(s.Password), bcrypt.MinCost)
+	if err != nil {
+		return err
+	}
+
+	query := `insert into students 
+    (id, first_name, last_name, email, phone_number, level, password, group_id)
+	values ($1, $2, $3, $4, $5, $6, $7, $8)`
+	_, err = p.db.ExecContext(
 		ctx, query,
-		s.ID, s.FirstName, s.LastName, s.Email, s.PhoneNumber, s.Level, s.GroupID,
+		s.ID, s.FirstName, s.LastName, s.Email, s.PhoneNumber, s.Level, string(bp), s.GroupID,
 	)
 
 	return err

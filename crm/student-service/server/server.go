@@ -242,6 +242,7 @@ func (s Server) convertUpdateStudentRequestToDomainStudent(protoStudent *student
 		Email:       protoStudent.Email,
 		PhoneNumber: protoStudent.PhoneNumber,
 		Level:       protoStudent.Level,
+		Password:    protoStudent.Password,
 		GroupID:     groupId,
 	})
 	if err != nil {
@@ -262,6 +263,7 @@ func (s Server) convertRegisterStudentRequestToDomainStudent(protoStudent *stude
 		protoStudent.LastName,
 		protoStudent.Email,
 		protoStudent.PhoneNumber,
+		protoStudent.Password,
 		protoStudent.Level,
 		groupID,
 	)

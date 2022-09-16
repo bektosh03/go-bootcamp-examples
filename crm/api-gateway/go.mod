@@ -3,7 +3,7 @@ module api-gateway
 go 1.18
 
 require (
-	github.com/bektosh03/crmprotos v0.2.1-0.20220914044424-e04fab01a79f
+	github.com/bektosh03/crmprotos v0.2.1-0.20220916093350-93f5e8a77d29
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/render v1.0.2

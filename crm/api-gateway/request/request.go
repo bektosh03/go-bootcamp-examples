@@ -118,6 +118,7 @@ type Student struct {
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
 	Level       int32  `json:"level"`
+	Password    string `json:"password"`
 	GroupID     string `json:"subject_id"`
 }
 
@@ -138,6 +139,7 @@ type RegisterStudentRequest struct {
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
 	Level       int32  `json:"level"`
+	Password    string `json:"password"`
 	GroupID     string `json:"group_id"`
 }
 
@@ -146,6 +148,7 @@ type RegisterTeacherRequest struct {
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
+	Password    string `json:"password"`
 	SubjectID   string `json:"subject_id"`
 }
 
