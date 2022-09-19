@@ -1,0 +1,4 @@
+CREATE DATABASE scheduledb;
+CREATE DATABASE teacherdb;
+CREATE DATABASE studentdb;
+CREATE DATABASE journaldb;

@@ -11,6 +11,7 @@ func NewStudentServiceClient(ctx context.Context, url string) (studentpb.Student
 	conn, err := grpc.DialContext(
 		ctx, url,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
 	)
 	if err != nil {
 		return nil, err

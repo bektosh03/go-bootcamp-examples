@@ -9,7 +9,10 @@ import (
 
 func NewJournalServiceClient(ctx context.Context, url string) (journalpb.JournalServiceClient, error) {
 	conn, err := grpc.DialContext(
-		ctx, url, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		ctx, url,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
+	)
 	if err != nil {
 		return nil, err
 	}
