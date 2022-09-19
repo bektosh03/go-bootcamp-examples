@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"schedule-service/config"
@@ -37,6 +38,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 	schedulepb.RegisterScheduleServiceServer(grpcServer, svr)
+
+	fmt.Println("Server starting at:", lis.Addr().String())
 
 	if err = grpcServer.Serve(lis); err != nil {
 		panic(err)

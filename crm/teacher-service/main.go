@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"teacher-service/config"
 	"teacher-service/domain/subject"
@@ -38,6 +39,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 	teacherpb.RegisterTeacherServiceServer(grpcServer, server)
+
+	fmt.Println("Server starting at:", lis.Addr().String())
 
 	if err := grpcServer.Serve(lis); err != nil {
 		panic(err)

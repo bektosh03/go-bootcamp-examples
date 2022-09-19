@@ -14,7 +14,6 @@ func toProtoTeacher(t teacher.Teacher) *teacherpb.Teacher {
 		LastName:    t.LastName(),
 		Email:       t.Email(),
 		PhoneNumber: t.PhoneNumber(),
-		Password: 	 t.Password(),
 		SubjectId:   t.SubjectID().String(),
 	}
 }

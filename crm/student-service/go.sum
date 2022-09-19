@@ -153,8 +153,6 @@ github.com/aws/smithy-go v1.7.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAm
 github.com/aws/smithy-go v1.8.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/bektosh03/crmcommon v0.1.1 h1:zirslrmErGWmuhorXjhqxrhhQWPbMJTF7yhlttIChLM=
 github.com/bektosh03/crmcommon v0.1.1/go.mod h1:hKa1afAvuz5S6PZGYsesjeWTRNtBMIZjuHTvoBAOzwY=
-github.com/bektosh03/crmprotos v0.0.0-20220908055640-d3e1f4214f57 h1:7+4trfZ8EoYP46Lam0fZVGrtLsVWBKxlRuihbcqYnbg=
-github.com/bektosh03/crmprotos v0.0.0-20220908055640-d3e1f4214f57/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/bektosh03/crmprotos v0.2.0 h1:bKvWUtg7DtrgySx8WKldOAs9MWVnX7Dzo6BmOF90Q+I=
 github.com/bektosh03/crmprotos v0.2.0/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/benbjohnson/clock v1.0.3/go.mod h1:bGMdMPoPVvcYyt1gHDf4J2KE153Yf9BuiUKYMaxlTDM=
