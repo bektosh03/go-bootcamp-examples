@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/bektosh03/crmcommon/id"
 	"github.com/bektosh03/crmprotos/studentpb"
 	"google.golang.org/grpc"
@@ -38,6 +39,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 	studentpb.RegisterStudentServiceServer(grpcServer, svr)
+
+	fmt.Println("Server starting at:", lis.Addr().String())
 
 	if err = grpcServer.Serve(lis); err != nil {
 		panic(err)

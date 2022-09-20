@@ -1,8 +1,10 @@
 package main
 
 import (
+	"api-gateway/config"
 	"api-gateway/pkg/auth"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -26,24 +28,31 @@ const (
 )
 
 func main() {
+	cfg, err := config.Load()
+	if err != nil {
+		log.Panicln("failed to load config", err)
+	}
+
+	fmt.Println("cfg:", cfg)
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	teacherServiceClient, err := grpc.NewTeacherServiceClient(ctx, TeacherServiceURL)
+	teacherServiceClient, err := grpc.NewTeacherServiceClient(ctx, cfg.TeacherServiceAddr)
 	if err != nil {
 		log.Panicln("failed to create new teacher service client:", err)
 	}
 
-	studentServiceClient, err := grpc.NewStudentServiceClient(ctx, StudentServiceURL)
+	studentServiceClient, err := grpc.NewStudentServiceClient(ctx, cfg.StudentServiceAddr)
 	if err != nil {
 		log.Panicln("failed to create new student service client:", err)
 	}
-	scheduleServiceClient, err := grpc.NewScheduleServiceClient(ctx, ScheduleServiceURL)
+	scheduleServiceClient, err := grpc.NewScheduleServiceClient(ctx, cfg.ScheduleServiceAddr)
 	if err != nil {
 		log.Panicln("failed to create new schedule service client:", err)
 	}
 
-	journalServiceClient, err := grpc.NewJournalServiceClient(ctx, JournalServiceURL)
+	journalServiceClient, err := grpc.NewJournalServiceClient(ctx, cfg.JournalServiceAddr)
 	if err != nil {
 		log.Panicln("failed to create new journal service client:", err)
 	}
@@ -132,6 +141,8 @@ func main() {
 		r.Post("/schedule/teacher", h.GetSpecificDateScheduleForTeacher)
 		r.Post("/schedule/group", h.GetSpecificDateScheduleForGroup)
 	})
+
+	fmt.Println("Server starting at :8080")
 
 	http.ListenAndServe(":8080", r)
 }
