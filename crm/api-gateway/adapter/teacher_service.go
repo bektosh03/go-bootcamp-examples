@@ -28,6 +28,7 @@ func (a TeacherService) RegisterTeacher(ctx context.Context, req request.Registe
 		LastName:    req.LastName,
 		Email:       req.Email,
 		PhoneNumber: req.PhoneNumber,
+		Password:    req.Password,
 		SubjectId:   req.SubjectID,
 	}
 	res, err := a.client.RegisterTeacher(ctx, grpcRequest)

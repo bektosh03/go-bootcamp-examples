@@ -153,8 +153,8 @@ github.com/aws/smithy-go v1.7.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAm
 github.com/aws/smithy-go v1.8.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
 github.com/bektosh03/crmcommon v0.1.1 h1:zirslrmErGWmuhorXjhqxrhhQWPbMJTF7yhlttIChLM=
 github.com/bektosh03/crmcommon v0.1.1/go.mod h1:hKa1afAvuz5S6PZGYsesjeWTRNtBMIZjuHTvoBAOzwY=
-github.com/bektosh03/crmprotos v0.2.0 h1:bKvWUtg7DtrgySx8WKldOAs9MWVnX7Dzo6BmOF90Q+I=
-github.com/bektosh03/crmprotos v0.2.0/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
+github.com/bektosh03/crmprotos v0.2.1-0.20220916093350-93f5e8a77d29 h1:XsKvYW2shzgcXJF6zyzVss+tJloAB2KK7/MqhH30Xr4=
+github.com/bektosh03/crmprotos v0.2.1-0.20220916093350-93f5e8a77d29/go.mod h1:blO1+Iv/FDLhUDOBWsfk/5GY5hgPZS1sij2Ik0E9mPk=
 github.com/benbjohnson/clock v1.0.3/go.mod h1:bGMdMPoPVvcYyt1gHDf4J2KE153Yf9BuiUKYMaxlTDM=
 github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
@@ -1158,6 +1158,7 @@ golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0/go.mod h1:LzIPMQfyMNhhGPh
 golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83/go.mod h1:jdWPYTVW3xRLrWPugEBEK3UY2ZEsg3UU495nc5E+M+I=
 golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2/go.mod h1:T9bdIzuCu7OtxOm1hfPfRQxPLYneinmdGuTeoZ9dtd4=
 golang.org/x/crypto v0.0.0-20210817164053-32db794688a5/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
+golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 h1:7I4JAnoQBe7ZtJcBaYHi5UtiO8tQHbUSXxL+pnGRANg=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/exp v0.0.0-20180321215751-8460e604b9de/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20180807140117-3d87b88a115f/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=

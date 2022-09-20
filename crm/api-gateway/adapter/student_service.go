@@ -201,6 +201,7 @@ func (a StudentService) UpdateStudent(ctx context.Context, st request.Student) (
 		Email:       st.Email,
 		PhoneNumber: st.PhoneNumber,
 		Level:       st.Level,
+		Password:    st.Password,
 		GroupId:     st.GroupID,
 	}
 	res, err := a.client.UpdateStudent(ctx, grpcRequest)
@@ -222,6 +223,7 @@ func (a StudentService) UpdateStudent(ctx context.Context, st request.Student) (
 		Email:       res.Email,
 		PhoneNumber: res.PhoneNumber,
 		Level:       res.Level,
+		Password:    res.Password,
 		GroupID:     res.GroupId,
 	}, nil
 }
@@ -278,10 +280,11 @@ func (a StudentService) RegisterStudent(ctx context.Context, req request.Registe
 		Email:       req.Email,
 		PhoneNumber: req.PhoneNumber,
 		Level:       req.Level,
+		Password:    req.Password,
 		GroupId:     req.GroupID,
 	}
 	res, err := a.client.RegisterStudent(ctx, grpcRequest)
-		if err != nil {
+	if err != nil {
 		if sts, ok := status.FromError(err); ok {
 			switch sts.Code() {
 			case codes.InvalidArgument:
@@ -300,6 +303,7 @@ func (a StudentService) RegisterStudent(ctx context.Context, req request.Registe
 		Email:       res.Email,
 		PhoneNumber: res.PhoneNumber,
 		Level:       res.Level,
+		Password:    res.Password,
 		GroupID:     res.GroupId,
 	}, nil
 }

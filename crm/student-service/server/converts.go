@@ -34,6 +34,7 @@ func toProtoStudent(s student.Student) *studentpb.Student {
 		Email:       s.Email(),
 		PhoneNumber: s.PhoneNumber(),
 		Level:       s.Level(),
+		Password:    s.Password(),
 		GroupId:     s.GroupID().String(),
 	}
 }

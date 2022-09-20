@@ -19,7 +19,7 @@ func NewFactory(idGenerator id.IGenerator) Factory {
 // NewStudent is a constructor that checks if the provided data for Student is valid or not
 // new Student objects can only be created through this constructor which ensures everything is valid
 func (f Factory) NewStudent(
-	firstName, lastName, email, phoneNumber string,
+	firstName, lastName, email, phoneNumber, password string,
 	level int32,
 	groupID uuid.UUID,
 ) (Student, error) {
@@ -30,6 +30,7 @@ func (f Factory) NewStudent(
 		email:       email,
 		phoneNumber: phoneNumber,
 		level:       level,
+		password:    password,
 		groupID:     groupID,
 	}
 
