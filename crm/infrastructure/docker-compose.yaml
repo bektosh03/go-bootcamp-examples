@@ -8,11 +8,12 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
       - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
-      - "./lib/postgresql:/var/lib/postgresql"
+      - "./postgres:/var/lib/postgresql/data"
   student-service:
     image: student-service:latest
     restart: always
