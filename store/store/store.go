@@ -1,7 +1,8 @@
 package store
 
 import (
-	"fmt"
+	"context"
+	"github.com/google/uuid"
 	"store/product"
 )
 
@@ -15,27 +16,15 @@ func New(i Inventory) *Store {
 	}
 }
 
-func (s Store) FindProduct(name string)(product.Product,bool)  {
-	return s.inventory.FindProduct(name) 
-}
-
-func (s Store) Run() {
-	p, exists := s.inventory.FindProduct("Olma")
-	if !exists {
-		fmt.Println("Olma topilmadi")
-		return
+func (s Store) AddProduct(ctx context.Context, p product.Product) (product.Product, error) {
+	p.ID = uuid.NewString()
+	if err := s.inventory.AddProduct(ctx, p); err != nil {
+		return product.Product{}, err
 	}
 
-	fmt.Println(p)
+	return p, nil
+}
 
-	// err := s.inventory.AddProduct(product.Product{
-	// 	Name:          "Banana",
-	// 	Quantity:      23,
-	// 	Price:         10,
-	// 	OriginalPrice: 8,
-	// })
-
-	// if err != nil {
-	// 	fmt.Println("add product err:", err)
-	// }
+func (s Store) ListProducts(ctx context.Context) (product.List, error) {
+	return s.inventory.ListProducts(ctx)
 }

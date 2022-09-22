@@ -1,10 +1,11 @@
 package product
 
 type Product struct {
-	Name          string
-	Quantity      uint64
-	Price         uint64
-	OriginalPrice uint64
+	ID            string  `db:"id"`
+	Name          string  `db:"name"`
+	Quantity      uint64  `db:"quantity"`
+	Price         float32 `db:"price"`
+	OriginalPrice float32 `db:"original_price"`
 }
 
 type List []Product

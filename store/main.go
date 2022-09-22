@@ -1,30 +1,46 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
+	"context"
 	"store/inventory"
+	"store/server/http"
+	"store/server/telegram"
 	"store/store"
+	"sync"
+	"time"
 )
 
 func main() {
-	i, err := inventory.NewFileInventory("data/inventory.txt")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
+
+	i, err := inventory.NewPostgresInventory(ctx)
 	if err != nil {
 		panic(err)
 	}
-	defer i.Close()
-	
-	s := store.New(i)
-	http.HandleFunc("/",greet)
-	http.HandleFunc("/product",func(w http.ResponseWriter, r *http.Request) {
-		str:= r.URL.Query().Get("name")
-		value,b:=s.FindProduct(str)
-		mmm:=map[string]interface{}{
-			"product":value,
-			"exists":b,
-		}
-		json.NewEncoder(w).Encode(mmm)
-	})
 
-	http.ListenAndServe(":8080",nil)
+	s := store.New(i)
+
+	httpServer := http.NewServer(s)
+	telegramBotServer, err := telegram.NewServer("5653971769:AAGRBrNQLubAAeI_P7MZmXhW-j_BiRDS7s4", s)
+	if err != nil {
+		panic(err)
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		if err = httpServer.Run("localhost:8080"); err != nil {
+			panic(err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		telegramBotServer.Run()
+	}()
+
+	wg.Wait()
 }
