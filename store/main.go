@@ -22,7 +22,7 @@ func main() {
 	s := store.New(i)
 
 	httpServer := http.NewServer(s)
-	telegramBotServer, err := telegram.NewServer("5653971769:AAGRBrNQLubAAeI_P7MZmXhW-j_BiRDS7s4", s)
+	telegramBotServer, err := telegram.NewServer("", s)
 	if err != nil {
 		panic(err)
 	}
