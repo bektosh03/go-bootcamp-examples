@@ -48,6 +48,23 @@ func (s Server) Run() {
 		return c.Send(buildProductsResponse(products))
 	})
 
+	s.bot.Handle("/markup", func(c tele.Context) error {
+		return c.Send(tele.ReplyMarkup{
+			InlineKeyboard: [][]tele.InlineButton{
+				{
+					{
+						Unique:          "",
+						Text:            "some text",
+						Data:            "",
+						InlineQuery:     "",
+						InlineQueryChat: "",
+						Login:           nil,
+					},
+				},
+			},
+		})
+	})
+
 	s.bot.Start()
 }
 

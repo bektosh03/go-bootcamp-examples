@@ -10,6 +10,11 @@ type Product struct {
 
 type List []Product
 
+func (l *List) Error() string {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (l *List) Add(p Product) {
 	*l = append(*l, p)
 }

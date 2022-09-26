@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"store/config"
 	"store/inventory"
 	"store/server/http"
 	"store/server/telegram"
@@ -11,18 +14,23 @@ import (
 )
 
 func main() {
+	cfg, err := config.Load()
+	if err != nil {
+		log.Println("error with loading config", err)
+		return
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	i, err := inventory.NewPostgresInventory(ctx)
+	i, err := inventory.NewPostgresInventory(ctx, cfg.PostgresConfig)
 	if err != nil {
 		panic(err)
 	}
 
 	s := store.New(i)
-
+	fmt.Println(cfg.BotApiToken)
 	httpServer := http.NewServer(s)
-	telegramBotServer, err := telegram.NewServer("", s)
+	telegramBotServer, err := telegram.NewServer(cfg.BotApiToken, s)
 	if err != nil {
 		panic(err)
 	}
