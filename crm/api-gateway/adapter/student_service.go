@@ -274,6 +274,7 @@ func (a StudentService) GetStudent(ctx context.Context, req request.GetStudentRe
 }
 
 func (a StudentService) RegisterStudent(ctx context.Context, req request.RegisterStudentRequest) (response.Student, error) {
+	fmt.Println("GROUP id:", req.GroupID)
 	grpcRequest := &studentpb.RegisterStudentRequest{
 		FirstName:   req.FirstName,
 		LastName:    req.LastName,

@@ -14,34 +14,71 @@ services:
     volumes:
       - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
       - "./postgres:/var/lib/postgresql/data"
+
+  zookeeper:
+    image: zookeeper:3.8
+    restart: always
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
   student-service:
     image: student-service:latest
     restart: always
+    ports:
+      - "8002:8002"
     env_file:
       - student-service.env
     depends_on:
       - postgres
+
   teacher-service:
     image: teacher-service:latest
     restart: always
+    ports:
+      - "8001:8001"
     env_file:
       - teacher-service.env
     depends_on:
       - postgres
+
   schedule-service:
     image: schedule-service:latest
     restart: always
+    ports:
+      - "8003:8003"
     env_file:
       - schedule-service.env
     depends_on:
       - postgres
+
   journal-service:
     image: journal-service:latest
     restart: always
+    ports:
+      - "8004:8004"
     env_file:
       - journal-service.env
     depends_on:
       - postgres
+
   api-gateway:
     image: api-gateway:latest
     restart: always
@@ -54,3 +91,12 @@ services:
       - teacher-service
       - schedule-service
       - journal-service
+      - kafka
+
+  email-service:
+    image: email-service:latest
+    restart: always
+    env_file:
+      - email-service.env
+    depends_on:
+      - kafka

@@ -3,8 +3,10 @@ package handler
 import (
 	"api-gateway/pkg/auth"
 	"api-gateway/pkg/httperr"
+	"api-gateway/pkg/producer"
 	"api-gateway/request"
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -75,6 +77,15 @@ func (h Handler) RegisterStudent(w http.ResponseWriter, r *http.Request) {
 
 	student, err := h.service.Student.RegisterStudent(context.Background(), req)
 	if err != nil {
+		httperr.Handle(w, r, err)
+		return
+	}
+
+	if err = h.producer.Produce(producer.RegisteredEvent{
+		Email:    student.Email,
+		FullName: fmt.Sprintf("%s %s", student.FirstName, student.LastName),
+		For:      producer.EventForStudent,
+	}); err != nil {
 		httperr.Handle(w, r, err)
 		return
 	}

@@ -3,9 +3,12 @@ package main
 import (
 	"api-gateway/config"
 	"api-gateway/pkg/auth"
+	"api-gateway/pkg/producer"
 	"context"
 	"fmt"
+	"github.com/Shopify/sarama"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -62,7 +65,26 @@ func main() {
 	journalService := adapter.NewJournalService(journalServiceClient)
 
 	svc := service.New(teacherService, studentService, scheduleService, journalService)
-	h := handler.New(svc)
+
+	kafkaCfg := sarama.NewConfig()
+	kafkaCfg.Producer.Return.Successes = true
+	kafkaCfg.Producer.Return.Errors = true
+
+	fmt.Println("KAFKA:", net.JoinHostPort(cfg.KafkaHost, cfg.KafkaPort))
+
+	kafkaClient, err := sarama.NewClient(
+		[]string{net.JoinHostPort(cfg.KafkaHost, cfg.KafkaPort)},
+		kafkaCfg,
+	)
+	if err != nil {
+		log.Panicln("failed to initialize kafka client:", err)
+	}
+	kafkaProducer, err := producer.NewKafkaProducer(kafkaClient)
+	if err != nil {
+		log.Panicln("failed to initialize kafka producer:", err)
+	}
+
+	h := handler.New(svc, kafkaProducer)
 
 	r := chi.NewRouter()
 

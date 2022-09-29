@@ -10,6 +10,8 @@ type Config struct {
 	TeacherServiceAddr  string `envconfig:"TEACHER_SERVICE_ADDR"`
 	ScheduleServiceAddr string `envconfig:"SCHEDULE_SERVICE_ADDR"`
 	JournalServiceAddr  string `envconfig:"JOURNAL_SERVICE_ADDR"`
+	KafkaHost           string `envconfig:"KAFKA_HOST"`
+	KafkaPort           string `envconfig:"KAFKA_PORT"`
 }
 
 func Load() (Config, error) {

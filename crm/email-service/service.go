@@ -6,31 +6,33 @@ import (
 	"sync"
 )
 
-func NewService(emailSender EmailSender) Service {
+func NewService(emailSender EmailSender, consumer Consumer) Service {
 	return Service{
 		emailSender: emailSender,
+		consumer:    consumer,
 	}
 }
 
 type Service struct {
 	emailSender EmailSender
+	consumer    Consumer
 }
 
-func (s Service) Run(teacherEvents <-chan TeacherRegistered) {
+func (s Service) Run() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
 		defer wg.Done()
-		s.handleTeacherRegistrations(teacherEvents)
+		s.handleRegistrations(s.consumer.Events())
 	}()
 
 	wg.Wait()
 }
 
-func (s Service) handleTeacherRegistrations(events <-chan TeacherRegistered) {
+func (s Service) handleRegistrations(events <-chan RegisteredEvent) {
 	for e := range events {
-		body := fmt.Sprintf("Welcome to our CRM, teacher %s", e.FullName)
+		body := fmt.Sprintf("Welcome to our CRM, %s %s", e.For, e.FullName)
 		email := Email{
 			To:   e.Email,
 			Body: []byte(body),
