@@ -1,13 +1,15 @@
 package producer
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Shopify/sarama"
 	"time"
 )
 
 const (
-	topic = "registrations"
+	registrationsTopic = "registrations"
+	marksTopic         = "marks"
 )
 
 func NewKafkaProducer(client sarama.Client) (KafkaProducer, error) {
@@ -29,15 +31,29 @@ type KafkaProducer struct {
 	producer sarama.SyncProducer
 }
 
-func (p KafkaProducer) Produce(event RegisteredEvent) error {
-	_, _, err := p.producer.SendMessage(&sarama.ProducerMessage{
-		Topic:     topic,
-		Key:       sarama.StringEncoder(event.Email),
-		Value:     event,
-		Timestamp: time.Now(),
-	})
+func (p KafkaProducer) Produce(event interface{}) error {
+	switch v := event.(type) {
+	case RegisteredEvent:
+		_, _, err := p.producer.SendMessage(&sarama.ProducerMessage{
+			Topic:     registrationsTopic,
+			Key:       sarama.StringEncoder(v.Email),
+			Value:     v,
+			Timestamp: time.Now(),
+		})
 
-	return err
+		return err
+	case StudentMarkedEvent:
+		_, _, err := p.producer.SendMessage(&sarama.ProducerMessage{
+			Topic:     marksTopic,
+			Key:       sarama.StringEncoder(v.JournalID),
+			Value:     v,
+			Timestamp: time.Now(),
+		})
+
+		return err
+	default:
+		return errors.New("unrecognized event")
+	}
 }
 
 func initTopics(client sarama.Client) error {
@@ -47,7 +63,7 @@ func initTopics(client sarama.Client) error {
 	}
 
 	for _, t := range topics {
-		if t == topic {
+		if t == registrationsTopic {
 			return nil
 		}
 	}
@@ -60,7 +76,7 @@ func initTopics(client sarama.Client) error {
 	_, err = broker.CreateTopics(&sarama.CreateTopicsRequest{
 		Version: 1,
 		TopicDetails: map[string]*sarama.TopicDetail{
-			topic: {
+			registrationsTopic: {
 				NumPartitions:     1,
 				ReplicationFactor: 1,
 			},

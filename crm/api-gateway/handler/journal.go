@@ -2,6 +2,7 @@ package handler
 
 import (
 	"api-gateway/pkg/httperr"
+	"api-gateway/pkg/producer"
 	"api-gateway/request"
 	"api-gateway/response"
 	"context"
@@ -68,6 +69,7 @@ func (h Handler) GetTeacherJournal(w http.ResponseWriter, r *http.Request) {
 
 	render.JSON(w, r, entries)
 }
+
 func (h Handler) GetStudentJournal(w http.ResponseWriter, r *http.Request) {
 	studentID := chi.URLParam(r, "id")
 	if studentID == "" {
@@ -131,7 +133,11 @@ func (h Handler) MarkStudent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.Journal.MarkStudent(context.Background(), req); err != nil {
+	if err := h.producer.Produce(producer.StudentMarkedEvent{
+		Mark:      req.Mark,
+		StudentID: req.StudentID,
+		JournalID: req.JournalID,
+	}); err != nil {
 		httperr.Handle(w, r, err)
 		return
 	}

@@ -8,8 +8,10 @@ import (
 
 // Config defines configuration values needed for the entire service
 type Config struct {
-	Host string `envconfig:"host" required:"true"`
-	Port string `envconfig:"port" required:"true"`
+	Host      string `envconfig:"host" required:"true"`
+	Port      string `envconfig:"port" required:"true"`
+	KafkaHost string `envconfig:"KAFKAHOST" required:"true"`
+	KafkaPort string `envconfig:"KAFKAPORT" required:"true"`
 	postgres.Config
 }
 

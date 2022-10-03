@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"journal-service/consumer"
 	"journal-service/domain/journal"
 	"log"
 	"time"
@@ -12,12 +13,46 @@ import (
 type Service struct {
 	repo           JournalRepository
 	journalFactory journal.Factory
+	consumer       consumer.Consumer
 }
 
-func New(jouRepo JournalRepository, journalFactory journal.Factory) Service {
+func New(jouRepo JournalRepository, journalFactory journal.Factory, consumer consumer.Consumer) Service {
 	return Service{
 		repo:           jouRepo,
 		journalFactory: journalFactory,
+		consumer:       consumer,
+	}
+}
+
+func (s Service) Run() {
+	go func() {
+		ch := s.consumer.Events()
+		s.handleMarks(ch)
+	}()
+}
+
+func (s Service) handleMarks(events <-chan consumer.StudentMarkedEvent) {
+	for e := range events {
+		journalID, err := uuid.Parse(e.JournalID)
+		if err != nil {
+			log.Println("error with parsing journalID", err)
+			return
+		}
+		studentID, err := uuid.Parse(e.StudentID)
+		if err != nil {
+			log.Println("error with parsing studentID", err)
+			return
+		}
+		stat, err := journal.NewStatus(journalID, studentID, true, e.Mark)
+		if err != nil {
+			log.Println("error with creating new journal tools", err)
+			return
+		}
+		err = s.MarkStudent(context.Background(), stat)
+		if err != nil {
+			log.Println("error with completing markstudent", err)
+			return
+		}
 	}
 }
 
