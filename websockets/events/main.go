@@ -19,5 +19,6 @@ func main() {
 	r := chi.NewRouter()
 	setupRouter(r, s, h)
 
+	h.Run()
 	http.ListenAndServe("localhost:8080", r)
 }

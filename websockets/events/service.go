@@ -27,6 +27,10 @@ func (s Service) AddEvent(event Event) error {
 		}
 
 		conflicts := s.getConflicts(event, otherEvents)
+		if len(conflicts) < 1 {
+			return
+		}
+		fmt.Println("sending conflicts to ch")
 		s.conflicts <- ConflictMessage{
 			To:        event.Organizer,
 			Conflicts: conflicts,
