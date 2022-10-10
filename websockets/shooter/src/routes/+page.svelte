@@ -1,0 +1,1 @@
+<h1>Proceed to <a href="/register">registration</a> to play</h1>
