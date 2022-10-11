@@ -40,6 +40,10 @@ func (s Service) CreatePlayer(p player.Player) {
 	s.repo.SavePlayer(p)
 }
 
+func (s Service) ShootPlayer() error {
+	return nil
+}
+
 func (s Service) AvailablePlayers() []player.Player {
 	availablePlayers := make([]player.Player, 0)
 	players := s.repo.ListPlayers()

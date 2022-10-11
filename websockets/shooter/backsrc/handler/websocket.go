@@ -118,6 +118,14 @@ func (h *WebsocketHandler) Run() {
 					h.hub.Write(m.Player2, event.Marshal())
 				}
 
+			case command.Shoot:
+				var payload ShootPayload
+				if err := json.Unmarshal(cmd.Payload(), &payload); err != nil {
+					log.Printf("failed to unmarshal %s payload: %v\n", cmd.Name(), err)
+				}
+
+				m := h.s.ShootPlayer()
+				m.Error()
 			// TODO add shoot command and someone win and game over event
 
 			default:
@@ -151,6 +159,11 @@ type PlayPayload struct {
 }
 
 type StartPayload struct {
+	MatchID string        `json:"match_id"`
+	Player  player.Player `json:"player"`
+}
+
+type ShootPayload struct {
 	MatchID string        `json:"match_id"`
 	Player  player.Player `json:"player"`
 }

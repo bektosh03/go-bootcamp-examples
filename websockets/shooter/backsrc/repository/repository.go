@@ -66,3 +66,9 @@ func (m *InMemory) GetPlayer(name string) player.Player {
 	defer m.mu.Unlock()
 	return m.players[name]
 }
+
+func (m *InMemory) ShootPlayer() error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return nil
+}
