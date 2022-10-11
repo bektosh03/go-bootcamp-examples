@@ -26,7 +26,7 @@ func main() {
 	repo := repository.NewInMemory()
 	s := service.New(repo)
 	h := hub.New(commands)
-	websocketHandler := handler.NewWebsocketHandler(service.Service{}, commands)
+	websocketHandler := handler.NewWebsocketHandler(s, h, commands)
 	websocketHandler.Run()
 
 	r.Use(cors.AllowAll().Handler)

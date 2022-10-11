@@ -43,7 +43,7 @@ func (h *Hub) Write(p player.Player, event []byte) error {
 }
 
 type Command struct {
-	Command string `json:"name"`
+	Command string `json:"command"`
 	payload []byte
 }
 

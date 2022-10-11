@@ -5,16 +5,16 @@ import (
 )
 
 type Player struct {
-	Name                       string `json:"name"`
-	Health                     int    `json:"health"`
-	Conn                       *websocket.Conn
-	isPlayerWaitingForOpponent bool
+	Name                 string `json:"name"`
+	Health               int    `json:"health"`
+	Conn                 *websocket.Conn
+	isWaitingForOpponent bool
 }
 
 func (p *Player) SetWaitingForOpponent(b bool) {
-	p.isPlayerWaitingForOpponent = b
+	p.isWaitingForOpponent = b
 }
 
-func (p *Player) IsPlayerWaitingForOpponent() bool {
-	return p.isPlayerWaitingForOpponent
+func (p *Player) IsWaitingForOpponent() bool {
+	return p.isWaitingForOpponent
 }
