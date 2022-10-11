@@ -155,7 +155,16 @@ func (h Handler) SetStudentAttendance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.Journal.SetStudentAttendance(context.Background(), req); err != nil {
+	//if err := h.service.Journal.SetStudentAttendance(context.Background(), req); err != nil {
+	//	httperr.Handle(w, r, err)
+	//	return
+	//}
+
+	if err := h.producer.Produce(producer.SetStudentAttendanceEvent{
+		StudentID: req.StudentID,
+		Attended:  req.Attended,
+		JournalID: req.JournalID,
+	}); err != nil {
 		httperr.Handle(w, r, err)
 		return
 	}

@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	"journal-service/consumer"
+	"journal-service/consumer/attend"
+	"journal-service/consumer/mark"
 	"journal-service/domain/journal"
 	"log"
 	"time"
@@ -13,44 +14,85 @@ import (
 type Service struct {
 	repo           JournalRepository
 	journalFactory journal.Factory
-	consumer       consumer.Consumer
+	attconsumer    attend.Consumer
+	markconsumer   mark.Consumer
 }
 
-func New(jouRepo JournalRepository, journalFactory journal.Factory, consumer consumer.Consumer) Service {
+func New(jouRepo JournalRepository, journalFactory journal.Factory, attconsumer attend.Consumer, markconsumer mark.Consumer) Service {
 	return Service{
 		repo:           jouRepo,
 		journalFactory: journalFactory,
-		consumer:       consumer,
+		attconsumer:    attconsumer,
+		markconsumer:   markconsumer,
 	}
 }
 
-func (s Service) Run() {
+func (s Service) RunAtt()  {
 	go func() {
-		ch := s.consumer.Events()
-		s.handleMarks(ch)
+		att := s.attconsumer.Events()
+		s.handleAttendance(att)
+	}()
+
+}
+
+func (s Service) RunMark() {
+	go func() {
+		mark := s.markconsumer.Events()
+		s.handleMarks(mark)
 	}()
 }
 
-func (s Service) handleMarks(events <-chan consumer.StudentMarkedEvent) {
+func (s Service) handleMarks(events <-chan mark.StudentMarkedEvent) {
 	for e := range events {
 		journalID, err := uuid.Parse(e.JournalID)
 		if err != nil {
-			log.Println("error with parsing journalID", err)
+			log.Println("handleMarks:error with parsing journalID", err)
 			return
 		}
+
 		studentID, err := uuid.Parse(e.StudentID)
 		if err != nil {
-			log.Println("error with parsing studentID", err)
+			log.Println("handleMarks:error with parsing studentID", err)
 			return
 		}
+
 		stat, err := journal.NewStatus(journalID, studentID, true, e.Mark)
 		if err != nil {
-			log.Println("error with creating new journal tools", err)
+			log.Println("handleMarks:error with creating new journal tools", err)
 			return
 		}
+
 		err = s.MarkStudent(context.Background(), stat)
 		if err != nil {
-			log.Println("error with completing markstudent", err)
+			log.Println("handleMarks:error with completing marking student", err)
+			return
+		}
+	}
+}
+
+func (s Service) handleAttendance(events <-chan attend.SetStudentAttendanceEvent) {
+	for e := range events {
+		journalID, err := uuid.Parse(e.JournalID)
+		if err != nil {
+			log.Println("handleAttendance:error with parsing journalID", err)
+			return
+		}
+
+		studentID, err := uuid.Parse(e.StudentID)
+		if err != nil {
+			log.Println("handleAttendance:error with parsing studentID", err)
+			return
+		}
+
+		stat, err := journal.NewStatus(journalID, studentID, e.Attended, 5)
+		if err != nil {
+			log.Println("handleAttendance:error with creating new journal tools", err)
+			return
+		}
+
+		err = s.SetStudentAttendance(context.Background(), stat)
+		if err != nil {
+			log.Println("handleAttendance:error with completing setting Student Attendance", err)
 			return
 		}
 	}

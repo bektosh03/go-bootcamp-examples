@@ -1,4 +1,4 @@
-package consumer
+package attend
 
 import (
 	"encoding/json"
@@ -6,16 +6,18 @@ import (
 	"log"
 )
 
-const topic = "registrations"
+const (
+	topic = "studentAttend"
+)
 
-type StudentMarkedEvent struct {
-	Mark      int32  `json:"mark"`
+type SetStudentAttendanceEvent struct {
 	StudentID string `json:"student_id"`
+	Attended  bool   `json:"attended"`
 	JournalID string `json:"journal_id"`
 }
 
 type Consumer interface {
-	Events() <-chan StudentMarkedEvent
+	Events() <-chan SetStudentAttendanceEvent
 }
 
 func NewConsumer(client sarama.Client) (Consumer, error) {
@@ -36,13 +38,13 @@ type KafkaConsumer struct {
 	consumer sarama.PartitionConsumer
 }
 
-func (c KafkaConsumer) Events() <-chan StudentMarkedEvent {
-	ch := make(chan StudentMarkedEvent)
+func (c KafkaConsumer) Events() <-chan SetStudentAttendanceEvent {
+	ch := make(chan SetStudentAttendanceEvent)
 
 	go func() {
 		defer close(ch)
 		for msg := range c.consumer.Messages() {
-			var event StudentMarkedEvent
+			var event SetStudentAttendanceEvent
 			if err := json.Unmarshal(msg.Value, &event); err != nil {
 				log.Println("[ERROR] could not unmarshal:", err)
 				continue

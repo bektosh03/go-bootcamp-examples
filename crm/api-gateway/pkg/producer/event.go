@@ -21,6 +21,12 @@ type StudentMarkedEvent struct {
 	JournalID string `json:"journal_id"`
 }
 
+type SetStudentAttendanceEvent struct {
+	StudentID string `json:"student_id"`
+	Attended  bool   `json:"attended"`
+	JournalID string `json:"journal_id"`
+}
+
 func (e RegisteredEvent) Encode() ([]byte, error) {
 	return json.Marshal(e)
 }
@@ -35,6 +41,15 @@ func (e StudentMarkedEvent) Encode() ([]byte, error) {
 }
 
 func (e StudentMarkedEvent) Length() int {
+	data, _ := e.Encode()
+	return len(data)
+}
+
+func (e SetStudentAttendanceEvent) Encode() ([]byte, error) {
+	return json.Marshal(e)
+}
+
+func (e SetStudentAttendanceEvent) Length() int {
 	data, _ := e.Encode()
 	return len(data)
 }

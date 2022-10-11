@@ -6,7 +6,8 @@ import (
 	"github.com/bektosh03/crmprotos/journalpb"
 	"google.golang.org/grpc"
 	"journal-service/config"
-	consumer2 "journal-service/consumer"
+	"journal-service/consumer/attend"
+	"journal-service/consumer/mark"
 	"journal-service/domain/journal"
 	"journal-service/repository"
 	"journal-service/server"
@@ -27,34 +28,46 @@ func main() {
 		kafkaCfg,
 	)
 	if err != nil {
-		panic(err)
+		log.Println("error creating sarama NewClient",err)
+		return
 	}
-	consumer, err := consumer2.NewConsumer(client)
+
+	attConsumer,err:=attend.NewConsumer(client)
 	if err != nil {
-		panic(err)
+		log.Println("error creating new attConsumer",err)
+		return
+	}
+
+	markConsumer,err:=mark.NewConsumer(client)
+	if err != nil {
+		log.Println("error creating new markConsumer",err)
+		return
 	}
 
 	defer client.Close()
 
 	repo, err := repository.NewPostgresRepository(cfg.Config)
 	if err != nil {
-		panic(err)
+		log.Println("error creating new postgres repo",err)
+		return
 	}
 
 	journalFactory := journal.NewFactory(id.Generator{})
-	svc := service.New(repo, journalFactory, consumer)
+	svc := service.New(repo, journalFactory, attConsumer,markConsumer)
 	svr := server.New(svc, journalFactory)
 
 	lis, err := net.Listen("tcp", net.JoinHostPort(cfg.Host, cfg.Port))
 	if err != nil {
-		panic(err)
+		log.Println("error with listening",err)
+		return
 	}
 	grpcServer := grpc.NewServer()
 	journalpb.RegisterJournalServiceServer(grpcServer, svr)
 
-	svc.Run()
+	svc.RunAtt()
+	svc.RunMark()
 
 	if err = grpcServer.Serve(lis); err != nil {
-		panic(err)
+		log.Println("error with serving grpc",err)
 	}
 }
