@@ -14,6 +14,18 @@ type Service struct {
 	repo Repository
 }
 
+func (s Service) RemovePlayer(name string) {
+	s.repo.RemovePlayer(name)
+}
+
+func (s Service) RemoveMatch(id string) {
+	s.repo.RemoveMatch(id)
+}
+
+func (s Service) SavePlayer(p player.Player) {
+	s.repo.SavePlayer(p)
+}
+
 func (s Service) CreateMatch(match match.Match) {
 	s.repo.CreateMatch(match)
 }

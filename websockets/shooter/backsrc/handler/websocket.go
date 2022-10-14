@@ -18,6 +18,10 @@ const (
 	EventNewAvailablePlayer = "new_available_player"
 	EventMatchCreated       = "match_created"
 	EventMatchStarted       = "match_started"
+	EventYouWon             = "you_won"
+	EventYouLost            = "you_lost"
+	EventGameOver           = "game_over"
+	EventPlayerUpdate       = "player_update"
 )
 
 func NewWebsocketHandler(s service.Service, h *hub.Hub, commands <-chan command.Command) *WebsocketHandler {
@@ -117,8 +121,56 @@ func (h *WebsocketHandler) Run() {
 					h.hub.Write(m.Player1, event.Marshal())
 					h.hub.Write(m.Player2, event.Marshal())
 				}
+			case command.Shoot:
+				var payload ShootPayload
+				err := json.Unmarshal(cmd.Payload(), &payload)
+				if err != nil {
+					log.Printf("failed to unmarshal %s payload: %v\n", cmd.Name(), err)
+					continue
+				}
+				m := h.s.GetMatch(payload.MatchID)
+				var shooter, shotPlayer player.Player
+				if payload.Player.Name == m.Player1.Name {
+					shooter = m.Player1
+					shotPlayer = m.Player2
+				} else {
+					shooter = m.Player2
+					shotPlayer = m.Player1
+				}
+				shotPlayer.Health -= 10
+				h.s.SavePlayer(shotPlayer)
+				m.Player1 = shooter
+				m.Player2 = shotPlayer
+				h.s.UpdateMatch(m)
 
-			// TODO add shoot command and someone win and game over event
+				if shotPlayer.Health <= 0 {
+					event := Event{
+						Name:   EventYouWon,
+						Player: shooter,
+						Metadata: map[string]interface{}{
+							"match_id": m.ID,
+						},
+					}
+					h.hub.Write(shooter, event.Marshal())
+					// TODO send player lost event
+
+					event = Event{
+						Name: EventGameOver,
+						Metadata: map[string]interface{}{
+							"match_id": payload.MatchID,
+						},
+					}
+					h.hub.Write(shooter, event.Marshal())
+					h.hub.Write(shotPlayer, event.Marshal())
+					h.s.RemoveMatch(m.ID)
+					h.s.RemovePlayer(shotPlayer.Name)
+				}
+
+				h.hub.Write(shotPlayer, Event{
+					Name:     EventPlayerUpdate,
+					Player:   shotPlayer,
+					Metadata: nil,
+				}.Marshal())
 
 			default:
 				panic("no such command")
@@ -139,6 +191,11 @@ func (h *WebsocketHandler) notifyOthers(self string, event []byte) {
 			continue
 		}
 	}
+}
+
+type ShootPayload struct {
+	MatchID string        `json:"match_id"`
+	Player  player.Player `json:"player"`
 }
 
 type WaitForOpponentPayload struct {

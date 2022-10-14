@@ -31,7 +31,7 @@ Qiziq tarafi:
 2-chi screen da ko'rsatilgan `Wait for someone` tugmasi bosilganda serverga quyidai xabar boradi:
 ```json
 {
-    "command": "wait_for_someone",
+    "command": "wait_for_opponent",
     "player": { // bu shu tugmani bosgan playerning ma'lumomtlari
         "name": "<Player ismi>"
     }
