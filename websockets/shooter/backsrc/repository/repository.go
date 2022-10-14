@@ -20,6 +20,12 @@ type InMemory struct {
 	mu      *sync.Mutex
 }
 
+func (r *InMemory) RemoveMatch(id string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	delete(r.matches, id)
+}
+
 func (m *InMemory) CreateMatch(match match.Match) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
