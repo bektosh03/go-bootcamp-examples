@@ -151,19 +151,27 @@ func (h *WebsocketHandler) Run() {
 							"match_id": m.ID,
 						},
 					}
-					h.hub.Write(shooter, event.Marshal())
-					// TODO send player lost event
 
+					h.hub.Write(shooter, event.Marshal())
+					event = Event{
+						Name: EventYouLost,
+						Player: shotPlayer,
+						Metadata: map[string]interface{}{
+							"match_id": m.ID,
+						},
+					}
+					h.hub.Write(shotPlayer, event.Marshal())
+					
 					event = Event{
 						Name: EventGameOver,
 						Metadata: map[string]interface{}{
 							"match_id": payload.MatchID,
 						},
 					}
+					
 					h.hub.Write(shooter, event.Marshal())
 					h.hub.Write(shotPlayer, event.Marshal())
 					h.s.RemoveMatch(m.ID)
-					h.s.RemovePlayer(shotPlayer.Name)
 				}
 
 				h.hub.Write(shotPlayer, Event{
