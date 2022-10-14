@@ -152,7 +152,14 @@ func (h *WebsocketHandler) Run() {
 						},
 					}
 					h.hub.Write(shooter, event.Marshal())
-					// TODO send player lost event
+
+					event = Event{
+						Name:   EventYouLost,
+						Player: shotPlayer,
+						Metadata: map[string]interface{}{
+							"match_id": m.ID,
+						},
+					}
 
 					event = Event{
 						Name: EventGameOver,
