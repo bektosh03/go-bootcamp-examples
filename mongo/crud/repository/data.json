@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "<id>",
+    "store": "<store name>",
+    "inventory": [
+      {
+        "name": "Apple",
+        "amount": 200,
+        "measurement": "kg",
+        "price_per_measurement": 2
+      }
+    ],
+    "sales": [
+      {
+        "date": "<date>",
+        "amount": 20
+      }
+    ]
+  }
+]
+
+// stores (<CLI Name>) add <store name>
+// stores buy <store name> <product name> <amount>
+// stores addProduct <store name>
+//  => 1. product name
+//  => 2. price ...
+//  ...
+// stores showInventory <store name>
+// Name  | Amount | Price
+// Apple | 200 kg | 2

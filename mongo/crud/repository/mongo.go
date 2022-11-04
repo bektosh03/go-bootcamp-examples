@@ -100,4 +100,25 @@ func (m *Mongo) DeleteUser(ctx context.Context, id string) error {
 	return nil
 }
 
+func (m *Mongo) GetUser(ctx context.Context, id string) (user.User, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return user.User{}, err
+	}
+	u := user.User{}
+	if err != nil {
+		return user.User{}, err
+	}
+	filter := bson.M{
+		"_id": objId,
+	}
+
+	cur := m.users.FindOne(ctx, filter)
+	if err := cur.Decode(&u); err != nil {
+		return user.User{}, err
+	}
+
+	return u, nil
+}
+
 // TODO get single user => GET /user/:id

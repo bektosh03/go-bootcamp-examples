@@ -25,14 +25,15 @@ func main() {
 		Email:     "shaxzod3@gmail.com",
 	}
 
-	if err = mongoRepo.DeleteUser(ctx, u.ID); err != nil {
-		panic(err)
-	}
-
-	users, err := mongoRepo.ListUsers(ctx)
+	_, err = mongoRepo.CreateUser(ctx, u)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(users)
+	user, err := mongoRepo.GetUser(ctx, u.ID)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(user)
 }
